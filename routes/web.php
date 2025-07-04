@@ -6,8 +6,12 @@ use App\Http\Controllers\RegController;
 use App\Http\Controllers\JemaatController;
 
 
+//Route::get('/', function () {
+//    return view('welcome');
+//});
+
 Route::get('/', function () {
-    return view('welcome');
+    return view('jemaat.daftar');
 });
 
 Route::get('/register', function () {
@@ -16,6 +20,10 @@ Route::get('/register', function () {
 
 Route::get('/login', function () {
     return view('login');
+});
+
+Route::get('/admin', function () {
+    return view('pengurus.dashboard_admin');
 });
 
 Route::get('/data-jemaat',[JemaatController::class,'Data_Jemaat']);

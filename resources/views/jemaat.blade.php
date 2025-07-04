@@ -11,7 +11,7 @@
                     @foreach ( $dtjemaat as $dtjemaatPLC )
                     <li>
                         <div class="flex items-center gap-x-6">
-                            <img class="size-16 rounded-full" src="{{ asset('storage/'. $dtjemaatPLC->foto)}}" alt="" />
+                            <img class="size-16 rounded-full" src="{{ asset('storage/'. $dtjemaatPLC->filename)}}" alt="" />
                             <div>
                                 <h3 class="text-base/7 font-semibold tracking-tight text-white">{{ ucwords($dtjemaatPLC->name) }}</h3>
                                 <h4 class="text-sm/6 font-semibold text-white">

@@ -24,6 +24,8 @@ class User extends Authenticatable
         'alamat',
         'no_HP',
         'gol_darah',
+        'filename',
+        'path',
         'role',
     ];
 

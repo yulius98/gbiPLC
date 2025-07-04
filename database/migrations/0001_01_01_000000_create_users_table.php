@@ -17,11 +17,12 @@ return new class extends Migration
             $table->string('email')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
-            $table->text('alamat');
-            $table->date('tgl_lahir');
-            $table->string('no_HP');
-            $table->string('gol_darah');
-            $table->string('foto');
+            $table->text('alamat')->nullable();
+            $table->date('tgl_lahir')->nullable();
+            $table->string('no_HP')->nullable();
+            $table->string('gol_darah')->nullable();
+            $table->string('filename')->nullable();
+            $table->string('path')->nullable();
             $table->enum('role',['jemaat','pengurus','pendeta']);
             $table->softDeletes();
             $table->rememberToken();

@@ -36,10 +36,10 @@
   }
 </style>
 
-<div class="container mx-auto px-4 py-6 bg-black text-white">
+<div class="flex flex-col justify-center items-center bg-black text-white">
     {{-- Error Message --}}
     @if ($errors->any())
-        <div class="pt-3">
+        <div class="pt-3 w-full max-w-xl">
             <div class="alert alert-danger bg-red-600 text-white p-4 rounded shadow">
                 <ul class="list-disc list-inside">
                     @foreach ($errors->all() as $item)
@@ -52,25 +52,44 @@
 
     {{-- Success Message --}}
     @if (session()->has('message'))
-        <div class="pt-3">
+        <div class="pt-3 w-full max-w-xl">
             <div id="flash-message" class="bg-green-600 text-white p-4 rounded shadow">
                 {{ session('message') }}
             </div>
         </div>
     @endif
 
+    <div class="w-full max-w-3xl p-8 rounded-lg" style="background: rgba(0,0,0,0.8);">
+        <img class="mx-auto h-56 w-auto rounded-full mb-6" src="..\logoplc.png" alt="Your Company">
+        <section class="hero" id="home">
+            <div class="mask-container">
+            <main class="content">
+                <h1 class="text-4xl text-purple-300 text-center font-serif font-normal mb-2" style="text-shadow: 0 0 5px #D8B4FE, 0 0 10px #D8B4FE, 0 0 20px #A855F7;">
+                    WELCOME
+                </h1>
+                <marquee behavior="scroll" direction="left" scrollamount="5">
+                    <p class="text-white mix-blend-difference font-serif font-normal text-justify text-base">
+                        Dan orang-orang bijaksana akan bercahaya seperti cahaya cakrawala dan yang telah menuntun banyak orang kepada kebenaran seperti bintang-bintang tetap untuk selama-lamanya 
+                        <strong class="text-white shadow-[0_0_20px_white]">-- Daniel 12 : 3 --</strong>
+                    </p>
+                </marquee>
+            </main>
+            </div>
+        </section>
+    </div>
     <!-- START FORM -->
-    <div class="my-6 p-6 rounded neon-glow transition">
+    <!-- <div class="my-6 p-6 rounded neon-glow transition"> -->
+    <div class=" w-full max-w-3xl p-6 rounded-2xl neon-glow transition">
         <form id = "daftar"  action="/Daftar" method="post" class="space-y-6" enctype="multipart/form-data">
             @csrf
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class=" w-full max-3-3xl grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Kolom Kiri -->
                 <div class="space-y-4">
                     {{-- Nama --}}
                     <div>
                         <label for="name" class="block mb-1 text-white">Nama</label>
                         <input type="text" id="name" name="name"
-                            class="w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition" />
+                            class=" w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition" />
                     </div>
 
                     {{-- Tanggal Lahir --}}
@@ -111,14 +130,14 @@
                     <div>
                         <label for="foto" class="block mb-1 text-white">Foto</label>
                         <input type="file" id="foto" name="foto"
-                            class="form-control w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition" />
+                            class="form-control w-full px-4 py-2 bg-gray-600 border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition" />
                     </div>
                     
                 </div>
             </div>
 
             <!-- Tombol -->
-            <div class="mt-6 text-end">
+            <div class="mt-6">
                 <a href="/" class="inline-block px-4 py-2 text-sm font-medium text-white border border-white rounded hover:bg-white hover:text-black transition">
                     ← Kembali
                 </a>
@@ -130,9 +149,7 @@
         </form>
     </div>
     <!-- AKHIR FORM -->
-    
 </div>
-
 </x-layout>
 
 <script>
