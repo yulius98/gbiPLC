@@ -63,7 +63,6 @@ public $name, $email, $password, $alamat, $no_HP, $gol_darah, $filename = null, 
             'alamat' => $this-> alamat,
             'no_HP' => $this-> no_HP,
             'gol_darah' => $this-> gol_darah,
-            'filename' => $this-> filename,
             'role' => $this->role,
         ];
 
@@ -83,7 +82,7 @@ public $name, $email, $password, $alamat, $no_HP, $gol_darah, $filename = null, 
 
     public function edit($id)
     {    
-        $jemaat = User::where('tblbarangs.id', $id)
+        $jemaat = User::where('users.id', $id)
             ->first();
         //dd($barang);
 
@@ -117,9 +116,16 @@ public $name, $email, $password, $alamat, $no_HP, $gol_darah, $filename = null, 
         $jemaat = User::find($this->jemaat_id);
 
         // Simpan gambar jika ada upload baru
+        if($jemaat->filename != null) {
+            $gambarPath = storage_path('app/public/' . $jemaat->filename);
+            if (file_exists($gambarPath)) {
+                unlink($gambarPath);
+            }
+        }
+
         if ($this->filename) {
-            $path = $this->gambar->store('foto-jemaat','public'); // Simpan di storage/app/barang
-            $jemaat->gambar = $path;
+            $path = $this->filename->store('foto-jemaat','public'); // Simpan di storage/app/barang
+            $jemaat->filename = $path;
         }
 
         // Update field lainnya
@@ -159,7 +165,7 @@ public $name, $email, $password, $alamat, $no_HP, $gol_darah, $filename = null, 
         if ($jemaat) {
             
             // Hapus gambar dari storage
-            $gambarPath = storage_path('app/public' . $jemaat->filename);
+            $gambarPath = storage_path('app/public/' . $jemaat->filename);
             if (file_exists($gambarPath)) {
                 unlink($gambarPath);
             }

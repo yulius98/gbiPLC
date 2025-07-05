@@ -20,6 +20,7 @@ class RegController extends Controller
         
         //gunanakan jika pakai disave local
        $add_user->filename = $request->file('filename')->store('foto-jemaat', 'public');
+       
         
         //gunakan jika pakai laravel cloud/
         //$file = $request->file('file');
@@ -32,7 +33,8 @@ class RegController extends Controller
                 ->orderby('name','asc')
                 ->paginate(8);
 
-        return view('jemaat',['dtjemaat' => $dtjemaat]);
+        //return view('jemaat',['dtjemaat' => $dtjemaat]);
+       return view ('jemaat.daftar');
         
     }
 

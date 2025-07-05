@@ -1,3 +1,4 @@
+<x-nav-bar-daftar/>
 <x-layout>
 
 <style>
@@ -59,7 +60,7 @@
         </div>
     @endif
 
-    <div class="w-full max-w-3xl p-8 rounded-lg" style="background: rgba(0,0,0,0.8);">
+    <div class="w-full max-w-3xl p-20 rounded-lg" style="background: rgba(0,0,0,0.8);">
         <img class="mx-auto h-56 w-auto rounded-full mb-6" src="..\logoplc.png" alt="Your Company">
         <section class="hero" id="home">
             <div class="mask-container">
@@ -129,7 +130,7 @@
                     {{-- Foto --}}
                     <div>
                         <label for="foto" class="block mb-1 text-white">Foto</label>
-                        <input type="file" id="foto" name="foto"
+                        <input type="file" id="filename" name="filename"
                             class="form-control w-full px-4 py-2 bg-gray-600 border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition" />
                     </div>
                     

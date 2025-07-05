@@ -22,7 +22,7 @@ Route::get('/login', function () {
     return view('login');
 });
 
-Route::get('/admin', function () {
+Route::get('/pengurus/dashboard_admin/{name_admin}', function () {
     return view('pengurus.dashboard_admin');
 });
 

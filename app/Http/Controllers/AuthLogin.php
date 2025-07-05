@@ -26,7 +26,7 @@ class AuthLogin extends Controller
                                
 
             if ( $dtuser->role == "pengurus") {
-                return redirect('/Admin/'.$dtuser->name);
+                return redirect('/pengurus/dashboard_admin/'.$dtuser->name);
             }
                        
         }
