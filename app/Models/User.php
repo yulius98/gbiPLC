@@ -51,4 +51,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function kunjugans()
+    {
+        return $this->hasMany(TblKunjungan::class);
+    }
 }

@@ -6,13 +6,13 @@ use App\Http\Controllers\RegController;
 use App\Http\Controllers\JemaatController;
 
 
-//Route::get('/', function () {
-//    return view('welcome');
-//});
-
 Route::get('/', function () {
-    return view('jemaat.daftar');
+    return view('welcome');
 });
+
+//Route::get('/', function () {
+//    return view('jemaat.daftar');
+//});
 
 Route::get('/register', function () {
     return view('jemaat.daftar');

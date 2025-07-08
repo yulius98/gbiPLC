@@ -21,6 +21,8 @@ return new class extends Migration
             $table->date('tgl_lahir')->nullable();
             $table->string('no_HP')->nullable();
             $table->string('gol_darah')->nullable();
+            $table->string('instagram')->nullable();
+            $table->string('facebook')->nullable();
             $table->string('filename')->nullable();
             $table->string('path')->nullable();
             $table->enum('role',['jemaat','pengurus','pendeta']);

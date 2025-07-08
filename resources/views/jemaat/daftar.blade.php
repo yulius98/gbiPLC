@@ -51,6 +51,13 @@
         </div>
     @endif
 
+    @if ($errors->has('filename'))
+        <div class="text-red-500 text-sm mt-1">
+            {{ $errors->first('filename') }}
+        </div>
+    @endif
+
+
     {{-- Success Message --}}
     @if (session()->has('message'))
         <div class="pt-3 w-full max-w-xl">

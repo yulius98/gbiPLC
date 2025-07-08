@@ -10,6 +10,17 @@ class RegController extends Controller
 {
      public function RegJemaat(Request $request){
         //dd($request);
+
+        // Validasi request
+        $request->validate([
+        'filename' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // maksimal 2MB (2048 KB)
+        ], [
+        'filename.image' => 'File yang diunggah harus berupa gambar.',
+        'filename.mimes' => 'Format gambar harus jpeg, png, jpg, gif, atau svg.',
+        'filename.max' => 'Ukuran gambar tidak boleh lebih dari 2MB.',
+        ]);
+
+
         $add_user = new User(); 
         $add_user->name = $request->name;
         $add_user->tgl_lahir = $request->tgl_lahir;
@@ -19,8 +30,12 @@ class RegController extends Controller
         $add_user->role = 'jemaat';
         
         //gunanakan jika pakai disave local
-       $add_user->filename = $request->file('filename')->store('foto-jemaat', 'public');
-       
+        if ($request->hasFile('filename')) {
+                $add_user->filename = $request->file('filename')->store('foto-jemaat', 'public');
+        } else {
+                $add_user->filename = null;
+        }
+
         
         //gunakan jika pakai laravel cloud/
         //$file = $request->file('file');
