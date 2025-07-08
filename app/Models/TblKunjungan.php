@@ -15,7 +15,7 @@ class TblKunjungan extends Model
     protected $fillable = [
         'id_jemaat',
         'tglkunjungan',
-        'id_pengurus',
+        'nama_timbesuk',
         'filename',
         'path',
         'keterangan'
@@ -26,8 +26,5 @@ class TblKunjungan extends Model
         return $this->belongsTo(User::class,'id_jemaat');
     }
 
-    public function pengurus()
-    {
-        return $this->belongsTo(User::class,'id_pengurus');
-    }
+    
 }

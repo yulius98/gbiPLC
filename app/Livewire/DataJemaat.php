@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 class DataJemaat extends Component
 {
     use WithPagination, WithFileUploads; 
-public $name, $email, $password, $alamat, $no_HP, $gol_darah, $filename = null, $role;
+    public $name, $email, $password, $alamat, $no_HP, $gol_darah, $filename = null, $role;
     protected $paginationTheme = 'bootstrap';
     public $updatedata = false;
     public $jemaat_id;
@@ -44,15 +44,17 @@ public $name, $email, $password, $alamat, $no_HP, $gol_darah, $filename = null, 
         $rules = [
             'name' => 'required',
             'filename' => 'nullable|image|max:2048', // 1MB Max
-            
+            'role' => 'required|in:jemaat,pengurus,pendeta',
         ];
         $messages = [
             'name' => 'Nama tidak boleh kosong',
             'filename.image' => 'File harus berupa gambar',
             'filename.max' => 'Ukuran gambar tidak boleh lebih dari 2MB',
-            
+            'role.required' => 'Role harus diisi',
+            'role.in' => 'Role harus salah satu dari jemaat, pengurus, atau pendeta',
         ];
         $validated = $this->validate($rules, $messages);
+        
         
 
         // Simpan data ke database
@@ -103,13 +105,14 @@ public $name, $email, $password, $alamat, $no_HP, $gol_darah, $filename = null, 
         $rules = [
             'name' => 'required',
             'filename' => 'nullable|image|max:2048', // 1MB Max
-            
+            'role' => 'required|in:jemaat,pengurus,pendeta',
         ];
         $messages = [
             'name' => 'Nama tidak boleh kosong',
             'filename.image' => 'File harus berupa gambar',
             'filename.max' => 'Ukuran gambar tidak boleh lebih dari 2MB',
-            
+            'role.required' => 'Role harus diisi',
+            'role.in' => 'Role harus salah satu dari jemaat, pengurus, atau pendeta',
         ];
         $validated = $this->validate($rules, $messages);
         

@@ -29,58 +29,61 @@
                 <!-- Kolom Pertama -->
                 <div class="col-md-6">
                     <div class="mb-3 row">
-                        <label for="nama" class="col-sm-3 col-form-label">Nama</label>
+                        <label for="email" class="col-sm-3 col-form-label">Nama Jemaat</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="name" wire:model="name">
+                            <div class="d-flex gap-2">
+                                
+                                <!-- Dropdown jemaat -->
+                                <div class="dropdown flex-grow-1">
+                                    <button class="btn btn-outline-primary w-100 d-flex justify-between align-items-center" type="button"
+                                        id="dropdownJemaat" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <span class="me-auto">{{ $name ?? 'Pilih Jemaat' }}</span>
+                                        <span class="dropdown-toggle ps-2"></span>
+                                    </button>
+
+                                    <ul class="dropdown-menu w-100" aria-labelledby="dropdownJemaat">
+                                        @foreach ($dtjemaat as $item)
+                                            <li>
+                                                <a class="dropdown-item"
+                                                href="#"
+                                                wire:click.prevent="selectJemaat({{ $item->id }})">
+                                                    {{ $item->name}}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                
+                                </div>
+                            </div>
+                            <!-- Menampilkan ID kategori yang dipilih -->
+                            <input type="hidden" class="form-control mt-2" id="id_jemaat" wire:model="id_jemaat" readonly>
                         </div>
                     </div>
 
                     <div class="mb-3 row">
-                        <label for="email" class="col-sm-3 col-form-label">Email</label>
+                        <label for="tglkunjungan" class="col-sm-3 col-form-label">Tanggal Kunjungan</label>
                         <div class="col-sm-9">
-                            <input type="email" class="form-control" id="email" wire:model="email">
+                            <input type="date" class="form-control" id="tglkunjungan" wire:model="tglkunjungan">
                         </div>
                     </div>
 
                     <div class="mb-3 row">
-                        <label for="password" class="col-sm-3 col-form-label">Password</label>
-                        <div class="col-sm-9">
-                            <input type="password" class="form-control" id="password" wire:model="password">
+                        <label for="email" class="col-sm-3 col-form-label">Dikunjungi Oleh</label>
+                         <div class="col-sm-9">
+                            <textarea class="form-control" id="nama_timbesuk" wire:model="nama_timbesuk"></textarea>
                         </div>
                     </div>
 
                     <div class="mb-3 row">
-                        <label for="alamat" class="col-sm-3 col-form-label">Alamat</label>
+                        <label for="keterangan" class="col-sm-3 col-form-label">Keterangan</label>
                         <div class="col-sm-9">
-                            <textarea class="form-control" id="alamat" wire:model="alamat"></textarea>
+                            <textarea class="form-control" id="keterangan" wire:model="keterangan"></textarea>
                         </div>
                     </div>
-
-                    <div class="mb-3 row">
-                        <label for="no_HP" class="col-sm-3 col-form-label">No HP</label>
-                        <div class="col-sm-9">
-                            <input type="number" class="form-control" id="no_HP" wire:model="no_HP">
-                        </div>
-                    </div>
-
-                    <div class="mb-3 row">
-                        <label for="gol_darah" class="col-sm-3 col-form-label">Golongan Darah</label>
-                        <div class="col-sm-9">
-                            <select id="gol_darah" name="gol_darah"
-                                class="form-control"
-                                wire:model="gol_darah">
-                                <option value="">-- Pilih Golongan Darah --</option>
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="AB">AB</option>
-                                <option value="O">O</option>
-                            </select>
-                        </div>
-                    </div>
-                    
+                
                     <div>
                         <div class="form-group row">
-                            <label for="filename" class="col-sm-3 col-form-label">Foto</label>
+                            <label for="filename" class="col-sm-3 col-form-label">Foto Kunjungan</label>
                             <div class="col-sm-9">
                                 <input 
                                     type="file" 
@@ -107,19 +110,7 @@
                         </div>
                     </div>
 
-                    <div class="mb-3 row">
-                        <label for="role" class="col-sm-3 col-form-label">Role</label>
-                        <div class="col-sm-9">
-                            <select id="role" name="role"
-                                class="form-control"
-                                wire:model="role">
-                                <option value="">-- Pilih Role --</option>
-                                <option value="jemaat">Jemaat</option>
-                                <option value="pengurus">Pengurus</option>
-                                <option value="pendeta">Pendeta</option>
-                            </select>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
     
@@ -147,35 +138,32 @@
         <div class="pb-3 pt-3">
             <input type="text" class="form-control mb-3 w-25" placeholder="Search..." wire:model.live="cari">
         </div>
-        {{ $dtjemaat->links() }}
+        {{ $dtkunjungan->links() }}
         <table class="table table-striped table-sortable ">
             <thead>
                 <tr>
                     <th class="col-md-1">No</th>
-                    <th class="col-md-4 sort" @if ($sortcolom == 'name') {{ $sortdirection }} @endif wire:click="sort('name')">Nama</th>
-                    <th class="col-md-3 sort" >Email</th>
-                    <th class="col-md-2 sort" >Alamat</th>
-                    <th class="col-md-2 sort" >No HP</th>
-                    <th class="col-md-2 sort" >Golongan Darah</th>
-<th class="col-md-2 sort" >Jabatan</th>
-</tr>
-                    <th class="col-md-2 sort" >Foto</th>
+                    <th class="col-md-4 sort" @if ($sortcolom == 'name') {{ $sortdirection }} @endif wire:click="sort('name')">Nama Jemaat</th>
+                    <th class="col-md-3 sort" >Tanggal Kunjungan</th>
+                    <th class="col-md-2 sort" >Nama Pembesuk</th>
+                    <th class="col-md-2 sort" >Keterangan</th>
+                    <th class="col-md-2 sort" >Foto Kunjungan</th>
                     <th class="col-md-2">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 
                 
-                @foreach ($dtjemaat as $key => $value)
+                @foreach ($dtkunjungan as $key => $value)
                 <tr>
-                    <td>{{ $dtjemaat->firstItem() + $key }}</td>
+                    <td>{{ $dtkunjungan->firstItem() + $key }}</td>
                     <td>{{ $value->name  }}</td>
-                    <td>{{ $value->email }}</td>
-                    <td>{{ $value->alamat }}</td>
-                    <td>{{ $value->no_HP }}</td>
-                    <td>{{ $value->gol_darah }}</td>
-<td><img src="{{ asset('storage/' . $value->filename) }}" alt="Foto" class="p-0.5 object-contain rounded-full " 
+                    <td>{{ $value->tglkunjungan }}</td>
+                    <td>{{ $value->nama_timbesuk  }}</td>
+                    <td>{{ $value->keterangan }}</td>
+                    <td><img src="{{ asset('storage/' . $value->filename) }}" alt="Foto" class="p-0.5 object-contain rounded-full " 
                                 style="width: 60px; height: 60px;"></td>
+                    <td>{{ $value->keterangan }}</td>
                     <td>
                         <div class="d-flex gap-1">
                             <a wire:click="show_detail({{ $value->id }})" class="btn btn-warning btn-sm">Detail</a>
@@ -215,3 +203,4 @@
 
 
     
+

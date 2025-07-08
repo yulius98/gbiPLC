@@ -26,6 +26,14 @@ Route::get('/pengurus/dashboard_admin/{name_admin}', function () {
     return view('pengurus.dashboard_admin');
 });
 
+Route::get('/pengurus/pendaftara', function () {
+    return view('pengurus.pendaftaran');
+});
+
+Route::get('/pengurus/kunjungan', function () {
+    return view('pengurus.data_kunjungan_jemaat');
+});
+
 Route::get('/data-jemaat',[JemaatController::class,'Data_Jemaat']);
 Route::get('/Daftar', [RegController::class, 'showJemaat']);
 

@@ -24,7 +24,10 @@
                 <main>
                     <div id="content-area" class="mt-5 container">
                         
-                        
+                        <div class="mb-5 p-4 bg-white rounded shadow-2xl shadow-black">
+                            <h2 class="h4 mb-3 text-dark">Data Jemaat</h2>
+                            @livewire('data-jemaat')
+                        </div>
                        
                     </div>
                 </main>

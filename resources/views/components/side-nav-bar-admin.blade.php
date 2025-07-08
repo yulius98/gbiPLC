@@ -14,7 +14,7 @@
                 </a>
                 <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" href="*">Registrasi</a>
+                        <a class="nav-link" href="/pengurus/pendaftara">Registrasi</a>
                     </nav>
                 </div>
                 
@@ -25,7 +25,7 @@
                 </a>
                 <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" href="*">Data Kunjungan Jemaat</a>
+                        <a class="nav-link" href="/pengurus/kunjungan">Data Kunjungan Jemaat</a>
                     </nav>
                 </div>
                 

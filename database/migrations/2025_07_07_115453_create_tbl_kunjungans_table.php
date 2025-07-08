@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('id_jemaat')->constrained('users')->onDelete('cascade');
             $table->date('tglkunjungan');
-            $table->foreignId('id_pengurus')->constrained('users')->onDelete('cascade');
+            $table->text('nama_timbesuk');
             $table->string('filename')->nullable();
             $table->string('path')->nullable();
-            $table->text('keterangan');
+            $table->text('keterangan')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
