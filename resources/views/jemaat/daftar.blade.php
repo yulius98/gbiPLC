@@ -33,11 +33,34 @@
   .neon-button:hover {
     background-color: black; /* Tailwind blue-600 */
     animation: neonPulse 1s infinite;
-    
+  }
+
+  /* Additional styles for camera capture */
+  #video {
+    width: 100%;
+    max-width: 320px;
+    border: 2px solid white;
+    border-radius: 8px;
+  }
+
+  #canvas {
+    display: none;
+    width: 100%;
+    max-width: 320px;
+    border: 2px solid white;
+    border-radius: 8px;
+  }
+
+  #camera-controls {
+    margin-top: 10px;
+  }
+
+  #camera-controls button {
+    margin-right: 10px;
   }
 </style>
 
-<div class="flex flex-col justify-center items-center bg-black text-white">
+<div class="flex flex-col justify-center items-center bg-black text-white pt-16">
     {{-- Error Message --}}
     @if ($errors->any())
         <div class="pt-3 w-full max-w-xl">
@@ -86,9 +109,8 @@
         </section>
     </div>
     <!-- START FORM -->
-    <!-- <div class="my-6 p-6 rounded neon-glow transition"> -->
     <div class=" w-full max-w-3xl p-6 rounded-2xl neon-glow transition">
-        <form id = "daftar"  action="/Daftar" method="post" class="space-y-6" enctype="multipart/form-data">
+        <form id="daftar" action="/Daftar" method="post" class="space-y-6" enctype="multipart/form-data" onsubmit="return preparePhotoForSubmit()">
             @csrf
             <div class=" w-full max-3-3xl grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Kolom Kiri -->
@@ -105,6 +127,20 @@
                         <label for="tgl_lahir" class="block mb-1 text-white">Tanggal Lahir</label>
                         <input type="date" id="tgl_lahir" name="tgl_lahir" 
                             class="form-control w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition" />
+                    </div>
+
+                    {{-- Alamat --}}
+                    <div>
+                        <label for="alamat" class="block mb-1 text-white">Alamat</label>
+                        <input type="text" id="alamat" name="alamat"
+                            class="w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition" />
+                    </div>
+
+                    {{-- Email --}}
+                    <div>
+                        <label for="email" class="block mb-1 text-white">Email</label>
+                        <input type="email" id="email" name="email"
+                            class="w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition" />
                     </div>
 
                     {{-- No HP --}}
@@ -127,18 +163,37 @@
                         </select>
                     </div>
 
-                    {{-- Alamat --}}
+                    
+
+                    {{-- Alamat Facebook --}}
                     <div>
-                        <label for="alamat" class="block mb-1 text-white">Alamat</label>
-                        <input type="text" id="alamat" name="alamat"
+                        <label for="facebook" class="block mb-1 text-white">Facebook</label>
+                        <input type="text" id="facebook" name="facebook"
+                            class="w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition" />
+                    </div>
+
+                    {{-- Alamat Instagram --}}
+                    <div>
+                        <label for="instagram" class="block mb-1 text-white">Instagram</label>
+                        <input type="text" id="instagram" name="instagram"
                             class="w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition" />
                     </div>
 
                     {{-- Foto --}}
                     <div>
                         <label for="foto" class="block mb-1 text-white">Foto</label>
-                        <input type="file" id="filename" name="filename"
-                            class="form-control w-full px-4 py-2 bg-gray-600 border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition" />
+                        <!-- Existing file input hidden, replaced by camera capture -->
+                        <input type="file" id="filename" name="filename" accept="image/*" capture="environment" style="display:none;" />
+                        <!-- Video preview for live camera -->
+                        <video id="video" autoplay playsinline></video>
+                        <!-- Canvas to capture photo -->
+                        <canvas id="canvas"></canvas>
+                        <!-- Camera control buttons -->
+                        <div id="camera-controls">
+                            <button type="button" id="start-camera" class="neon-button px-4 py-2 rounded">Mulai Kamera</button>
+                            <button type="button" id="capture-photo" class="neon-button px-4 py-2 rounded" disabled>Ambil Foto</button>
+                            <button type="button" id="retake-photo" class="neon-button px-4 py-2 rounded" disabled>Ulangi Foto</button>
+                        </div>
                     </div>
                     
                 </div>
@@ -161,25 +216,107 @@
 </x-layout>
 
 <script>
-    // Function to check if the image input is empty
-    function validateForm() {
-        const imageInput = document.getElementById('foto');
-        
-        if (imageInput.files.length === 0) {
-            alert('Silakan pilih foto');
-        } else {
-            // Submit the form if the image is selected
-            
-            document.getElementById('daftar').submit();
-        }
-    }
-</script>
+    // Camera capture script
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const startCameraButton = document.getElementById('start-camera');
+    const capturePhotoButton = document.getElementById('capture-photo');
+    const retakePhotoButton = document.getElementById('retake-photo');
+    const filenameInput = document.getElementById('filename');
+    let stream;
 
-<script>
-    function previewImage(event) {
-        const imagePreview = document.getElementById('image-preview');
-        imagePreview.src = URL.createObjectURL(event.target.files[0]);
-        imagePreview.classList.remove('hidden');
+startCameraButton.addEventListener('click', async () => {
+        try {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                alert('Browser Anda tidak mendukung akses kamera.');
+                return;
+            }
+            stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+            video.srcObject = stream;
+            startCameraButton.disabled = true;
+            capturePhotoButton.disabled = false;
+            retakePhotoButton.disabled = true;
+            canvas.style.display = 'none';
+            video.style.display = 'block';
+            // Clear previous file input value
+            filenameInput.value = '';
+        } catch (err) {
+            alert('Tidak dapat mengakses kamera: ' + err.message);
+        }
+    });
+
+    // Helper function to resize and compress image to be under 1MB
+    async function resizeAndCompressImage(canvas) {
+        const MAX_SIZE = 1024; // max width or height in pixels
+        const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB in bytes
+        let width = canvas.width;
+        let height = canvas.height;
+
+        // Calculate new dimensions while maintaining aspect ratio
+        if (width > height && width > MAX_SIZE) {
+            height = Math.round(height * (MAX_SIZE / width));
+            width = MAX_SIZE;
+        } else if (height > width && height > MAX_SIZE) {
+            width = Math.round(width * (MAX_SIZE / height));
+            height = MAX_SIZE;
+        } else if (width === height && width > MAX_SIZE) {
+            width = MAX_SIZE;
+            height = MAX_SIZE;
+        }
+
+        // Create an offscreen canvas for resizing
+        const offscreenCanvas = document.createElement('canvas');
+        offscreenCanvas.width = width;
+        offscreenCanvas.height = height;
+        const ctx = offscreenCanvas.getContext('2d');
+        ctx.drawImage(canvas, 0, 0, width, height);
+
+        // Compress image by adjusting quality until under 1MB
+        let quality = 0.9;
+        let blob = await new Promise(resolve => offscreenCanvas.toBlob(resolve, 'image/jpeg', quality));
+        while (blob.size > MAX_FILE_SIZE && quality > 0.1) {
+            quality -= 0.1;
+            blob = await new Promise(resolve => offscreenCanvas.toBlob(resolve, 'image/jpeg', quality));
+        }
+        return blob;
+    }
+
+    capturePhotoButton.addEventListener('click', async () => {
+        const context = canvas.getContext('2d');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        canvas.style.display = 'block';
+        video.style.display = 'none';
+        capturePhotoButton.disabled = true;
+        retakePhotoButton.disabled = false;
+        // Stop the camera stream
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
+        // Resize and compress image to be under 1MB
+        const compressedBlob = await resizeAndCompressImage(canvas);
+        const file = new File([compressedBlob], 'captured_photo.jpg', { type: 'image/jpeg' });
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        filenameInput.files = dataTransfer.files;
+    });
+
+    retakePhotoButton.addEventListener('click', () => {
+        // Restart camera
+        startCameraButton.disabled = false;
+        capturePhotoButton.disabled = true;
+        retakePhotoButton.disabled = true;
+        canvas.style.display = 'none';
+        video.style.display = 'block';
+        filenameInput.value = '';
+    });
+
+    function preparePhotoForSubmit() {
+        if (!filenameInput.files.length) {
+            alert('Silakan ambil foto terlebih dahulu.');
+            return false;
+        }
+        return true;
     }
 </script>
-    

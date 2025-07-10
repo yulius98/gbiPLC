@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+
+
+
 
 class RegController extends Controller
 {
@@ -13,13 +15,14 @@ class RegController extends Controller
 
         // Validasi request
         $request->validate([
-        'filename' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // maksimal 2MB (2048 KB)
+        'filename' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:1024', // maksimal 1MB (1024 KB)
         ], [
         'filename.image' => 'File yang diunggah harus berupa gambar.',
         'filename.mimes' => 'Format gambar harus jpeg, png, jpg, gif, atau svg.',
-        'filename.max' => 'Ukuran gambar tidak boleh lebih dari 2MB.',
+        'filename.max' => 'Ukuran gambar tidak boleh lebih dari 1MB.',
         ]);
 
+        
 
         $add_user = new User(); 
         $add_user->name = $request->name;
@@ -27,11 +30,19 @@ class RegController extends Controller
         $add_user->no_HP = $request->no_HP;
         $add_user->gol_darah = $request->gol_darah;
         $add_user->alamat = $request->alamat;
+        $add_user->email = $request->email;
+        $add_user->facebook = $request->facebook;
+        $add_user->instagram = $request->instagram;
         $add_user->role = 'jemaat';
         
         //gunanakan jika pakai disave local
         if ($request->hasFile('filename')) {
-                $add_user->filename = $request->file('filename')->store('foto-jemaat', 'public');
+                $file = $request->file('filename');
+                // Sanitize the name input to create a safe filename
+                $name = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->name);
+                $extension = $file->getClientOriginalExtension();
+                $filename = $name . '.' . $extension;
+                $add_user->filename = $file->storeAs('foto-jemaat', $filename, 'public');
         } else {
                 $add_user->filename = null;
         }

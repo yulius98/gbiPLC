@@ -25,6 +25,9 @@ class User extends Authenticatable
         'no_HP',
         'gol_darah',
         'filename',
+        'facebook',
+        'instagram',
+        'tgl_lahir',
         'path',
         'role',
     ];

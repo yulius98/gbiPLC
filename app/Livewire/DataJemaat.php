@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 class DataJemaat extends Component
 {
     use WithPagination, WithFileUploads; 
-    public $name, $email, $password, $alamat, $no_HP, $gol_darah, $filename = null, $role;
+    public $name, $email, $password, $alamat, $no_HP, $gol_darah, $filename = null, $role, $tgl_lahir, $facebook, $instagram;
     protected $paginationTheme = 'bootstrap';
     public $updatedata = false;
     public $jemaat_id;
@@ -33,7 +33,10 @@ class DataJemaat extends Component
             $this->no_HP = $jemaat->no_HP;
             $this->gol_darah = $jemaat->gol_darah;
             $this->filename = $jemaat->filename;
-            
+            $this->role = $jemaat->role;
+            $this->tgl_lahir = $jemaat->tgl_lahir;
+            $this->facebook = $jemaat->facebook;
+            $this->instagram = $jemaat->instagram;
             $this->updatedata = true;
             $this->jemaat_id = $id;
        
@@ -43,13 +46,13 @@ class DataJemaat extends Component
     {
         $rules = [
             'name' => 'required',
-            'filename' => 'nullable|image|max:2048', // 1MB Max
+            'filename' => 'nullable|image|max:1024', // 1MB Max
             'role' => 'required|in:jemaat,pengurus,pendeta',
         ];
         $messages = [
             'name' => 'Nama tidak boleh kosong',
             'filename.image' => 'File harus berupa gambar',
-            'filename.max' => 'Ukuran gambar tidak boleh lebih dari 2MB',
+            'filename.max' => 'Ukuran gambar tidak boleh lebih dari 1MB',
             'role.required' => 'Role harus diisi',
             'role.in' => 'Role harus salah satu dari jemaat, pengurus, atau pendeta',
         ];
@@ -65,12 +68,22 @@ class DataJemaat extends Component
             'alamat' => $this-> alamat,
             'no_HP' => $this-> no_HP,
             'gol_darah' => $this-> gol_darah,
+            'tgl_lahir' => $this->tgl_lahir,
+            'facebook' => $this->facebook,
+            'instagram' => $this->instagram,
             'role' => $this->role,
         ];
 
         // Cek apakah ada gambar yang diupload
         if ($this->filename != null) {
-            $data['filename'] = $this->filename->store('foto-jemaat', 'public');
+
+            $file = $this->filename; // Menggunakan Livewire file upload
+            // Sanitize the name input to create a safe filename
+            $name = preg_replace('/[^A-Za-z0-9_\-]/', '_', $this->name);
+            $extension = $file->getClientOriginalExtension();
+            $filename = $name . '.' . $extension;
+            $data['filename'] = $file->storeAs('foto-jemaat', $filename, 'public');
+
         } else {
             $data['filename'] = null; // atau bisa dihapus jika tidak ingin menyimpan key 'gambar' sama sekali
         }
@@ -95,6 +108,9 @@ class DataJemaat extends Component
         $this-> no_HP = $jemaat-> no_HP;
         $this-> gol_darah = $jemaat-> gol_darah;
         $this-> filename = $jemaat-> filename;
+        $this->tgl_lahir = $jemaat->tgl_lahir;
+        $this->facebook = $jemaat->facebook;
+        $this->instagram = $jemaat->instagram;
         $this-> role = $jemaat-> role;     
         $this->updatedata = true;
         $this->jemaat_id = $id;
@@ -127,8 +143,14 @@ class DataJemaat extends Component
         }
 
         if ($this->filename) {
-            $path = $this->filename->store('foto-jemaat','public'); // Simpan di storage/app/barang
-            $jemaat->filename = $path;
+
+            $file = $this->filename; // Menggunakan Livewire file upload
+            // Sanitize the name input to create a safe filename
+            $name = preg_replace('/[^A-Za-z0-9_\-]/', '_', $this->name);
+            $extension = $file->getClientOriginalExtension();
+            $filename = $name . '.' . $extension;
+            $jemaat['filename'] = $file->storeAs('foto-jemaat', $filename, 'public');
+            
         }
 
         // Update field lainnya
@@ -138,6 +160,9 @@ class DataJemaat extends Component
         $jemaat-> alamat = $this-> alamat;
         $jemaat-> no_HP = $this-> no_HP;
         $jemaat-> gol_darah = $this-> gol_darah;
+        $jemaat-> tgl_lahir = $this->tgl_lahir;
+        $jemaat-> facebook = $this->facebook;
+        $jemaat-> instagram = $this->instagram;
         $jemaat-> role = $this-> role;
         $jemaat-> save();
 
@@ -155,6 +180,9 @@ class DataJemaat extends Component
         $this-> gol_darah = '';
         $this-> role = '';
         $this-> filename = '';
+        $this->tgl_lahir = '';
+        $this->facebook = '';
+        $this->instagram = '';
         $this->cari = '';
         
         $this->updatedata = false;

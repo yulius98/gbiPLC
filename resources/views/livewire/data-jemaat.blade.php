@@ -36,6 +36,13 @@
                     </div>
 
                     <div class="mb-3 row">
+                        <label for="tgl_lahir" class="col-sm-3 col-form-label">Tanggal Lahir</label>
+                        <div class="col-sm-9">
+                            <input type="date" class="form-control" id="tgl_lahir" wire:model="tgl_lahir">
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
                         <label for="email" class="col-sm-3 col-form-label">Email</label>
                         <div class="col-sm-9">
                             <input type="email" class="form-control" id="email" wire:model="email">
@@ -75,6 +82,20 @@
                                 <option value="AB">AB</option>
                                 <option value="O">O</option>
                             </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label for="facebook" class="col-sm-3 col-form-label">Facebook</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="facebook" wire:model="facebook">
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label for="instagram" class="col-sm-3 col-form-label">Instagram</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="instagram" wire:model="instagram">
                         </div>
                     </div>
                     

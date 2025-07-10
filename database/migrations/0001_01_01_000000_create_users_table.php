@@ -26,6 +26,8 @@ return new class extends Migration
             $table->string('filename')->nullable();
             $table->string('path')->nullable();
             $table->enum('role',['jemaat','pengurus','pendeta']);
+            $table->string('facebook')->nullable(); // Added facebook field
+            $table->string('instagram')->nullable();
             $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
