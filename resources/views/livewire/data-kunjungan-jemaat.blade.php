@@ -25,41 +25,46 @@
     <!-- START FORM -->
     <div class="my-3 p-3 bg-body rounded ">        
         <form>
+            <div class="my-3 p-3 bg-body rounded shadow-sm">
+                <h4 class="font-medium">Data Jemaat</h4>
+            <div class="pb-3 pt-3">
+                <input type="text" class="form-control mb-3 w-25" placeholder="Search..." wire:model.live="cari">
+            </div>
+            <table class="table table-striped table-sortable ">
+                <thead>
+                    <tr>
+                        <th class="col-md-1">No</th>
+                        <th class="col-md-4 sort" >Nama Jemaat</th>
+                        <th class="col-md-4 sort" >Alamat</th>
+                        <th class="col-md-2">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($dtjemaat as $key => $value)
+                    <tr>
+                        <td>{{ $dtjemaat->firstItem() + $key }}</td>
+                        <td>{{ $value->name  }}</td>
+                        <td>{{ $value->alamat }}</td>
+                        <td>
+                            <div class="d-flex gap-1">
+                                <a wire:click="kunjungi({{ $value->id }})" class="btn btn-warning btn-sm">Kunjungi</a>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
             <div class="row">
                 <!-- Kolom Pertama -->
                 <div class="col-md-6">
                     <div class="mb-3 row">
-                        <label for="email" class="col-sm-3 col-form-label">Nama Jemaat</label>
+                        <label for="nama" class="col-sm-3 col-form-label">Nama</label>
                         <div class="col-sm-9">
-                            <div class="d-flex gap-2">
-                                
-                                <!-- Dropdown jemaat -->
-                                <div class="dropdown flex-grow-1">
-                                    <button class="btn btn-outline-primary w-100 d-flex justify-between align-items-center" type="button"
-                                        id="dropdownJemaat" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <span class="me-auto">{{ $name ?? 'Pilih Jemaat' }}</span>
-                                        <span class="dropdown-toggle ps-2"></span>
-                                    </button>
-
-                                    <ul class="dropdown-menu w-100" aria-labelledby="dropdownJemaat">
-                                        @foreach ($dtjemaat as $item)
-                                            <li>
-                                                <a class="dropdown-item"
-                                                href="#"
-                                                wire:click.prevent="selectJemaat({{ $item->id }})">
-                                                    {{ $item->name}}
-                                                </a>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                
-                                </div>
-                            </div>
-                            <!-- Menampilkan ID kategori yang dipilih -->
-                            <input type="hidden" class="form-control mt-2" id="id_jemaat" wire:model="id_jemaat" readonly>
+                            <input type="text" class="form-control" id="name" wire:model="name" readonly>
+                            <input type="hidden" class="form-control" id="id_jemaat" wire:model="id_jemaat">
                         </div>
                     </div>
-
+                    
                     <div class="mb-3 row">
                         <label for="tglkunjungan" class="col-sm-3 col-form-label">Tanggal Kunjungan</label>
                         <div class="col-sm-9">

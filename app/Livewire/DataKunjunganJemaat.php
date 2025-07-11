@@ -189,6 +189,18 @@ class DataKunjunganJemaat extends Component
         //dd($this->sortdirection);
         
     }
+
+    public function kunjungi($id)
+    {
+        $kunjungan = User::find($id);
+        if ($kunjungan) {
+            $this->id_jemaat = $kunjungan->id;
+            $this->name = $kunjungan->name;
+        } else {
+            session()->flash('message', 'Data Jemaat tidak ditemukan.');
+        }
+    }
+
     public function render()
     {
                          
@@ -209,7 +221,9 @@ class DataKunjunganJemaat extends Component
             ->get();
 
         $dtjemaat = User::where('users.role','=','jemaat')
-            ->get();   
+            ->where('name', 'like', '%' . $this->cari . '%')
+            ->orderBy('name', 'asc')
+            ->paginate(1);   
             
         //dd($dtkunjungan);    
 

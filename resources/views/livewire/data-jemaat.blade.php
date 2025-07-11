@@ -178,8 +178,7 @@
                     <th class="col-md-2 sort" >Alamat</th>
                     <th class="col-md-2 sort" >No HP</th>
                     <th class="col-md-2 sort" >Golongan Darah</th>
-<th class="col-md-2 sort" >Jabatan</th>
-</tr>
+                    <th class="col-md-2 sort" >Jabatan</th>
                     <th class="col-md-2 sort" >Foto</th>
                     <th class="col-md-2">Aksi</th>
                 </tr>
@@ -195,7 +194,8 @@
                     <td>{{ $value->alamat }}</td>
                     <td>{{ $value->no_HP }}</td>
                     <td>{{ $value->gol_darah }}</td>
-<td><img src="{{ asset('storage/' . $value->filename) }}" alt="Foto" class="p-0.5 object-contain rounded-full " 
+                    <td>{{ $value->role }}</td>
+                    <td><img src="{{ asset('storage/' . $value->filename) }}" alt="Foto" class="p-0.5 object-contain rounded-full " 
                                 style="width: 60px; height: 60px;"></td>
                     <td>
                         <div class="d-flex gap-1">

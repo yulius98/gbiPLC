@@ -26,6 +26,10 @@ Route::get('/pengurus/dashboard_admin/{name_admin}', function () {
     return view('pengurus.dashboard_admin');
 });
 
+Route::get('/pengurus/dashboard_timbesuk', function () {
+    return view('pengurus.dashboard_timbesuk');
+});
+
 Route::get('/pengurus/pendaftara', function () {
     return view('pengurus.pendaftaran');
 });

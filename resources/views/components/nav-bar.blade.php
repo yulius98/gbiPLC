@@ -3,7 +3,7 @@
       <div class="flex h-16 items-center justify-between">
         <div class="flex items-center">
           <div class="shrink-0">
-            <img class="h-14 w-auto rounded-lg shadow-md object-cover my-1 hover:opacity-90" src="..\logoplc.png" alt="GBI PLC">
+            <img class="h-14 w-auto rounded-full shadow-md object-cover my-1 hover:opacity-90" src="..\logoplc.png" alt="GBI PLC">
           </div>
           
           <div class="hidden md:block">
