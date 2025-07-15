@@ -183,7 +183,7 @@
                     <div>
                         <label for="foto" class="block mb-1 text-white">Foto</label>
                         <!-- Existing file input hidden, replaced by camera capture -->
-                        <input type="file" id="filename" name="filename" accept="image/*" capture="environment" style="display:none;" />
+                        <input type="file" id="filename" name="filename" accept="image/*" capture="user" style="display:none;" />
                         <!-- Video preview for live camera -->
                         <video id="video" autoplay playsinline></video>
                         <!-- Canvas to capture photo -->
@@ -231,7 +231,7 @@ startCameraButton.addEventListener('click', async () => {
                 alert('Browser Anda tidak mendukung akses kamera.');
                 return;
             }
-            stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+            stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
             video.srcObject = stream;
             startCameraButton.disabled = true;
             capturePhotoButton.disabled = false;

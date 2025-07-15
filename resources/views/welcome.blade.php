@@ -88,7 +88,7 @@
     </script>
 
     <!-- Suara Gembala -->
-    <div style="margin-top: 4rem;" class="border-t-5 border-gray-800">
+    <div style="margin-top: 4rem;" class="border-t-5 border-gray-200">
         <div>
             @if ($dtpasstornote)
                 <div>
@@ -97,7 +97,7 @@
                 <div class=" border-t border-gray-200 pt-50 sm:mt-10 sm:pt-16 lg:mx-0">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
                         <div class="flex justify-center px-1 lg:justify-start lg:px-0 sm:mt-10">
-                            <img src="{{ asset('storage/'. $dtpasstornote->filename) }}" alt="foto" class=" w-auto rounded-3xl bg-gray-50" />
+                            <img src="{{ asset('storage/'. $dtpasstornote->filename) }}" alt="foto" class=" w-auto rounded-3xl bg-gray-50 sm:rounded-3xl" />
                         </div>
                         <div class="flex flex-col justify-center space-y-2">
                             <time class="text-gray-200 text-sm" datetime="{{ \Carbon\Carbon::parse($dtpasstornote->tgl_note)->format('Y-m-d') }}">

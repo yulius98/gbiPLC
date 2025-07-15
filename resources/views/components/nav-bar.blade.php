@@ -2,8 +2,9 @@
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="flex h-16 items-center justify-between">
         <div class="flex items-center">
-          <div class="shrink-0">
+          <div class="shrink-0 flex items-center">
             <img class="h-14 w-auto rounded-full shadow-md object-cover my-1 hover:opacity-90" src="..\logoplc.png" alt="GBI PLC">
+            <h2 class="text-white text-lg font-semibold ml-3">GBI Philadelphia Life Center</h2>
           </div>
           
           <div class="hidden md:block">
@@ -42,7 +43,7 @@
     <div x-show="isOpen" class="md:hidden" id="mobile-menu">
       <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
             <a href="/" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Home</a>
-            <a href="/data-jemaat" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Jemaat</a>
+            <a href="#" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Event</a>
             
       </div>
       <div class="border-t border-gray-700 pt-4 pb-3">
