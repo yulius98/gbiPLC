@@ -13,7 +13,8 @@ class TblPastorNote extends Model
     protected $table = 'tbl_pastor_notes';
     protected $fillable =[
         'tgl_note',
-        'judul_note',
-        'note'
+        'note',
+        'filename',
+        'path'
     ];
 }

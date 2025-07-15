@@ -19,7 +19,7 @@ class DataJemaat extends Component
     public $sortcolom ='name'; 
     public $sortdirection = 'asc';
     
-     public function show_detail($id)
+    public function show_detail($id)
     {
         
         $jemaat = User::where('users.id', $id)

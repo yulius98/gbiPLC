@@ -1,4 +1,9 @@
 @php use Illuminate\Support\Facades\Storage; @endphp
+@php
+    use Carbon\Carbon;
+    $namaBulan = Carbon::now()->translatedFormat('F');
+@endphp
+
 
 <div class="container">
     @if ($errors->any())
@@ -44,7 +49,7 @@
         
         <div class="col-xl-3 col-md-6">
             <div class="card bg-primary text-white mb-4">
-                <div class="card-body">Kunjungan Bulan ini</div>
+                <div class="card-body">Kunjungan Bulan {{ $namaBulan }}</div>
                 <div class="card-footer d-flex align-items-center justify-content-between">
                     <div class="small text-white">Total kunjungan bulan ini : {{ $dtkunjungan_bln_ini }}</div>            
                 </div>
@@ -91,7 +96,7 @@
         <div class="pb-3 pt-3">
             <input type="text" class="form-control mb-3 w-25" placeholder="Search..." wire:model.live="cari">
         </div>
-        {{ $dtjemaat_belumpernah_kunjungan->links() }}
+        {{ $jemaat_belumpernah_kunjungan->links() }}
         <table class="table table-striped table-sortable ">
             <thead>
                 <tr>
@@ -104,9 +109,9 @@
             <tbody>
                 
                 
-            @foreach ($dtjemaat_belumpernah_kunjungan as $key => $value)
+            @foreach ($jemaat_belumpernah_kunjungan as $key => $value)
                 <tr>
-                    <td>{{ $dtjemaat_belumpernah_kunjungan->firstItem() + $key }}</td>
+                    <td>{{ $jemaat_belumpernah_kunjungan->firstItem() + $key }}</td>
                     <td>{{ $value->name  }}</td>
                     <td>{{ $value->alamat }}</td>
                     <td>{{ $value->no_HP }}</td>

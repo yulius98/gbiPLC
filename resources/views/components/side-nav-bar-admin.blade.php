@@ -16,6 +16,11 @@
                     <nav class="sb-sidenav-menu-nested nav">
                         <a class="nav-link" href="/pengurus/pendaftara">Registrasi</a>
                     </nav>
+                    <nav class="sb-sidenav-menu-nested nav">
+                        <a class="nav-link" href="/pengurus/pastor_note">Suara Gembala</a>
+                    </nav>
+
+                    
                 </div>
                 
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
@@ -39,12 +44,12 @@
                 </a>
                 <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                        <a class="nav-link collapsed" id="kategori" href="/dashboard_barang" >
-                            Data Event    
+                        <a class="nav-link collapsed" id="kategori" href="/pengurus/dashboard_timmultimedia" >
+                            Event    
                         </a>
-                        <a class="nav-link collapsed" href="/dashboard_supplier" >
+                        <!--<a class="nav-link collapsed" href="/dashboard_supplier" >
                             Data Ibadah
-                        </a>
+                        </a>  -- IGNORE --->
                     </nav>
                 </div>
             

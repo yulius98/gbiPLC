@@ -14,8 +14,11 @@ return new class extends Migration
         Schema::create('tbl_pastor_notes', function (Blueprint $table) {
             $table->id();
             $table->date('tgl_note');
-            $table->string('judul_note');
+            //$table->string('judul_note')->nullable();
+            //$table->string('ayat')->nullable();
             $table->text('note');
+            $table->string('filename')->nullable();
+            $table->string('path')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

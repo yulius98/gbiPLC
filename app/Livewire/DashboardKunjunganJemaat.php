@@ -33,7 +33,7 @@ class DashboardKunjunganJemaat extends Component
             ->whereNull('tbl_kunjungans.id_jemaat')
             ->count();
 
-        $dtjemaat_belumpernah_kunjungan = User::leftJoin('tbl_kunjungans', 'users.id', '=', 'tbl_kunjungans.id_jemaat')
+        $jemaat_belumpernah_kunjungan = User::leftJoin('tbl_kunjungans', 'users.id', '=', 'tbl_kunjungans.id_jemaat')
             ->where('users.role', 'jemaat')
             ->whereNull('tbl_kunjungans.id_jemaat')
             ->paginate(5);
@@ -46,7 +46,7 @@ class DashboardKunjunganJemaat extends Component
             ->count();
 
 
-        return view('livewire.dashboard-kunjungan-jemaat',['dtjemaat_belumpernah_kunjungan' =>$dtjemaat_belumpernah_kunjungan,'dtjemaat_belumpernah_kunjungan' => $dtjemaat_belumpernah_kunjungan,'jmljemaat_baru'=> $jmljemaat_baru,'dtkunjungan_bln_ini' => $dtkunjungan_bln_ini, 'dtkunjungan_lebih_dari_satu' => $dtkunjungan_lebih_dari_satu, 'dtjemaat_baru'=>$dtjemaat_baru]);
+        return view('livewire.dashboard-kunjungan-jemaat',['jemaat_belumpernah_kunjungan' =>$jemaat_belumpernah_kunjungan,'dtjemaat_belumpernah_kunjungan' => $dtjemaat_belumpernah_kunjungan,'jmljemaat_baru'=> $jmljemaat_baru,'dtkunjungan_bln_ini' => $dtkunjungan_bln_ini, 'dtkunjungan_lebih_dari_satu' => $dtkunjungan_lebih_dari_satu, 'dtjemaat_baru'=>$dtjemaat_baru]);
             
     }
 }

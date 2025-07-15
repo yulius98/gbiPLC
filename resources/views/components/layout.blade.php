@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>GBI PLC</title>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
     {{-- @vite('resources/css/app.css') --}}
     @php
         $isProduction = app()->environment('production');
@@ -23,6 +20,12 @@
             @viteReactRefresh
             @vite(['resources/js/app.js','resources/css/app.css'])
     @endif
+    <title>GBI PLC</title>
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <!-- Removed Bootstrap JS bundle to avoid conflict with Tailwind -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
 
 </head>
 <body class="h-full">
