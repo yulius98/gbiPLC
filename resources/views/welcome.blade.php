@@ -130,8 +130,9 @@
                         <div>
                             <h3 class="text-base/7 font-semibold tracking-tight text-white">{{ ucwords($jemaat->name) }}</h3>
                             <h4 class="text-sm/6 font-semibold text-white">
-                                    {{ \Carbon\Carbon::parse($jemaat->tgl_lahir)->format('d-m-Y') }}
+                                {{ \Carbon\Carbon::parse($jemaat->tgl_lahir)->translatedFormat('d F') }}
                             </h4>
+
                         </div>
                     </div>
                 </li>
@@ -146,6 +147,31 @@
     </div>    
         
     @endif
+
+    <footer class="bg-gray-200 text-black py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+                <h3 class="font-semibold text-lg mb-2">Gembala</h3>
+                <p>Pdm. DR. Jimmy Sugiarto, S.PSI, M.TH</p>
+                <h4 class="font-semibold text-lg mb-2">Wakil Gembala</h4>
+                <p>Pdm. Korinta Jati</p>
+            </div>
+            <div>
+                <h3 class="font-semibold text-lg mb-2">GBI Philadelphia Life Center</h3>
+                <p>Alamat : Jl. Babarsari No.45, Janti, Caturtunggal, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281</p>
+                <a style="wa-link:hover; font-weight:bold" href="https://wa.me/6285336618852" target="_blank">Telp : 0853-3661-8852</a>
+
+            </div>
+            <!--<div>
+                <h3 class="font-semibold text-lg mb-2">Pelayanan Konsening</h3>
+                <p>No Telp :</p>
+            </div>
+            <div>
+                <h3 class="font-semibold text-lg mb-2">Pelayanan Doa</h3>
+                <p>No. Telp :</p>
+            </div> -->
+        </div>
+    </footer>
             
 
 

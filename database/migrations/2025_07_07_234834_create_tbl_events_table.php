@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('keterangan');
             $table->string('filename')->nullable();
             $table->string('path')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

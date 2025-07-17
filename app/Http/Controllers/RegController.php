@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 
 
@@ -52,15 +53,26 @@ class RegController extends Controller
         //$file = $request->file('file');
         //$fileName = time().'_'.$file->getClientOriginalName();
         //$path = Storage::disk('s3')->putFileAs('',$file,$file);
+        
         $add_user->save();
 
+        $dtcarousel = cache()->remember('dtcarousel', 600, function () {
+            return TblCarousel::all();
+        });
 
-        $dtjemaat = User::where('role','=','jemaat')
-                ->orderby('name','asc')
+        $dtpasstornote = cache()->remember('dtpasstornote', 600, function () {
+            return TblPastorNote::orderBy('tgl_note', 'desc')->first();
+        });
+
+        $dtjemaatultah = cache()->remember('dtjemaatultah_' . Carbon::now()->month, 600, function () {
+            return User::whereMonth('tgl_lahir', Carbon::now()->month)
+                ->where('role', 'jemaat')
+                ->orderby('name', 'asc')
                 ->paginate(8);
+        });        
 
-        //return view('jemaat',['dtjemaat' => $dtjemaat]);
-       return view ('jemaat.daftar');
+        
+       return view('welcome', compact('dtcarousel','dtpasstornote','dtjemaatultah'));
         
     }
 

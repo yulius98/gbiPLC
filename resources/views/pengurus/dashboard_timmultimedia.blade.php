@@ -24,6 +24,10 @@
                     <div id="content-area" class="mt-5 container">
                         @livewire('carousel-tim-media')
                     </div>
+
+                    <div id="content-area" class="mt-5 container">
+                        @livewire('event-tim-media')
+                    </div>
         </div>
         {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script> --}}
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>

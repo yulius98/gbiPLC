@@ -29,8 +29,20 @@
                 <!-- Kolom Pertama -->
                 <div class="col-md-6">
                     <div>
+                        <div class="mb-3 row">
+                            <label for="tgl_event" class="col-sm-3 col-form-label">Tanggal event</label>
+                            <div class="col-sm-9">
+                                <input type="date" class="form-control" id="tgl_event" wire:model="tgl_event">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="Keterangan" class="col-sm-3 col-form-label">Keterangan Event</label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" id="keterangan" wire:model="keterangan"></textarea>
+                            </div>
+                        </div>
                         <div class="form-group row">
-                            <label for="filename" class="col-sm-3 col-form-label">Foto Carousel</label>
+                            <label for="filename" class="col-sm-3 col-form-label">Foto Event</label>
                             <div class="col-sm-9">
                                 <input 
                                     type="file" 
@@ -79,15 +91,17 @@
     <!-- START DATA -->
     
     <div class="my-3 p-3 bg-body rounded shadow-sm">
-        <h4 class="font-medium">Data Carousel</h4>
+        <h4 class="font-medium">Data Event</h4>
         <div class="pb-3 pt-3">
             <input type="text" class="form-control mb-3 w-25" placeholder="Search..." wire:model.live="cari">
         </div>
-        {{ $dtcarousel->links() }}
+        {{ $dtevent->links() }}
         <table class="table table-striped table-sortable ">
             <thead>
                 <tr>
                     <th class="col-md-1">No</th>
+                    <th class="col-md-2 sort" >Tanggal Event</th>
+                    <th class="col-md-2 sort" >Keterangan</th>
                     <th class="col-md-2 sort" >Foto</th>
                     <th class="col-md-2">Aksi</th>
                 </tr>
@@ -95,9 +109,12 @@
             <tbody>
                 
                 
-                @foreach ($dtcarousel as $key => $value)
+                @foreach ($dtevent as $key => $value)
                 <tr>
-                    <td>{{ $dtcarousel->firstItem() + $key }}</td>
+                    
+                    <td>{{ $dtevent->firstItem() + $key }}</td>
+                    <td>{{ $value->tgl_event }}</td>
+                    <td>{{ $value->keterangan }}</td>
                     <td><img src="{{ asset('storage/' . $value->filename) }}" alt="Foto" class="p-0.5 object-contain rounded-full " 
                                 style="width: 60px; height: 60px;"></td>
                     <td>
@@ -139,4 +156,5 @@
 
 
     
+
 
