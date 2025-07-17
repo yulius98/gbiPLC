@@ -46,7 +46,7 @@ Route::get('/pengurus/pastor_note', function () {
     return view('pengurus.pastor_note');
 });
 
-Route::get('/data-jemaat',[JemaatController::class,'Data_Jemaat']);
+Route::get('/event',[JemaatController::class,'Data_Jemaat']);
 Route::get('/Daftar', [RegController::class, 'showJemaat']);
 
 

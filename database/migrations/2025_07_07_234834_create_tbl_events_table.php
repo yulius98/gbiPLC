@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tbl_events', function (Blueprint $table) {
             $table->id();
             $table->date('tgl_event');
-            $table->text('keterangan');
+            $table->text('keterangan')->nullable();
             $table->string('filename')->nullable();
             $table->string('path')->nullable();
             $table->softDeletes();
