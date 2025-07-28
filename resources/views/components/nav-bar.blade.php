@@ -43,7 +43,7 @@
     <div x-show="isOpen" class="md:hidden" id="mobile-menu">
       <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
             <a href="/" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Home</a>
-            <a href="#" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Event</a>
+            <a href="/event" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Event</a>
             
       </div>
       <div class="border-t border-gray-700 pt-4 pb-3">

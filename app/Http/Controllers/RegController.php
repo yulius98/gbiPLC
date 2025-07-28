@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
+use App\Models\TblCarousel;
+use App\Models\TblPastorNote;
 
 
 
@@ -71,8 +74,8 @@ class RegController extends Controller
                 ->paginate(8);
         });        
 
-        
-       return view('welcome', compact('dtcarousel','dtpasstornote','dtjemaatultah'));
+        return redirect('/')->with('success', 'Pendaftaran berhasil! Selamat datang di GBI PLC');       
+       //return view('welcome', compact('dtcarousel','dtpasstornote','dtjemaatultah'));
         
     }
 
