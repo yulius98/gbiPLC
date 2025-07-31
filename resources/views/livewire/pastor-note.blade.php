@@ -1,4 +1,8 @@
-@php use Illuminate\Support\Facades\Storage; @endphp
+@php 
+    use Illuminate\Support\Facades\Storage;
+    use Illuminate\Support\Str;
+    
+@endphp
 
 <div class="container">
     @if ($errors->any())
@@ -117,7 +121,7 @@
                 <tr>
                     <td>{{ $pastornotes->firstItem() + $key }}</td>
                     <td>{{ $value->tgl_note  }}</td>
-                    <td>{{ $value->note }}</td>
+                    <td>{{ Str::limit($value->note, 200) }}</td>
                     <td><img src="{{ asset('storage/' . $value->filename) }}" alt="Foto" class="p-0.5 object-contain rounded-full " 
                                 style="width: 60px; height: 60px;"></td>
                     <td>

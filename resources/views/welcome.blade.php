@@ -151,10 +151,10 @@
     <footer class="bg-gray-200 text-black py-8 mt-12">
         <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-                <h3 class="font-semibold text-lg mb-2">Gembala</h3>
-                <p>Pdm. DR. Jimmy Sugiarto, S.PSI, M.TH</p>
-                <h4 class="font-semibold text-lg mb-2">Wakil Gembala</h4>
-                <p>Pdm. Korinta Jati</p>
+                <h3 class="font-semibold text-lg mb-0">Gembala</h3>
+                <h4 class=" mt-0 mb-2">Pdm. DR. Jimmy Sugiarto, S.PSI, M.TH</h4>
+                <h5 class="font-semibold text-lg mb-0">Wakil Gembala</h5>
+                <h6 class="mt-0">Fredy Budiman SE, MTh</h6>
             </div>
             <div>
                 <h3 class="font-semibold text-lg mb-2">GBI Philadelphia Life Center</h3>

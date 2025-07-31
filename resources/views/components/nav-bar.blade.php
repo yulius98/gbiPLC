@@ -9,15 +9,27 @@
           
           <div class="hidden md:block">
             <div class="ml-10 flex items-baseline space-x-4">
-              <a href="/" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Home</a>
-              <a href="/event" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Event</a> 
+              <a href="{{ route('home') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Home</a>
+              <a href="{{ route('event') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Event</a> 
             </div>
           </div>
         </div>
         <div class="hidden md:block">
           <div class="ml-4 flex items-center md:ml-6">
-              <a href="/register" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Register</a>
-              <a href="/login" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Login</a>
+              @guest
+                  <a href="{{ route('register') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Register</a>
+                  <a href="{{ route('login') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Login</a>
+              @endguest
+              @auth
+                  <span class="text-white text-sm mr-4">Welcome, {{ Auth::user()->name }}</span>
+                  <form action="{{ route('logout') }}" method="POST" class="inline">
+                      @csrf
+                      <button type="submit" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Logout</button>
+                  </form>
+                  @if(Auth::user()->role === 'pengurus' || Auth::user()->role === 'pendeta')
+                      <a href="/pengurus/dashboard_admin/{{ Auth::user()->name }}" class="ml-2 rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Dashboard</a>
+                  @endif
+              @endauth
           </div> 
         </div>
         
@@ -42,15 +54,28 @@
     <!-- Mobile menu, show/hide based on menu state. -->
     <div x-show="isOpen" class="md:hidden" id="mobile-menu">
       <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
-            <a href="/" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Home</a>
-            <a href="/event" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Event</a>
+            <a href="{{ route('home') }}" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Home</a>
+            <a href="{{ route('event') }}" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Event</a>
             
       </div>
       <div class="border-t border-gray-700 pt-4 pb-3">
         <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
-          <a href="/register" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Register</a>
-          <a href="/login" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Login</a>
+          @guest
+              <a href="{{ route('register') }}" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Register</a>
+              <a href="{{ route('login') }}" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Login</a>
+          @endguest
+          @auth
+              <div class="px-3 py-2 text-sm text-white">Welcome, {{ Auth::user()->name }}</div>
+              @if(Auth::user()->role === 'pengurus' || Auth::user()->role === 'pendeta')
+                  <a href="/pengurus/dashboard_admin/{{ Auth::user()->name }}" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Dashboard</a>
+              @endif
+              <form action="{{ route('logout') }}" method="POST" class="block">
+                  @csrf
+                  <button type="submit" class="w-full text-left block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Logout</button>
+              </form>
+          @endauth
         </div>
       </div>  
     </div>
 </nav>
+

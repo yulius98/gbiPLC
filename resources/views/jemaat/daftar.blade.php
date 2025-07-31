@@ -51,6 +51,15 @@
     border-radius: 8px;
   }
 
+  #gallery-preview {
+    display: none;
+    width: 100%;
+    max-width: 320px;
+    border: 2px solid white;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+
   #camera-controls {
     margin-top: 10px;
   }
@@ -182,16 +191,20 @@
                     {{-- Foto --}}
                     <div>
                         <label for="foto" class="block mb-1 text-white">Foto</label>
-                        <!-- Existing file input hidden, replaced by camera capture -->
+                        <!-- File input for camera capture -->
                         <input type="file" id="filename" name="filename" accept="image/*" capture="user" style="display:none;" />
+                        <!-- File input for gallery selection -->
+                        <input type="file" id="gallery-input" accept="image/*" style="display:none;" />
                         <!-- Video preview for live camera -->
                         <video id="video" autoplay playsinline></video>
                         <!-- Canvas to capture photo -->
                         <canvas id="canvas"></canvas>
+                        <!-- Preview image from gallery -->
+                        <img id="gallery-preview" style="display:none; width: 100%; max-width: 320px; border: 2px solid white; border-radius: 8px;" />
                         <!-- Camera control buttons -->
                         <div id="camera-controls">
-                            <button type="button" id="start-camera" class="neon-button px-4 py-2 rounded">Mulai Kamera</button>
-                            <button type="button" id="capture-photo" class="neon-button px-4 py-2 rounded" disabled>Ambil Foto</button>
+                            <button type="button" id="gallery-action" class="neon-button px-4 py-2 rounded">Foto dari Galeri</button>
+                            <button type="button" id="camera-action" class="neon-button px-4 py-2 rounded" data-action="start">Foto dari Kamera</button>
                             <button type="button" id="retake-photo" class="neon-button px-4 py-2 rounded" disabled>Ulangi Foto</button>
                         </div>
                     </div>
@@ -219,29 +232,123 @@
     // Camera capture script
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
-    const startCameraButton = document.getElementById('start-camera');
-    const capturePhotoButton = document.getElementById('capture-photo');
+    const cameraActionButton = document.getElementById('camera-action');
+    const galleryActionButton = document.getElementById('gallery-action');
     const retakePhotoButton = document.getElementById('retake-photo');
     const filenameInput = document.getElementById('filename');
+    const galleryInput = document.getElementById('gallery-input');
+    const galleryPreview = document.getElementById('gallery-preview');
     let stream;
 
-startCameraButton.addEventListener('click', async () => {
-        try {
-            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                alert('Browser Anda tidak mendukung akses kamera.');
+    // Camera action button functionality
+    cameraActionButton.addEventListener('click', async () => {
+        const action = cameraActionButton.getAttribute('data-action');
+        
+        if (action === 'start') {
+            // Start camera functionality
+            try {
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    alert('Browser Anda tidak mendukung akses kamera.');
+                    return;
+                }
+                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+                video.srcObject = stream;
+                
+                // Change button to capture mode
+                cameraActionButton.setAttribute('data-action', 'capture');
+                cameraActionButton.textContent = 'Ambil Foto';
+                galleryActionButton.disabled = true;
+                retakePhotoButton.disabled = true;
+                canvas.style.display = 'none';
+                galleryPreview.style.display = 'none';
+                video.style.display = 'block';
+                // Clear previous file input value
+                filenameInput.value = '';
+            } catch (err) {
+                alert('Tidak dapat mengakses kamera: ' + err.message);
+            }
+        } else if (action === 'capture') {
+            // Capture photo functionality
+            const context = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            canvas.style.display = 'block';
+            video.style.display = 'none';
+            galleryPreview.style.display = 'none';
+            
+            // Change button to disabled state and enable retake
+            cameraActionButton.disabled = true;
+            galleryActionButton.disabled = true;
+            retakePhotoButton.disabled = false;
+            
+            // Stop the camera stream
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            
+            // Resize and compress image to be under 1MB
+            const compressedBlob = await resizeAndCompressImage(canvas);
+            const file = new File([compressedBlob], 'captured_photo.jpg', { type: 'image/jpeg' });
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            filenameInput.files = dataTransfer.files;
+        }
+    });
+
+    // Gallery action button functionality
+    galleryActionButton.addEventListener('click', () => {
+        galleryInput.click();
+    });
+
+    // Gallery input change event
+    galleryInput.addEventListener('change', async (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            // Validate file size (max 5MB for initial upload)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Ukuran file terlalu besar. Maksimal 5MB.');
                 return;
             }
-            stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
-            video.srcObject = stream;
-            startCameraButton.disabled = true;
-            capturePhotoButton.disabled = false;
-            retakePhotoButton.disabled = true;
-            canvas.style.display = 'none';
-            video.style.display = 'block';
-            // Clear previous file input value
-            filenameInput.value = '';
-        } catch (err) {
-            alert('Tidak dapat mengakses kamera: ' + err.message);
+
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                alert('File harus berupa gambar.');
+                return;
+            }
+
+            // Display preview
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                galleryPreview.src = e.target.result;
+                galleryPreview.style.display = 'block';
+                video.style.display = 'none';
+                canvas.style.display = 'none';
+
+                // Compress image if needed
+                const img = new Image();
+                img.onload = async () => {
+                    const tempCanvas = document.createElement('canvas');
+                    const ctx = tempCanvas.getContext('2d');
+                    tempCanvas.width = img.width;
+                    tempCanvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+
+                    const compressedBlob = await resizeAndCompressImage(tempCanvas);
+                    const compressedFile = new File([compressedBlob], file.name, { type: 'image/jpeg' });
+                    
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(compressedFile);
+                    filenameInput.files = dataTransfer.files;
+                };
+                img.src = e.target.result;
+
+                // Update button states
+                cameraActionButton.disabled = true;
+                galleryActionButton.disabled = true;
+                retakePhotoButton.disabled = false;
+            };
+            reader.readAsDataURL(file);
         }
     });
 
@@ -281,40 +388,28 @@ startCameraButton.addEventListener('click', async () => {
         return blob;
     }
 
-    capturePhotoButton.addEventListener('click', async () => {
-        const context = canvas.getContext('2d');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        canvas.style.display = 'block';
-        video.style.display = 'none';
-        capturePhotoButton.disabled = true;
-        retakePhotoButton.disabled = false;
-        // Stop the camera stream
-        if (stream) {
-            stream.getTracks().forEach(track => track.stop());
-        }
-        // Resize and compress image to be under 1MB
-        const compressedBlob = await resizeAndCompressImage(canvas);
-        const file = new File([compressedBlob], 'captured_photo.jpg', { type: 'image/jpeg' });
-        const dataTransfer = new DataTransfer();
-        dataTransfer.items.add(file);
-        filenameInput.files = dataTransfer.files;
-    });
-
+    // Retake photo functionality
     retakePhotoButton.addEventListener('click', () => {
-        // Restart camera
-        startCameraButton.disabled = false;
-        capturePhotoButton.disabled = true;
+        // Reset to initial state
+        cameraActionButton.setAttribute('data-action', 'start');
+        cameraActionButton.textContent = 'Mulai Kamera';
+        cameraActionButton.disabled = false;
+        galleryActionButton.disabled = false;
         retakePhotoButton.disabled = true;
+        
+        // Hide all previews
         canvas.style.display = 'none';
         video.style.display = 'block';
+        galleryPreview.style.display = 'none';
+        
+        // Clear file inputs
         filenameInput.value = '';
+        galleryInput.value = '';
     });
 
     function preparePhotoForSubmit() {
         if (!filenameInput.files.length) {
-            alert('Silakan ambil foto terlebih dahulu.');
+            alert('Silakan ambil foto dari kamera atau pilih dari galeri terlebih dahulu.');
             return false;
         }
         return true;

@@ -28,11 +28,24 @@ class AuthLogin extends Controller
             if ( $dtuser->role == "pengurus") {
                 return redirect('/pengurus/dashboard_admin/'.$dtuser->name);
             }
+            
+            // If user role is not pengurus, redirect to homepage
+            return redirect('/')->with('message', 'Anda tidak memiliki akses ke halaman admin');
                        
         }
         
         return back()->withErrors([
             'email' => 'Email atau Password Salah !!',
         ])->onlyInput('email');  
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        
+        return redirect()->route('home')->with('message', 'Successfully logged out');
     }
 }

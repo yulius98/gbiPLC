@@ -1,0 +1,200 @@
+/* Responsive Sidebar Styles - Updated */
+
+/* Mobile Navigation Styles */
+@media (max-width: 767.98px) {
+    .sb-sidenav {
+        display: none !important;
+    }
+    
+    /* Mobile Navigation Container */
+    #mobileNav {
+        background-color: #ffffff;
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        margin-bottom: 1rem;
+    }
+    
+    #mobileNav .bg-light {
+        background-color: #f8f9fa !important;
+    }
+    
+    /* Mobile Menu Items */
+    #mobileNav ul li a {
+        transition: all 0.3s ease;
+        border-radius: 0.25rem;
+    }
+    
+    #mobileNav ul li a:hover {
+        background-color: #e9ecef !important;
+        transform: translateX(5px);
+    }
+    
+    /* Active state */
+    #mobileNav ul li a[style*="background-color: #e3f2fd"] {
+        background-color: #e3f2fd !important;
+        color: #1976d2 !important;
+        font-weight: 500;
+    }
+    
+    /* Submenu styling */
+    #mobileNav .collapse ul {
+        border-left: 3px solid #dee2e6;
+        margin-left: 1rem;
+        padding-left: 0.5rem;
+    }
+    
+    /* Chevron animation */
+    #mobileNav .fas.fa-chevron-down {
+        transition: transform 0.3s ease;
+    }
+    
+    /* Mobile toggle button */
+    .btn-outline-primary {
+        border-color: #0d6efd;
+        color: #0d6efd;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-outline-primary:hover {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+        color: #ffffff;
+        transform: translateY(-1px);
+        box-shadow: 0 0.25rem 0.5rem rgba(13, 110, 253, 0.25);
+    }
+    
+    .btn-outline-primary:focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+    
+    /* Icon animation in toggle button */
+    .btn-outline-primary .fas {
+        transition: transform 0.3s ease;
+    }
+    
+    .btn-outline-primary[aria-expanded="true"] .fas {
+        transform: rotate(90deg);
+    }
+}
+
+/* Tablet Styles */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .sb-sidenav {
+        width: 220px;
+    }
+    
+    .sb-sidenav .nav-link {
+        font-size: 0.9rem;
+        padding: 0.75rem 1rem;
+    }
+    
+    .sb-sidenav .sb-nav-link-icon {
+        width: 16px;
+        margin-right: 0.5rem;
+    }
+    
+    /* Hide mobile navigation on tablet and desktop */
+    #mobileNav {
+        display: none !important;
+    }
+}
+
+/* Desktop Styles */
+@media (min-width: 992px) {
+    .sb-sidenav {
+        width: 260px;
+    }
+    
+    /* Hide mobile navigation on desktop */
+    #mobileNav {
+        display: none !important;
+    }
+}
+
+/* Smooth transitions for all collapse elements */
+.collapse {
+    transition: height 0.35s ease;
+}
+
+.collapsing {
+    transition: height 0.35s ease;
+}
+
+/* Improved scrollbar for mobile */
+@media (max-width: 767.98px) {
+    #mobileNav {
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+    
+    #mobileNav::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    #mobileNav::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+    
+    #mobileNav::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 10px;
+    }
+    
+    #mobileNav::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }
+}
+
+/* Enhanced visual feedback */
+#mobileNav a[data-bs-toggle="collapse"] {
+    cursor: pointer;
+    user-select: none;
+}
+
+#mobileNav a[data-bs-toggle="collapse"]:active {
+    transform: scale(0.98);
+}
+
+/* Loading animation for slow connections */
+.collapse.show {
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Focus indicators for accessibility */
+#mobileNav a:focus {
+    outline: 2px solid #0d6efd;
+    outline-offset: 2px;
+}
+
+/* Dark mode support (optional) */
+@media (prefers-color-scheme: dark) {
+    #mobileNav .bg-light {
+        background-color: #212529 !important;
+        color: #ffffff;
+    }
+    
+    #mobileNav .border {
+        border-color: #495057 !important;
+    }
+    
+    #mobileNav a {
+        color: #ffffff !important;
+    }
+    
+    #mobileNav a:hover {
+        background-color: #495057 !important;
+    }
+}
