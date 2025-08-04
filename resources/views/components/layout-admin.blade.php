@@ -23,6 +23,11 @@
     
     <title>{{ $title ?? 'Admin Panel' }} - GBI PLC</title>
     
+    <!-- Favicon with cache buster -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v={{ time() }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v={{ time() }}">
+    <link rel="icon" type="image/png" href="{{ asset('logoplc.png') }}?v={{ time() }}">
+    
     <!-- Additional head content -->
     @stack('styles')
 </head>

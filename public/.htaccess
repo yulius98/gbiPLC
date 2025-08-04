@@ -5,6 +5,14 @@
 
     RewriteEngine On
 
+    # Favicon cache control
+    <FilesMatch "\.(ico|png)$">
+        Header unset ETag
+        FileETag None
+        ExpiresActive on
+        ExpiresDefault "access plus 1 hour"
+    </FilesMatch>
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

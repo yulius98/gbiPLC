@@ -7,11 +7,14 @@ use App\Models\User;
 use Livewire\Component;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Livewire\WithPagination;
 
 
 
 class DashboardKunjunganJemaat extends Component
 {
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
     public function render()
     {
         

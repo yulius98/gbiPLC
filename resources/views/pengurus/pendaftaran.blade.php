@@ -12,6 +12,12 @@
         <link href="{{ asset('css/styles.css') }}" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <title>GBI PLC</title>
+        
+        <!-- Favicon -->
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+        <link rel="icon" type="image/png" href="{{ asset('logoplc.png') }}">
+        
     </head>
     <body class="sb-nav-fixed">
         <x-nav-bar-admin/>

@@ -24,6 +24,18 @@
             @vite(['resources/js/app.js','resources/css/app.css'])
     @endif
     <title>GBI PLC</title>
+    
+    <!-- Force favicon refresh -->
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <meta http-equiv="pragma" content="no-cache">
+    
+    <!-- Favicon with cache buster -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v={{ time() }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v={{ time() }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('logoplc.png') }}?v={{ time() }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('logoplc.png') }}?v={{ time() }}">
+    
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <script src="https://unpkg.com/feather-icons"></script>
     <!-- Removed Bootstrap JS bundle to avoid conflict with Tailwind -->
