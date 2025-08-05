@@ -87,6 +87,100 @@
         });
     </script>
 
+    <!-- Popup Ads -->
+    @if ($dtpopup && $dtpopup->count() > 0)
+        @foreach ($dtpopup as $popup)
+            <div id="popup-{{ $popup->id }}" class="popup-overlay fixed inset-0 bg-transparent bg-opacity-50 z-50 hidden" style="display: none;">
+                <div class="popup-content bg-white rounded-lg shadow-xl max-w-lg w-auto mx-4 relative" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                    <button class="popup-close absolute top-2 right-2 text-gray-600 hover:text-gray-800 text-2xl font-bold z-10" 
+                            onclick="closePopup('popup-{{ $popup->id }}')">
+                        &times;
+                    </button>
+                    <div class="p-4">
+                        <img src="{{ asset('storage/'. $popup->filename) }}" 
+                             alt="Popup Ad {{ $popup->id }}" 
+                             class="w-1/5 h-auto rounded-lg mx-auto">
+                    </div>
+                </div>
+            </div>
+        @endforeach
+
+        <script>
+            let currentPopupIndex = 0;
+            const popups = @json($dtpopup->pluck('id'));
+            const popupDelay = 3000; // 3 seconds between popups
+            const initialDelay = 2000; // 2 seconds after page load
+
+            function showPopup(popupId) {
+                const popup = document.getElementById(`popup-${popupId}`);
+                if (popup) {
+                    popup.style.display = 'block';
+                    popup.classList.remove('hidden');
+                    // Allow scrolling when popup is open
+                }
+            }
+
+            function closePopup(popupId) {
+                const popup = document.getElementById(popupId);
+                if (popup) {
+                    popup.style.display = 'none';
+                    popup.classList.add('hidden');
+                    // Scrolling remains available
+                    
+                    // Show next popup after delay
+                    setTimeout(() => {
+                        showNextPopup();
+                    }, popupDelay);
+                }
+            }
+
+            function showNextPopup() {
+                if (currentPopupIndex < popups.length) {
+                    showPopup(popups[currentPopupIndex]);
+                    currentPopupIndex++;
+                }
+            }
+
+            // Auto-close popup after 10 seconds
+            function autoClosePopup(popupId) {
+                setTimeout(() => {
+                    closePopup(`popup-${popupId}`);
+                }, 10000);
+            }
+
+            // Start showing popups after page load
+            window.addEventListener('load', () => {
+                if (popups.length > 0) {
+                    setTimeout(() => {
+                        showNextPopup();
+                        if (popups[currentPopupIndex - 1]) {
+                            autoClosePopup(popups[currentPopupIndex - 1]);
+                        }
+                    }, initialDelay);
+                }
+            });
+
+            // Close popup when clicking outside
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('popup-overlay')) {
+                    const popupId = e.target.id;
+                    closePopup(popupId);
+                }
+            });
+
+            // Close popup with Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    const activePopup = document.querySelector('.popup-overlay:not(.hidden)');
+                    if (activePopup) {
+                        closePopup(activePopup.id);
+                    }
+                }
+            });
+        </script>
+    @endif
+    <!-- End Popup Ads -->
+
     <!-- Suara Gembala -->
     <div style="margin-top: 4rem;" class="border-t-5 border-gray-200">
         <div>

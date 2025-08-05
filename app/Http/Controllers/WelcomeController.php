@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\TblCarousel;
 use App\Models\TblPastorNote;
+use App\Models\TblPopupAds;
 use App\Models\User;
 use Carbon\Carbon;
 
@@ -12,6 +13,8 @@ class WelcomeController extends Controller
 {
     public function index()
     {
+        $dtpopup = TblPopupAds::all();
+        
         $dtcarousel = TblCarousel::all();
         
         $dtpasstornote = TblPastorNote::orderBy('tgl_note', 'desc')
@@ -37,6 +40,6 @@ class WelcomeController extends Controller
         //        ->paginate(8);
         //});    
 
-        return view('welcome', compact('dtcarousel','dtpasstornote','dtjemaatultah'));
+        return view('welcome', compact('dtpopup','dtcarousel','dtpasstornote','dtjemaatultah'));
     }
 }

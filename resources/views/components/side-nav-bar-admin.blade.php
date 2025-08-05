@@ -47,9 +47,10 @@
                         <a class="nav-link collapsed" id="kategori" href="/pengurus/dashboard_timmultimedia" >
                             Event    
                         </a>
-                        <!--<a class="nav-link collapsed" href="/dashboard_supplier" >
-                            Data Ibadah
-                        </a>  -- IGNORE --->
+                        <a class="nav-link collapsed" id="kategori" href="/pengurus/dashboard_popup" >
+                             Popup Ads   
+                        </a>
+                       
                     </nav>
                 </div>
             

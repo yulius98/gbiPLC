@@ -41,6 +41,10 @@ Route::middleware(['web'])->group(function () {
             return view('pengurus.dashboard_timmultimedia');
         });
 
+        Route::get('/dashboard_popup', function () {
+            return view('pengurus.dashboard_popup');
+        });
+        
         Route::get('/pendaftara', function () {
             return view('pengurus.pendaftaran');
         });
