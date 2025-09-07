@@ -1,9 +1,11 @@
+
 <?php
 
 use App\Http\Controllers\AuthLogin;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegController;
 use App\Http\Controllers\JemaatController;
+use App\Http\Controllers\PageJemaatController;
 use App\Http\Controllers\WelcomeController;
 
 // All web routes should be within web middleware group
@@ -27,12 +29,21 @@ Route::middleware(['web'])->group(function () {
     // Logout route (can be accessed by authenticated users)
     Route::post('/logout', [AuthLogin::class, 'logout'])->name('logout')->middleware('auth');
 
+    // Protected Jemaat Routes (hanya untuk jemaat)
+    Route::group(['middleware' => ['role:jemaat'], 'prefix' => 'jemaat'], function() {
+	    Route::get('/page-jemaat', [PageJemaatController::class, 'index'])->name('page-jemaat');
+        Route::get('/myprofile', [PageJemaatController::class, 'myProfile'])->name('myprofile');
+        Route::get('/myprofile/update', [PageJemaatController::class, 'updateProfile'])->name('myprofile.update');
+        Route::post('/myprofile/update', [PageJemaatController::class, 'saveProfile'])->name('myprofile.save');
+
+    });
+
     // Protected Admin Routes (hanya untuk pengurus)
     Route::group(['middleware' => ['role:pengurus'], 'prefix' => 'pengurus'], function () {
         Route::get('/dashboard_admin/{name_admin}', function () {
             return view('pengurus.dashboard_admin');
         });
-        
+
         Route::get('/dashboard_timbesuk', function () {
             return view('pengurus.dashboard_timbesuk');
         });
@@ -44,7 +55,7 @@ Route::middleware(['web'])->group(function () {
         Route::get('/dashboard_popup', function () {
             return view('pengurus.dashboard_popup');
         });
-        
+
         Route::get('/pendaftara', function () {
             return view('pengurus.pendaftaran');
         });

@@ -1,7 +1,6 @@
-<x-nav-bar-daftar/>
+<x-nav-bar />
 <x-layout>
-
-<style>
+    <style>
   @keyframes neonPulse {
     0%, 100% {
       box-shadow: 0 0 8px #ffffff, 0 0 16px #ffffff, 0 0 24px #ffffff;
@@ -100,7 +99,7 @@
     @endif
 
     <div class="w-full max-w-3xl p-20 rounded-lg" style="background: rgba(0,0,0,0.8);">
-        <img class="mx-auto h-56 w-auto rounded-full mb-6" src="..\logoplc.png" alt="Your Company">
+        <img class="mx-auto h-56 w-auto rounded-full mb-6" src="{{ asset('logoplc.png') }}" alt="Your Company">
         <section class="hero" id="home">
             <div class="mask-container">
             <main class="content">
@@ -119,7 +118,7 @@
     </div>
     <!-- START FORM -->
     <div class=" w-full max-w-3xl p-6 rounded-2xl neon-glow transition">
-        <form id="daftar" action="/Daftar" method="post" class="space-y-6" enctype="multipart/form-data" onsubmit="return preparePhotoForSubmit()">
+        <form id="updateprofile" action="{{ route('myprofile.save') }}" method="post" class="space-y-6" enctype="multipart/form-data" onsubmit="return preparePhotoForSubmit()">
             @csrf
             <div class=" w-full max-3-3xl grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Kolom Kiri -->
@@ -128,35 +127,40 @@
                     <div>
                         <label for="name" class="block mb-1 text-white">Nama</label>
                         <input type="text" id="name" name="name"
-                            class=" w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition" />
+                            class=" w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition"
+                            value="{{ old('name', isset($dtuser) ? $dtuser->name : '') }}" />
                     </div>
 
                     {{-- Tanggal Lahir --}}
                     <div>
                         <label for="tgl_lahir" class="block mb-1 text-white">Tanggal Lahir</label>
                         <input type="date" id="tgl_lahir" name="tgl_lahir"
-                            class="form-control w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition" />
+                            class="form-control w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition"
+                            value="{{ old('tgl_lahir', isset($dtuser) ? $dtuser->tgl_lahir : '') }}" />
                     </div>
 
                     {{-- Alamat --}}
                     <div>
                         <label for="alamat" class="block mb-1 text-white">Alamat</label>
                         <input type="text" id="alamat" name="alamat"
-                            class="w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition" />
+                            class="w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition"
+                            value="{{ old('alamat', isset($dtuser) ? $dtuser->alamat : '') }}" />
                     </div>
 
                     {{-- Email --}}
                     <div>
                         <label for="email" class="block mb-1 text-white">Email</label>
                         <input type="email" id="email" name="email"
-                            class="w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition" />
+                            class="w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition"
+                            value="{{ old('email', isset($dtuser) ? $dtuser->email : '') }}" />
                     </div>
 
                     {{-- No HP --}}
                     <div>
                         <label for="no_HP" class="block mb-1 text-white">No Telp/HP</label>
                         <input type="text" id="no_HP" name="no_HP"
-                            class="w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition" />
+                            class="w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition"
+                            value="{{ old('no_HP', isset($dtuser) ? $dtuser->no_HP : '') }}" />
                     </div>
 
                     {{-- Golongan Darah --}}
@@ -165,10 +169,10 @@
                         <select id="gol_darah" name="gol_darah"
                             class="w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition">
                             <option value="">-- Pilih Golongan Darah --</option>
-                            <option value="A">A</option>
-                            <option value="B">B</option>
-                            <option value="AB">AB</option>
-                            <option value="O">O</option>
+                            <option value="A" {{ (old('gol_darah', isset($dtuser) ? $dtuser->gol_darah : '') == 'A') ? 'selected' : '' }}>A</option>
+                            <option value="B" {{ (old('gol_darah', isset($dtuser) ? $dtuser->gol_darah : '') == 'B') ? 'selected' : '' }}>B</option>
+                            <option value="AB" {{ (old('gol_darah', isset($dtuser) ? $dtuser->gol_darah : '') == 'AB') ? 'selected' : '' }}>AB</option>
+                            <option value="O" {{ (old('gol_darah', isset($dtuser) ? $dtuser->gol_darah : '') == 'O') ? 'selected' : '' }}>O</option>
                         </select>
                     </div>
 
@@ -178,14 +182,16 @@
                     <div>
                         <label for="facebook" class="block mb-1 text-white">Facebook</label>
                         <input type="text" id="facebook" name="facebook"
-                            class="w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition" />
+                            class="w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition"
+                            value="{{ old('facebook', isset($dtuser) ? $dtuser->facebook : '') }}" />
                     </div>
 
                     {{-- Alamat Instagram --}}
                     <div>
                         <label for="instagram" class="block mb-1 text-white">Instagram</label>
                         <input type="text" id="instagram" name="instagram"
-                            class="w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition" />
+                            class="w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition"
+                            value="{{ old('instagram', isset($dtuser) ? $dtuser->instagram : '') }}" />
                     </div>
 
                     {{-- Foto --}}
@@ -415,4 +421,5 @@
         return true;
     }
 </script>
+
 

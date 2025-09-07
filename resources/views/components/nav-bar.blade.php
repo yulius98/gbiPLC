@@ -3,14 +3,14 @@
       <div class="flex h-16 items-center justify-between">
         <div class="flex items-center">
           <div class="shrink-0 flex items-center">
-            <img class="h-14 w-auto rounded-full shadow-md object-cover my-1 hover:opacity-90" src="..\logoplc.png" alt="GBI PLC">
+            <img class="h-14 w-auto rounded-full shadow-md object-cover my-1 hover:opacity-90" src="{{ asset('logoplc.png') }}" alt="GBI PLC">
             <h2 class="text-white text-lg font-semibold ml-3">GBI Philadelphia Life Center</h2>
           </div>
-          
+
           <div class="hidden md:block">
             <div class="ml-10 flex items-baseline space-x-4">
               <a href="{{ route('home') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Home</a>
-              <a href="{{ route('event') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Event</a> 
+              <a href="{{ route('event') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Event</a>
             </div>
           </div>
         </div>
@@ -21,18 +21,20 @@
                   <a href="{{ route('login') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Login</a>
               @endguest
               @auth
-                  <span class="text-white text-sm mr-4">Welcome, {{ Auth::user()->name }}</span>
-                  <form action="{{ route('logout') }}" method="POST" class="inline">
+
+                <span class="text-white text-sm mr-4">Welcome, {{ Auth::user()->name }}</span>
+                <a href="{{ route('myprofile') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">My Profile</a>
+                <form action="{{ route('logout') }}" method="POST" class="inline">
                       @csrf
                       <button type="submit" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Logout</button>
-                  </form>
-                  @if(Auth::user()->role === 'pengurus' || Auth::user()->role === 'pendeta')
+                </form>
+                @if(Auth::user()->role === 'pengurus' || Auth::user()->role === 'pendeta')
                       <a href="/pengurus/dashboard_admin/{{ Auth::user()->name }}" class="ml-2 rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Dashboard</a>
-                  @endif
+                 @endif
               @endauth
-          </div> 
+          </div>
         </div>
-        
+
         <div class="-mr-2 flex md:hidden">
           <!-- Mobile menu button -->
           <button type="button" @click="isOpen = !isOpen" class="relative inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden" aria-controls="mobile-menu" aria-expanded="false">
@@ -56,7 +58,7 @@
       <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
             <a href="{{ route('home') }}" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Home</a>
             <a href="{{ route('event') }}" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Event</a>
-            
+
       </div>
       <div class="border-t border-gray-700 pt-4 pb-3">
         <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
@@ -75,7 +77,7 @@
               </form>
           @endauth
         </div>
-      </div>  
+      </div>
     </div>
 </nav>
 
