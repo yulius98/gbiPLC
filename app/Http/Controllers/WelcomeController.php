@@ -13,33 +13,33 @@ class WelcomeController extends Controller
 {
     public function index()
     {
-        $dtpopup = TblPopupAds::all();
-        
-        $dtcarousel = TblCarousel::all();
-        
-        $dtpasstornote = TblPastorNote::orderBy('tgl_note', 'desc')
+        $popupAds = TblPopupAds::all();
+
+        $carousels = TblCarousel::all();
+
+        $latestPastorNote = TblPastorNote::orderBy('tgl_note', 'desc')
             ->first();
-        
-        $dtjemaatultah = User::whereMonth('tgl_lahir', Carbon::now()->month)
+
+        $birthdayMembers = User::whereMonth('tgl_lahir', Carbon::now()->month)
             ->orderby('tgl_lahir','asc')
             ->paginate(8);
 
 
-        //$dtcarousel = cache()->remember('dtcarousel', 600, function () {
+        //$carousels = cache()->remember('carousels', 600, function () {
         //    return TblCarousel::all();
         //});
 
-        //$dtpasstornote = cache()->remember('dtpasstornote', 600, function () {
+        //$latestPastorNote = cache()->remember('latestPastorNote', 600, function () {
         //    return TblPastorNote::orderBy('tgl_note', 'desc')->first();
         //});
 
-        //$dtjemaatultah = cache()->remember('dtjemaatultah_' . Carbon::now()->month, 600, function () {
+        //$birthdayMembers = cache()->remember('birthdayMembers_' . Carbon::now()->month, 600, function () {
         //    return User::whereMonth('tgl_lahir', Carbon::now()->month)
         //        ->where('role', 'jemaat')
         //        ->orderby('name', 'asc')
         //        ->paginate(8);
-        //});    
+        //});
 
-        return view('welcome', compact('dtpopup','dtcarousel','dtpasstornote','dtjemaatultah'));
+        return view('welcome', compact('popupAds','carousels','latestPastorNote','birthdayMembers'));
     }
 }

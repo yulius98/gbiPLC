@@ -7,74 +7,97 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
 
 class DataJemaat extends Component
 {
     use WithPagination, WithFileUploads;
-    public $name, $email, $password, $alamat, $no_HP, $gol_darah, $filename = null, $role, $tgl_lahir, $facebook, $instagram;
-    public $foto_upload; // untuk upload file gambar
-    protected $paginationTheme = 'bootstrap';
+
+    // Form properties
+    public $name = '';
+    public $email = '';
+    public $password = '';
+    public $alamat = '';
+    public $no_HP = '';
+    public $gol_darah = '';
+    public $filename = null;
+    public $role = '';
+    public $tgl_lahir = '';
+    public $facebook = '';
+    public $instagram = '';
+    public $foto_upload;
+
+    // Component state
     public $updatedata = false;
     public $jemaat_id;
-    public $cari;
-    public $sortcolom ='name';
+    public $cari = '';
+    public $sortcolom = 'name';
     public $sortdirection = 'asc';
 
-    public function show_detail($id)
+    protected $paginationTheme = 'bootstrap';
+
+    protected function rules()
     {
-        $jemaat = User::where('users.id', $id)->first();
-        $this->name = $jemaat->name;
-        $this->email = $jemaat->email;
-        $this->password = $jemaat->password;
-        $this->alamat = $jemaat->alamat;
-        $this->no_HP = $jemaat->no_HP;
-        $this->gol_darah = $jemaat->gol_darah;
-        $this->filename = $jemaat->filename; // path gambar lama
-        $this->foto_upload = null; // reset upload file
-        $this->role = $jemaat->role;
-        $this->tgl_lahir = $jemaat->tgl_lahir;
-        $this->facebook = $jemaat->facebook;
-        $this->instagram = $jemaat->instagram;
+        $rules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'alamat' => 'nullable|string|max:255',
+            'no_HP' => 'nullable|string|max:30',
+            'gol_darah' => 'nullable|string|max:3',
+            'tgl_lahir' => 'nullable|date',
+            'facebook' => 'nullable|string|max:255',
+            'instagram' => 'nullable|string|max:255',
+            'foto_upload' => 'nullable|image|max:2048', // 2MB Max
+            'role' => 'required|in:jemaat,pengurus,pendeta',
+        ];
+
+        if (!$this->updatedata) {
+            $rules['password'] = 'required|min:8';
+            $rules['email'] .= '|unique:users,email';
+        } else {
+            $rules['email'] .= '|unique:users,email,' . $this->jemaat_id;
+        }
+
+        return $rules;
+    }
+
+    protected function messages()
+    {
+        return [
+            'name.required' => 'Nama tidak boleh kosong',
+            'email.required' => 'Email tidak boleh kosong',
+            'email.email' => 'Format email tidak valid',
+            'email.unique' => 'Email sudah digunakan',
+            'password.required' => 'Password tidak boleh kosong',
+            'password.min' => 'Password minimal 8 karakter',
+            'foto_upload.image' => 'File harus berupa gambar',
+            'foto_upload.max' => 'Ukuran gambar tidak boleh lebih dari 2MB',
+            'role.required' => 'Role harus diisi',
+            'role.in' => 'Role harus salah satu dari jemaat, pengurus, atau pendeta',
+        ];
+    }
+
+    public function showDetail($id)
+    {
+        $jemaat = User::findOrFail($id);
+        $this->fillForm($jemaat);
         $this->updatedata = true;
         $this->jemaat_id = $id;
     }
 
     public function simpan()
     {
-        $rules = [
-            'name' => 'required',
-            'foto_upload' => 'nullable|image|max:1024', // 1MB Max
-            'role' => 'required|in:jemaat,pengurus,pendeta',
-        ];
-        $messages = [
-            'name' => 'Nama tidak boleh kosong',
-            'foto_upload.image' => 'File harus berupa gambar',
-            'foto_upload.max' => 'Ukuran gambar tidak boleh lebih dari 1MB',
-            'role.required' => 'Role harus diisi',
-            'role.in' => 'Role harus salah satu dari jemaat, pengurus, atau pendeta',
-        ];
-        $validated = $this->validate($rules, $messages);
+        $this->validate();
 
-        $data = [
-            'name' => $this->name,
-            'email' => $this->email,
-            'password' => $this->password,
-            'alamat' => $this->alamat,
-            'no_HP' => $this->no_HP,
-            'gol_darah' => $this->gol_darah,
-            'tgl_lahir' => $this->tgl_lahir,
-            'facebook' => $this->facebook,
-            'instagram' => $this->instagram,
-            'role' => $this->role,
-        ];
+        $data = $this->prepareData();
 
-        // Cek apakah ada gambar yang diupload
+        if (!$this->updatedata) {
+            $data['password'] = Hash::make($this->password);
+        }
+
+        // Handle file upload
         if ($this->foto_upload) {
-            $file = $this->foto_upload;
-            $name = preg_replace('/[^A-Za-z0-9_\-]/', '_', $this->name);
-            $extension = $file->getClientOriginalExtension();
-            $filename = $name . '.' . $extension;
-            $data['filename'] = $file->storeAs('foto-jemaat', $filename, 'public');
+            $data['filename'] = $this->handleFileUpload($this->foto_upload, $this->name);
         }
 
         User::create($data);
@@ -84,140 +107,118 @@ class DataJemaat extends Component
 
     public function edit($id)
     {
-        $jemaat = User::where('users.id', $id)
-            ->first();
-        //dd($barang);
-
-        $this->name = $jemaat->name;
-        $this-> email = $jemaat-> email;
-        $this-> password = $jemaat-> password;
-        $this-> alamat = $jemaat-> alamat;
-        $this-> no_HP = $jemaat-> no_HP;
-        $this-> gol_darah = $jemaat-> gol_darah;
-        $this-> filename = $jemaat-> filename;
-        $this->tgl_lahir = $jemaat->tgl_lahir;
-        $this->facebook = $jemaat->facebook;
-        $this->instagram = $jemaat->instagram;
-        $this-> role = $jemaat-> role;
+        $jemaat = User::findOrFail($id);
+        $this->fillForm($jemaat);
         $this->updatedata = true;
         $this->jemaat_id = $id;
     }
 
     public function update()
     {
-        $rules = [
-            'name' => 'required',
-            'foto_upload' => 'nullable|image|max:2048', // 2MB Max
-            'role' => 'required|in:jemaat,pengurus,pendeta',
-        ];
-        $messages = [
-            'name' => 'Nama tidak boleh kosong',
-            'foto_upload.image' => 'File harus berupa gambar',
-            'foto_upload.max' => 'Ukuran gambar tidak boleh lebih dari 2MB',
-            'role.required' => 'Role harus diisi',
-            'role.in' => 'Role harus salah satu dari jemaat, pengurus, atau pendeta',
-        ];
-        $validated = $this->validate($rules, $messages);
+        $this->validate();
 
-        $jemaat = User::find($this->jemaat_id);
+        $jemaat = User::findOrFail($this->jemaat_id);
 
-        // Simpan gambar jika ada upload baru
+        // Handle file upload
         if ($this->foto_upload) {
-            // Hapus gambar lama jika ada
-            if ($jemaat->filename) {
-                $gambarPath = storage_path('app/public/' . $jemaat->filename);
-                if (file_exists($gambarPath)) {
-                    unlink($gambarPath);
-                }
+            // Delete old image if exists
+            if ($jemaat->filename && Storage::disk('public')->exists($jemaat->filename)) {
+                Storage::disk('public')->delete($jemaat->filename);
             }
-            $file = $this->foto_upload;
-            $name = preg_replace('/[^A-Za-z0-9_\-]/', '_', $this->name);
-            $extension = $file->getClientOriginalExtension();
-            $filename = $name . '.' . $extension;
-            $jemaat->filename = $file->storeAs('foto-jemaat', $filename, 'public');
+            $jemaat->filename = $this->handleFileUpload($this->foto_upload, $this->name);
         }
 
-        // Update field lainnya
-        $jemaat->name = $this->name;
-        $jemaat->email = $this->email;
-        $jemaat->password = $this->password;
-        $jemaat->alamat = $this->alamat;
-        $jemaat->no_HP = $this->no_HP;
-        $jemaat->gol_darah = $this->gol_darah;
-        $jemaat->tgl_lahir = $this->tgl_lahir;
-        $jemaat->facebook = $this->facebook;
-        $jemaat->instagram = $this->instagram;
-        $jemaat->role = $this->role;
-        $jemaat->save();
+        // Update other fields
+        $jemaat->update($this->prepareData());
 
         session()->flash('message', 'Data Jemaat berhasil diupdate.');
         $this->clear();
     }
 
-    public function clear()
-    {
-        $this->name = '';
-        $this->email = '';
-        $this->password = '';
-        $this->alamat = '';
-        $this->no_HP = '';
-        $this->gol_darah = '';
-        $this->role = '';
-        $this->filename = '';
-        $this->foto_upload = null;
-        $this->tgl_lahir = '';
-        $this->facebook = '';
-        $this->instagram = '';
-        $this->cari = '';
-        $this->updatedata = false;
-    }
-
     public function hapus()
     {
+        $jemaat = User::findOrFail($this->jemaat_id);
 
-        $id = $this->jemaat_id;
-        $jemaat = User::find($id);
-        if ($jemaat) {
-
-            // Hapus gambar dari storage
-            $gambarPath = storage_path('app/public/' . $jemaat->filename);
-            if (file_exists($gambarPath)) {
-                unlink($gambarPath);
-            }
-            // Hapus data dari database
-            $jemaat->delete();
-            session()->flash('message', 'Data Jemaat berhasil dihapus.');
-        } else {
-            session()->flash('message', 'Data Jemaat tidak ditemukan.');
+        // Delete image from storage
+        if ($jemaat->filename && Storage::disk('public')->exists($jemaat->filename)) {
+            Storage::disk('public')->delete($jemaat->filename);
         }
 
+        // Delete data from database
+        $jemaat->delete();
+        session()->flash('message', 'Data Jemaat berhasil dihapus.');
         $this->clear();
     }
 
     public function konfimasihapus($id)
     {
-
         $this->jemaat_id = $id;
     }
 
-    public function sort($colomname){
-
+    public function sort($colomname)
+    {
         $this->sortcolom = $colomname;
-        //dump($this->sortcolom);
-        $this->sortdirection = $this->sortdirection == 'asc' ? 'desc' : 'asc';
-        //dd($this->sortdirection);
-
+        $this->sortdirection = $this->sortdirection === 'asc' ? 'desc' : 'asc';
     }
+
+    public function clear()
+    {
+        $this->reset([
+            'name', 'email', 'password', 'alamat', 'no_HP', 'gol_darah',
+            'role', 'filename', 'foto_upload', 'tgl_lahir', 'facebook',
+            'instagram', 'cari', 'updatedata', 'jemaat_id'
+        ]);
+    }
+
     public function render()
     {
-        if ($this->cari != null) {
-            $dtjemaat = User::where('users.name', 'like', '%' . $this->cari . '%')
-            ->orderBy($this->sortcolom,$this->sortdirection)->paginate(20);
-        } else {
-            $dtjemaat = User::orderBy($this->sortcolom,$this->sortdirection)
-            ->paginate(10);
+        $query = User::query();
+
+        if ($this->cari) {
+            $query->where('name', 'like', '%' . $this->cari . '%');
         }
 
-        return view('livewire.data-jemaat',['dtjemaat' => $dtjemaat]);
+        $members = $query->orderBy($this->sortcolom, $this->sortdirection)
+                         ->paginate($this->cari ? 20 : 10);
+
+        return view('livewire.data-jemaat', ['members' => $members]);
+    }
+
+    private function fillForm(User $jemaat)
+    {
+        $this->name = $jemaat->name;
+        $this->email = $jemaat->email;
+        $this->alamat = $jemaat->alamat;
+        $this->no_HP = $jemaat->no_HP;
+        $this->gol_darah = $jemaat->gol_darah;
+        $this->filename = $jemaat->filename;
+        $this->role = $jemaat->role;
+        $this->tgl_lahir = $jemaat->tgl_lahir;
+        $this->facebook = $jemaat->facebook;
+        $this->instagram = $jemaat->instagram;
+        $this->foto_upload = null;
+    }
+
+    private function prepareData()
+    {
+        return [
+            'name' => $this->name,
+            'email' => $this->email,
+            'alamat' => $this->alamat,
+            'no_HP' => $this->no_HP,
+            'gol_darah' => $this->gol_darah,
+            'tgl_lahir' => $this->tgl_lahir,
+            'facebook' => $this->facebook,
+            'instagram' => $this->instagram,
+            'role' => $this->role,
+        ];
+    }
+
+    private function handleFileUpload($file, $name)
+    {
+        $cleanName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $name);
+        $extension = $file->getClientOriginalExtension();
+        $filename = $cleanName . '.' . $extension;
+        return $file->storeAs('foto-jemaat', $filename, 'public');
     }
 }

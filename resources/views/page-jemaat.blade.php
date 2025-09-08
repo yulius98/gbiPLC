@@ -21,7 +21,7 @@
         <div id="heroCarousel" class="relative w-full rounded-3xl overflow-hidden">
             <!-- Carousel Indicators -->
             <div class="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 space-x-2">
-                @foreach ( $dtcarousel as $key => $Ads)
+                @foreach ( $carousels as $key => $Ads)
                     <button type="button"
                         class="h-2 w-2 rounded-full bg-white/50 hover:bg-white/80 transition-colors duration-200"
                         data-carousel-indicator="{{ $key }}"
@@ -31,7 +31,7 @@
             </div>
 
             <div class="flex transition-transform duration-500 ease-in-out" id="carouselItems">
-                @foreach ( $dtcarousel as $key => $Ads)
+                @foreach ( $carousels as $key => $Ads)
                     <div class="min-w-full relative" data-carousel-item="{{ $key }}">
                         <img src="{{ asset('storage/'. $Ads->filename) }}"
                             class="w-full h-96 md:h-[500px] object-cover"
@@ -87,18 +87,18 @@
     </script>
 
     <!-- Popup Ads -->
-    @if ($dtpopup && $dtpopup->count() > 0)
-        @foreach ($dtpopup as $popup)
-            <div id="popup-{{ $popup->id }}" class="popup-overlay fixed inset-0 bg-transparent bg-opacity-50 z-50 hidden" style="display: none;">
-                <div class="popup-content bg-white rounded-lg shadow-xl max-w-lg w-auto mx-4 relative" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-                    <button class="popup-close absolute top-2 right-2 text-gray-600 hover:text-gray-800 text-2xl font-bold z-10"
+    @if ($popupAds && $popupAds->count() > 0)
+        @foreach ($popupAds as $popup)
+            <div id="popup-{{ $popup->id }}" class="popup-overlay fixed inset-0 min-h-screen bg-transparent bg-opacity-60 z-50 flex justify-center pt-24 sm:pt-32" style="display: none;">
+                <div class="popup-content bg-transparent rounded-lg shadow-xl w-full max-w-xs sm:max-w-md md:max-w-lg mx-4 flex flex-col items-center relative" style="margin:0 auto;">
+                    <button class="popup-close absolute top-2 right-0  text-red-500 text-4xl font-extrabold z-10"
                             onclick="closePopup('popup-{{ $popup->id }}')">
                         &times;
                     </button>
-                    <div class="p-4">
+                    <div class="p-4 w-full flex flex-col items-center">
                         <img src="{{ asset('storage/'. $popup->filename) }}"
                              alt="Popup Ad {{ $popup->id }}"
-                             class="w-1/5 h-auto rounded-lg mx-auto">
+                             class="w-full max-w-xs sm:max-w-md md:max-w-lg h-auto rounded-lg mx-auto object-contain" style="max-height:60vh;" loading="lazy">
                     </div>
                 </div>
             </div>
@@ -106,7 +106,7 @@
 
         <script>
             let currentPopupIndex = 0;
-            const popups = @json($dtpopup->pluck('id'));
+            const popups = @json($popupAds->pluck('id'));
             const popupDelay = 3000; // 3 seconds between popups
             const initialDelay = 2000; // 2 seconds after page load
 
@@ -182,15 +182,15 @@
 
     <!-- Suara Gembala -->
     <div class="mt-16 border-t border-gray-700 pt-10 pb-8 w-full max-w-5xl mx-auto">
-        @if ($dtpasstornote)
+        @if ($latestPastorNote)
             <h2 class="text-3xl md:text-4xl font-bold text-center text-purple-200 mb-8 tracking-wide">Suara Gembala</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                 <div class="flex justify-center">
-                    <img src="{{ asset('storage/'. $dtpasstornote->filename) }}" alt="foto" class="max-h-72 rounded-3xl shadow-lg border-4 border-purple-200 bg-gray-50" />
+                    <img src="{{ asset('storage/'. $latestPastorNote->filename) }}" alt="foto" class="max-h-72 rounded-3xl shadow-lg border-4 border-purple-200 bg-gray-50" />
                 </div>
                 <div class="flex flex-col justify-center space-y-3">
-                    <time class="text-gray-300 text-sm">Tanggal : {{ \Carbon\Carbon::parse($dtpasstornote->tgl_note)->format('d-m-Y') }}</time>
-                    <p class="text-white text-lg leading-relaxed">{{ $dtpasstornote->note }}</p>
+                    <time class="text-gray-300 text-sm">Tanggal : {{ \Carbon\Carbon::parse($latestPastorNote->tgl_note)->format('d-m-Y') }}</time>
+                    <p class="text-white text-lg leading-relaxed">{{ $latestPastorNote->note }}</p>
                 </div>
             </div>
         @endif
@@ -198,14 +198,14 @@
     <!-- END Suara Gembala -->
 
     <!-- Jemaat Ultah -->
-    @if ($dtjemaatultah->count() > 0)
+    @if ($birthdayMembers->count() > 0)
     <div class=" bg-transparent py-20 sm:py-28 w-full mt-10">
         <div class="mx-auto grid max-w-7xl gap-16 px-6 lg:px-8 xl:grid-cols-3">
             <div class="max-w-xl">
                 <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-purple-200 mb-6">Jemaat GBI Philadelphia Berulang Tahun Bulan {{ \Carbon\Carbon::now()->translatedFormat('F') }}</h2>
             </div>
             <ul role="list" class="grid gap-x-8 gap-y-12 sm:grid-cols-2 sm:gap-y-16 xl:col-span-2">
-                @foreach ( $dtjemaatultah as $jemaat)
+                @foreach ( $birthdayMembers as $jemaat)
                 <li>
                     <div class="flex items-center gap-x-6 bg-black/60 rounded-xl p-4 shadow-lg">
                         <img class="w-16 h-16 rounded-full border-2 border-purple-300 object-cover" src="{{ asset('storage/'. $jemaat->filename)}}" alt="" />
@@ -218,7 +218,7 @@
                 @endforeach
             </ul>
             <div class="mt-6 text-white">
-                {{ $dtjemaatultah->links() }}
+                {{ $birthdayMembers->links() }}
             </div>
         </div>
     </div>

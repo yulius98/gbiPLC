@@ -8,7 +8,7 @@
                 <img src="{{ $user->filename ? asset('storage/' . $user->filename) : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) }}" class="w-36 h-36 rounded-full object-cover border-4 border-blue-700 shadow-lg group-hover:scale-105 transition-transform duration-300 bg-zinc-800" alt="Foto Profil">
                 <span class="absolute bottom-2 right-2 bg-blue-600 text-white text-xs px-2 py-1 rounded shadow-md">{{ $user->role ?? 'User' }}</span>
             </div>
-            <a href="{{ route('myprofile.update') }}" class="mt-6 w-40 bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-semibold py-2 px-4 rounded-lg shadow transition-all duration-200 flex items-center justify-center">Edit Profil</a>
+            <a href="{{ route('myprofile.edit') }}" class="mt-6 w-40 bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-semibold py-2 px-4 rounded-lg shadow transition-all duration-200 flex items-center justify-center">Edit Profil</a>
         </div>
         <div class="flex-1 w-full">
             <h2 class="text-3xl font-bold text-white mb-2">{{ $user->name }}</h2>

@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use App\Models\TblCarousel;
 use App\Models\TblPastorNote;
+use App\Models\TblEvent;
 
 
 
@@ -26,9 +27,9 @@ class RegController extends Controller
         'filename.max' => 'Ukuran gambar tidak boleh lebih dari 1MB.',
         ]);
 
-        
 
-        $add_user = new User(); 
+
+        $add_user = new User();
         $add_user->name = $request->name;
         $add_user->tgl_lahir = $request->tgl_lahir;
         $add_user->no_HP = $request->no_HP;
@@ -38,7 +39,7 @@ class RegController extends Controller
         $add_user->facebook = $request->facebook;
         $add_user->instagram = $request->instagram;
         $add_user->role = 'jemaat';
-        
+
         //gunanakan jika pakai disave local
         if ($request->hasFile('filename')) {
                 $file = $request->file('filename');
@@ -51,12 +52,12 @@ class RegController extends Controller
                 $add_user->filename = null;
         }
 
-        
+
         //gunakan jika pakai laravel cloud/
         //$file = $request->file('file');
         //$fileName = time().'_'.$file->getClientOriginalName();
         //$path = Storage::disk('s3')->putFileAs('',$file,$file);
-        
+
         $add_user->save();
 
         $dtcarousel = cache()->remember('dtcarousel', 600, function () {
@@ -72,18 +73,17 @@ class RegController extends Controller
                 ->where('role', 'jemaat')
                 ->orderby('name', 'asc')
                 ->paginate(8);
-        });        
+        });
 
-        return redirect('/')->with('success', 'Pendaftaran berhasil! Selamat datang di GBI PLC');       
+        return redirect('/')->with('success', 'Pendaftaran berhasil! Selamat datang di GBI PLC');
        //return view('welcome', compact('dtcarousel','dtpasstornote','dtjemaatultah'));
-        
+
     }
 
     public function showJemaat(){
-        $dtjemaat = User::where('role','=','jemaat')
-                ->orderby('name','asc')
+        $events = TblEvent::orderBy('tgl_event', 'desc')
                 ->paginate(8);
 
-        return view('jemaat',['dtjemaat' => $dtjemaat]);
+        return view('jemaat', ['events' => $events]);
     }
 }

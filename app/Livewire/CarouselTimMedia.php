@@ -6,148 +6,116 @@ use App\Models\TblCarousel;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Storage;
 
 class CarouselTimMedia extends Component
 {
     use WithPagination, WithFileUploads;
-    public $filename, $path; 
-    public $name;
-    protected $paginationTheme = 'bootstrap';
-    public $updatedata = false;
-    public $caraousel_id;
-    public $cari; 
-    
 
-    public function show_detail($id)
+    // Form properties
+    public $filename;
+    public $imageUpload;
+
+    // Component state
+    public $updatedata = false;
+    public $carousel_id;
+    public $cari = '';
+
+    protected $paginationTheme = 'bootstrap';
+
+    protected function rules()
     {
-        
-        $carousel = TblCarousel::where('tbl_carousels.id', $id)
-            ->first();
-        
-            $this->filename = $carousel->filename;
-            $this->updatedata = true;
-            $this->caraousel_id = $id;
-       
+        return [
+            'imageUpload' => 'required|image|max:2048', // 2MB Max
+        ];
+    }
+
+    protected function messages()
+    {
+        return [
+            'imageUpload.required' => 'Gambar harus diupload',
+            'imageUpload.image' => 'File harus berupa gambar',
+            'imageUpload.max' => 'Ukuran gambar tidak boleh lebih dari 2MB',
+        ];
+    }
+
+    public function showDetail($id)
+    {
+        $carousel = TblCarousel::findOrFail($id);
+        $this->filename = $carousel->filename;
+        $this->updatedata = true;
+        $this->carousel_id = $id;
     }
 
     public function simpan()
     {
-        $rules = [
-            'filename' => 'nullable|image|max:1024', // 1MB Max
-        ];
-        $messages = [
-            'filename.image' => 'File harus berupa gambar',
-            'filename.max' => 'Ukuran gambar tidak boleh lebih dari 1MB',
-            
-        ];
-        $validated = $this->validate($rules, $messages);
-        
-       
-         // Cek apakah ada gambar yang diupload
-        if ($this->filename != null) {
-            $data['filename'] = $this->filename->store('foto-carousel', 'public');
-        } else {
-            $data['foto-carousel'] = null; // atau bisa dihapus jika tidak ingin menyimpan key 'gambar' sama sekali
+        $this->validate();
+
+        $data = [];
+        if ($this->imageUpload) {
+            $data['filename'] = $this->imageUpload->store('foto-carousel', 'public');
         }
 
-
-
-        // Simpan ke database
         TblCarousel::create($data);
-        session()->flash('message', 'Data Carausel berhasil disimpan.');
+        session()->flash('message', 'Data Carousel berhasil disimpan.');
         $this->clear();
-        // Initialization code can go here
     }
 
     public function edit($id)
-    {    
-        $carousel = TblCarousel::where('tbl_carousels.id', $id)
-            ->first();
-        //dd($barang);
-
-        $this-> filename = $carousel-> filename;     
+    {
+        $carousel = TblCarousel::findOrFail($id);
+        $this->filename = $carousel->filename;
         $this->updatedata = true;
-        $this->caraousel_id = $id;
+        $this->carousel_id = $id;
     }
 
     public function update()
     {
-        $rules = [
-            'filename' => 'nullable|image|max:2048', // 1MB Max
-            
-        ];
-        $messages = [
-            
-            'filename.image' => 'File harus berupa gambar',
-            'filename.max' => 'Ukuran gambar tidak boleh lebih dari 2MB',
-            
-        ];
-        $validated = $this->validate($rules, $messages);
-        
-        $carousel = TblCarousel::find($this->caraousel_id);
+        $this->validate();
 
-        // Simpan gambar jika ada upload baru
-        if($carousel->filename != null) {
-            $gambarPath = storage_path('app/public/' . $carousel->filename);
-            if (file_exists($gambarPath)) {
-                unlink($gambarPath);
+        $carousel = TblCarousel::findOrFail($this->carousel_id);
+
+        // Delete old image if exists and new image is uploaded
+        if ($this->imageUpload) {
+            if ($carousel->filename && Storage::disk('public')->exists($carousel->filename)) {
+                Storage::disk('public')->delete($carousel->filename);
             }
+            $carousel->filename = $this->imageUpload->store('foto-carousel', 'public');
+            $carousel->save();
         }
-
-         // Cek apakah ada gambar yang diupload
-        if ($this->filename != null) {
-            $data['filename'] = $this->filename->store('foto-carousel', 'public');
-        } else {
-            $data['foto-carousel'] = null; // atau bisa dihapus jika tidak ingin menyimpan key 'gambar' sama sekali
-        }
-
-        // Update field lainnya
-        $carousel-> save();
 
         session()->flash('message', 'Data Carousel berhasil diupdate.');
         $this->clear();
     }
 
-    public function clear()
-    {
-        
-        $this-> filename = '';
-        $this->cari = '';
-        
-        $this->updatedata = false;
-    }
-
     public function hapus()
     {
-        
-        $id = $this->caraousel_id;
-        $carousel = TblCarousel::find($id);
-        if ($carousel) {
-            
-            // Hapus gambar dari storage
-            $gambarPath = storage_path('app/public/' . $carousel->filename);
-            if (file_exists($gambarPath)) {
-                unlink($gambarPath);
-            }
-            // Hapus data dari database
-            $carousel->delete();
-            session()->flash('message', 'Data Carousel berhasil dihapus.');
-        } else {
-            session()->flash('message', 'Data Carousel tidak ditemukan.');
+        $carousel = TblCarousel::findOrFail($this->carousel_id);
+
+        // Delete image from storage
+        if ($carousel->filename && Storage::disk('public')->exists($carousel->filename)) {
+            Storage::disk('public')->delete($carousel->filename);
         }
 
+        // Delete data from database
+        $carousel->delete();
+        session()->flash('message', 'Data Carousel berhasil dihapus.');
         $this->clear();
     }
 
     public function konfimasihapus($id)
     {
-        
-        $this->caraousel_id = $id;
+        $this->carousel_id = $id;
     }
+
+    public function clear()
+    {
+        $this->reset(['filename', 'imageUpload', 'cari', 'updatedata', 'carousel_id']);
+    }
+
     public function render()
     {
-        $dtcarousel = TblCarousel::paginate(5);
-
-        return view('livewire.carousel-tim-media',['dtcarousel' => $dtcarousel]);
+        $carousels = TblCarousel::paginate(5);
+        return view('livewire.carousel-tim-media', ['carousels' => $carousels]);
     }
 }

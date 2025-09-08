@@ -8,36 +8,30 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthLogin extends Controller
 {
-    public function AuthUser(request $request){
-
+    /**
+     * Authenticate user and redirect based on role
+     */
+    public function authenticateUser(Request $request)
+    {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
-
         if (Auth::attempt($credentials)) {
-
             $request->session()->regenerate();
 
+            $user = Auth::user();
 
-            $dtuser = User::where('email', $credentials['email'])->first();
-
-
-
-            if ( $dtuser->role == "pengurus") {
-                return redirect('/pengurus/dashboard_admin/'.$dtuser->name);
-            } elseif ( $dtuser->role == "jemaat"){
-                return redirect('/jemaat/page-jemaat');
-            }
-
-            // If user role is not pengurus, redirect to homepage
-            return redirect('/')->with('message', 'Anda tidak memiliki akses ke halaman admin');
-
+            return match ($user->role) {
+                'pengurus' => redirect('/pengurus/dashboard_admin/' . $user->name),
+                'jemaat' => redirect('/jemaat/page-jemaat'),
+                default => redirect('/')->with('error', 'Anda tidak memiliki akses ke halaman admin')
+            };
         }
 
         return back()->withErrors([
-            'email' => 'Email atau Password Salah !!',
+            'email' => 'Email atau password salah.',
         ])->onlyInput('email');
     }
 

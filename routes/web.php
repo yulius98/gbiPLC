@@ -7,6 +7,7 @@ use App\Http\Controllers\RegController;
 use App\Http\Controllers\JemaatController;
 use App\Http\Controllers\PageJemaatController;
 use App\Http\Controllers\WelcomeController;
+use App\Http\Controllers\ResetPasswordController;
 
 // All web routes should be within web middleware group
 Route::middleware(['web'])->group(function () {
@@ -15,7 +16,7 @@ Route::middleware(['web'])->group(function () {
     Route::get('/register', function () {
         return view('jemaat.daftar');
     })->name('register');
-    Route::get('/event', [JemaatController::class, 'Data_Jemaat'])->name('event');
+    Route::get('/event', [JemaatController::class, 'index'])->name('event');
     Route::get('/Daftar', [RegController::class, 'showJemaat']);
 
     // Authentication Routes
@@ -23,8 +24,26 @@ Route::middleware(['web'])->group(function () {
         return view('login');
     })->name('login')->middleware('guest');
 
-    Route::post('/login', [AuthLogin::class, 'AuthUser'])->name('login.post')->middleware('guest');
+    Route::post('/login', [AuthLogin::class, 'authenticateUser'])->name('login.post')->middleware('guest');
     Route::post('/Daftar', [RegController::class, 'RegJemaat'])->middleware('guest');
+
+    // Password Reset Routes
+    Route::middleware('guest')->group(function () {
+        Route::get('/forgot-password', function () {
+            return view('auth.forgot-password');
+        })->name('password.request');
+
+        Route::post('/forgot-password', [ResetPasswordController::class, 'sendResetLinkEmail'])
+             ->middleware('throttle:6,1')
+             ->name('password.email');
+
+        Route::get('/reset-password/{token}', function (string $token) {
+            return view('auth.reset-password', ['token' => $token]);
+        })->name('password.reset');
+
+        Route::post('/reset-password', [ResetPasswordController::class, 'resetPassword'])
+             ->name('password.update');
+    });
 
     // Logout route (can be accessed by authenticated users)
     Route::post('/logout', [AuthLogin::class, 'logout'])->name('logout')->middleware('auth');
@@ -33,9 +52,8 @@ Route::middleware(['web'])->group(function () {
     Route::group(['middleware' => ['role:jemaat'], 'prefix' => 'jemaat'], function() {
 	    Route::get('/page-jemaat', [PageJemaatController::class, 'index'])->name('page-jemaat');
         Route::get('/myprofile', [PageJemaatController::class, 'myProfile'])->name('myprofile');
-        Route::get('/myprofile/update', [PageJemaatController::class, 'updateProfile'])->name('myprofile.update');
-        Route::post('/myprofile/update', [PageJemaatController::class, 'saveProfile'])->name('myprofile.save');
-
+        Route::get('/myprofile/edit', [PageJemaatController::class, 'editProfile'])->name('myprofile.edit');
+        Route::put('/myprofile/update', [PageJemaatController::class, 'updateProfile'])->name('myprofile.update');
     });
 
     // Protected Admin Routes (hanya untuk pengurus)

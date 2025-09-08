@@ -28,7 +28,7 @@
                 <div class="alert alert-info text-blue-600 mb-4 p-3 rounded-md bg-blue-50 border border-blue-200">
                     {{ session('message') }}
                 </div>
-            @endif 
+            @endif
         <div>
             <label for="email" class="block text-sm/6 font-semibold text-white">Email</label>
             <div class="mt-2">
@@ -39,7 +39,9 @@
         <div>
             <div class="flex items-center justify-between">
                 <label for="password" class="block text-sm/6 font-semibold text-white">Password</label>
-               
+               <div class="text-sm">
+                    <a href="/forgot-password" class="font-semibold text-blue-300 hover:text-blue-700">Lupa/Buat password?</a>
+                </div>
             </div>
             <div class="mt-2">
             <input type="password" name="password" id="password" autocomplete="current-password" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-[#723322] sm:text-sm/6" placeholder="Masukkan password Anda">
@@ -69,11 +71,11 @@
         </div>
         </form>
 
-       
 
-        
+
+
     </div>
-    
+
     </div>
 
     <script>
@@ -82,7 +84,7 @@
             const button = document.querySelector('button[type="submit"]');
             const buttonText = document.getElementById('button-text');
             const spinner = document.getElementById('loading-spinner');
-            
+
             button.disabled = true;
             buttonText.textContent = 'Sedang masuk...';
             spinner.classList.remove('hidden');

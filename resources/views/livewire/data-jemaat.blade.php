@@ -169,7 +169,7 @@
         <div class="pb-3 pt-3">
             <input type="text" class="form-control mb-3 w-25" placeholder="Search..." wire:model.live="cari">
         </div>
-        {{ $dtjemaat->links() }}
+        {{ $members->links() }}
         <table class="table table-striped table-sortable ">
             <thead>
                 <tr>
@@ -187,10 +187,10 @@
             <tbody>
 
 
-                @foreach ($dtjemaat as $key => $value)
+                @foreach ($members as $key => $value)
 
                 <tr>
-                    <td>{{ $dtjemaat->firstItem() + $key }}</td>
+                    <td>{{ $members->firstItem() + $key }}</td>
                     <td>{{ $value->name  }}</td>
                     <td>{{ $value->email }}</td>
                     <td>{{ $value->alamat }}</td>

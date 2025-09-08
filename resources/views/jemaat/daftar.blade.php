@@ -128,48 +128,66 @@
                     <div>
                         <label for="name" class="block mb-1 text-white">Nama</label>
                         <input type="text" id="name" name="name"
-                            class=" w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition" />
+                            class="w-full px-4 py-2 bg-black border rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition {{ $errors->has('name') ? 'border-red-500' : 'border-white' }} text-white" value="{{ old('name') }}" />
+                        @error('name')
+                            <span class="text-red-500 text-xs">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     {{-- Tanggal Lahir --}}
                     <div>
                         <label for="tgl_lahir" class="block mb-1 text-white">Tanggal Lahir</label>
                         <input type="date" id="tgl_lahir" name="tgl_lahir"
-                            class="form-control w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition" />
+                            class="form-control w-full px-4 py-2 bg-black border rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition {{ $errors->has('tgl_lahir') ? 'border-red-500' : 'border-white' }} text-white" value="{{ old('tgl_lahir') }}" />
+                        @error('tgl_lahir')
+                            <span class="text-red-500 text-xs">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     {{-- Alamat --}}
                     <div>
                         <label for="alamat" class="block mb-1 text-white">Alamat</label>
                         <input type="text" id="alamat" name="alamat"
-                            class="w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition" />
+                            class="w-full px-4 py-2 bg-black border rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition {{ $errors->has('alamat') ? 'border-red-500' : 'border-white' }} text-white" value="{{ old('alamat') }}" />
+                        @error('alamat')
+                            <span class="text-red-500 text-xs">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     {{-- Email --}}
                     <div>
                         <label for="email" class="block mb-1 text-white">Email</label>
                         <input type="email" id="email" name="email"
-                            class="w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition" />
+                            class="w-full px-4 py-2 bg-black border rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition {{ $errors->has('email') ? 'border-red-500' : 'border-white' }} text-white" value="{{ old('email') }}" />
+                        @error('email')
+                            <span class="text-red-500 text-xs">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     {{-- No HP --}}
                     <div>
                         <label for="no_HP" class="block mb-1 text-white">No Telp/HP</label>
                         <input type="text" id="no_HP" name="no_HP"
-                            class="w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition" />
+                            class="w-full px-4 py-2 bg-black border rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition {{ $errors->has('no_HP') ? 'border-red-500' : 'border-white' }} text-white" value="{{ old('no_HP') }}" />
+                        @error('no_HP')
+                            <span class="text-red-500 text-xs">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     {{-- Golongan Darah --}}
                     <div>
                         <label for="gol_darah" class="block mb-1 text-white">Golongan Darah</label>
                         <select id="gol_darah" name="gol_darah"
-                            class="w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition">
+                            class="w-full px-4 py-2 bg-black border rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition {{ $errors->has('gol_darah') ? 'border-red-500' : 'border-white' }} text-white">
                             <option value="">-- Pilih Golongan Darah --</option>
                             <option value="A">A</option>
                             <option value="B">B</option>
                             <option value="AB">AB</option>
                             <option value="O">O</option>
                         </select>
+                        @error('gol_darah')
+                            <span class="text-red-500 text-xs">{{ $message }}</span>
+                        @enderror
                     </div>
 
 
@@ -178,14 +196,20 @@
                     <div>
                         <label for="facebook" class="block mb-1 text-white">Facebook</label>
                         <input type="text" id="facebook" name="facebook"
-                            class="w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition" />
+                            class="w-full px-4 py-2 bg-black border rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition {{ $errors->has('facebook') ? 'border-red-500' : 'border-white' }} text-white" value="{{ old('facebook') }}" />
+                        @error('facebook')
+                            <span class="text-red-500 text-xs">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     {{-- Alamat Instagram --}}
                     <div>
                         <label for="instagram" class="block mb-1 text-white">Instagram</label>
                         <input type="text" id="instagram" name="instagram"
-                            class="w-full px-4 py-2 bg-black border border-white text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition" />
+                            class="w-full px-4 py-2 bg-black border rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition {{ $errors->has('instagram') ? 'border-red-500' : 'border-white' }} text-white" value="{{ old('instagram') }}" />
+                        @error('instagram')
+                            <span class="text-red-500 text-xs">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     {{-- Foto --}}
@@ -196,17 +220,20 @@
                         <!-- File input for gallery selection -->
                         <input type="file" id="gallery-input" accept="image/*" style="display:none;" />
                         <!-- Video preview for live camera -->
-                        <video id="video" autoplay playsinline></video>
+                        <video id="video" autoplay playsinline class="w-full max-w-xs md:max-w-sm rounded border-2 border-white mb-2"></video>
                         <!-- Canvas to capture photo -->
-                        <canvas id="canvas"></canvas>
+                        <canvas id="canvas" class="w-full max-w-xs md:max-w-sm rounded border-2 border-white mb-2" style="display:none;"></canvas>
                         <!-- Preview image from gallery -->
-                        <img id="gallery-preview" style="display:none; width: 100%; max-width: 320px; border: 2px solid white; border-radius: 8px;" />
+                        <img id="gallery-preview" class="w-full max-w-xs md:max-w-sm rounded border-2 border-white mb-2" style="display:none;" />
                         <!-- Camera control buttons -->
                         <div id="camera-controls">
                             <button type="button" id="gallery-action" class="neon-button px-4 py-2 rounded">Foto dari Galeri</button>
                             <button type="button" id="camera-action" class="neon-button px-4 py-2 rounded" data-action="start">Foto dari Kamera</button>
                             <button type="button" id="retake-photo" class="neon-button px-4 py-2 rounded" disabled>Ulangi Foto</button>
                         </div>
+                        @error('filename')
+                            <span class="text-red-500 text-xs">{{ $message }}</span>
+                        @enderror
                     </div>
 
                 </div>

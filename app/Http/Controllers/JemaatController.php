@@ -3,20 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\TblEvent;
-use App\Models\User;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class JemaatController extends Controller
 {
-    public function Data_Jemaat()
+    /**
+     * Display list of jemaat and current month events
+     */
+    public function index()
     {
+        $events = cache()->remember(
+            'monthly_events_' . Carbon::now()->month . '_' . Carbon::now()->year,
+            now()->addHours(1),
+            function () {
+                return TblEvent::thisMonth()
+                    ->orderBy('tgl_event', 'asc')
+                    ->paginate(10);
+            }
+        );
 
-        $dtevent = cache()->remember('dtevent' . Carbon::now()->month, 600, function () {
-            return TblEvent::whereMonth('tgl_event', Carbon::now()->month)
-                ->paginate(10);
-        });
-
-        return view ('jemaat',['dtevent' => $dtevent]);            
+        return view('jemaat', compact('events'));
     }
 }

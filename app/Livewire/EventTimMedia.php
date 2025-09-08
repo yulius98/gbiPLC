@@ -10,13 +10,13 @@ use Livewire\WithFileUploads;
 
 class EventTimMedia extends Component
 {
-    use WithPagination, WithFileUploads; 
+    use WithPagination, WithFileUploads;
     public $tgl_event, $keterangan, $filename, $path;
     protected $paginationTheme = 'bootstrap';
     public $updatedata = false;
     public $event_id;
-    public $cari; 
-    public $sortcolom ='tgl_event'; 
+    public $cari;
+    public $sortcolom ='tgl_event';
     public $sortdirection = 'asc';
 
     public function show_detail($id)
@@ -71,7 +71,7 @@ class EventTimMedia extends Component
     }
 
     public function edit($id)
-    {    
+    {
         $event = TblEvent::where('tbl_events.id', $id)
             ->first();
 
@@ -97,11 +97,11 @@ class EventTimMedia extends Component
             'tgl_event' => 'Tanggal tidak boleh kosong',
             'filename.image' => 'File harus berupa gambar',
             'filename.max' => 'Ukuran gambar tidak boleh lebih dari 1MB',
-            
+
         ];
         $validated = $this->validate($rules, $messages);
-        
-       
+
+
          // Cek apakah ada gambar yang diupload
         if ($this->filename != null) {
             $data['filename'] = $this->filename->store('foto-event', 'public');
@@ -124,12 +124,12 @@ class EventTimMedia extends Component
         $this->event_id = '';
         $this->cari = '';
 
-        
+
     }
 
     public function hapus()
     {
-        
+
         $id = $this->event_id;
         $event = TblEvent::find($id);
         if ($event) {
@@ -150,30 +150,30 @@ class EventTimMedia extends Component
 
     public function konfimasihapus($id)
     {
-        
+
         $this->event_id = $id;
     }
 
     public function sort($colomname){
-        
+
         $this->sortcolom = $colomname;
         //dump($this->sortcolom);
         $this->sortdirection = $this->sortdirection == 'asc' ? 'desc' : 'asc';
         //dd($this->sortdirection);
-        
+
     }
 
     public function render()
     {
         if ($this->cari != null) {
-            $dtevent = TblEvent::where('keterangan', 'like', '%' . $this->cari . '%')
+            $events = TblEvent::where('keterangan', 'like', '%' . $this->cari . '%')
             ->orderBy($this->sortcolom, $this->sortdirection)
             ->paginate(10);
         } else {
-            $dtevent = TblEvent::orderBy($this->sortcolom,$this->sortdirection)
+            $events = TblEvent::orderBy($this->sortcolom,$this->sortdirection)
             ->paginate(10);
         }
-        
-        return view('livewire.event-tim-media',['dtevent' => $dtevent]);
+
+        return view('livewire.event-tim-media',['events' => $events]);
     }
 }
