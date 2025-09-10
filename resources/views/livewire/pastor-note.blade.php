@@ -1,8 +1,4 @@
-@php 
-    use Illuminate\Support\Facades\Storage;
-    use Illuminate\Support\Str;
-    
-@endphp
+@php use Illuminate\Support\Facades\Storage; @endphp
 
 <div class="container">
     @if ($errors->any())
@@ -12,7 +8,7 @@
                     @foreach ($errors->all() as $item)
                         <li>{{ $item }}</li>
                     @endforeach
-                </ul>    
+                </ul>
             </div>
         </div>
     @endif
@@ -22,12 +18,12 @@
                 {{ session('message') }}
             </div>
         </div>
-        
+
     @endif
 
 
     <!-- START FORM -->
-    <div class="my-3 p-3 bg-body rounded ">        
+    <div class="my-3 p-3 bg-body rounded ">
         <form>
             <div class="row">
                 <!-- Kolom Pertama -->
@@ -51,23 +47,24 @@
                             <div class="form-group row">
                                 <label for="filename" class="col-sm-3 col-form-label">Gambar</label>
                                 <div class="col-sm-9">
-                                    <input 
-                                        type="file" 
-                                        class="form-control @error('filename') is-invalid @enderror" 
-                                        id="filename" 
-                                        wire:model="filename" 
+                                    <input
+                                        type="file"
+                                        class="form-control @error('filename') is-invalid @enderror"
+                                        id="filename"
+                                        wire:model="filename"
                                         accept=".jpg,.jpeg,.png"
                                         onchange="document.getElementById('label-gambar').innerText = this.files[0]?.name || 'Pilih gambar';"
                                     >
                                     <small id="label-gambar" class="form-text text-muted">Pilih Foto</small>
-                                    @error('filename') 
-                                        <span class="invalid-feedback d-block">{{ $message }}</span> 
+                                    @error('filename')
+                                        <span class="invalid-feedback d-block">{{ $message }}</span>
                                     @enderror
-                                    
+
                                     {{-- Preview Gambar --}}
                                     @isset($filename)
                                         @if ($filename instanceof \Illuminate\Http\UploadedFile)
                                             <div class="mt-3">
+                                                @dump($filename->temporaryURL())
                                                 <img src="{{ $filename->temporaryUrl() }}" alt="Preview Gambar" class="img-thumbnail object-contain rounded" style="max-height: 100px;">
                                             </div>
                                         @endif
@@ -78,26 +75,26 @@
                     </div>
                 </div>
             </div>
-    
+
             <!-- Tombol SIMPAN -->
             <div class="mb-3 row">
                 <div class="col-12 text-end">
                     @if ($updatedata == false)
                         <button type="button" class="btn btn-primary" name="submit" wire:click="simpan()">SIMPAN</button>
                     @else
-                        <button type="button" class="btn btn-primary" name="submit" wire:click="update()">UPDATE</button>    
+                        <button type="button" class="btn btn-primary" name="submit" wire:click="update()">UPDATE</button>
                     @endif
-                    <button type="button" class="btn btn-secondary" name="submit" wire:click="clear()">Clear</button>    
-                    
+                    <button type="button" class="btn btn-secondary" name="submit" wire:click="clear()">Clear</button>
+
                 </div>
             </div>
         </form>
     </div>
-    
+
     <!-- AKHIR FORM -->
 
     <!-- START DATA -->
-    
+
     <div class="my-3 p-3 bg-body rounded shadow-sm">
         <h4 class="font-medium">Data Suara Gembala</h4>
         <div class="pb-3 pt-3">
@@ -115,14 +112,14 @@
                 </tr>
             </thead>
             <tbody>
-                
-                
+
+
                 @foreach ($pastornotes as $key => $value)
                 <tr>
                     <td>{{ $pastornotes->firstItem() + $key }}</td>
                     <td>{{ $value->tgl_note  }}</td>
-                    <td>{{ Str::limit($value->note, 200) }}</td>
-                    <td><img src="{{ asset('storage/' . $value->filename) }}" alt="Foto" class="p-0.5 object-contain rounded-full " 
+                    <td>{{ $value->note }}</td>
+                    <td><img src="{{ asset('storage/' . $value->filename) }}" alt="Foto" class="p-0.5 object-contain rounded-full "
                                 style="width: 60px; height: 60px;"></td>
                     <td>
                         <div class="d-flex gap-1">
@@ -133,10 +130,10 @@
                     </td>
                 </tr>
                 @endforeach
-                
+
             </tbody>
         </table>
-        
+
     </div>
     <!-- AKHIR DATA -->
     <div wire:ignore.self class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -162,4 +159,4 @@
 
 
 
-    
+
