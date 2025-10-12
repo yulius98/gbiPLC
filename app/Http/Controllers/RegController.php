@@ -28,7 +28,6 @@ class RegController extends Controller
         ]);
 
 
-
         $add_user = new User();
         $add_user->name = $request->name;
         $add_user->tgl_lahir = $request->tgl_lahir;

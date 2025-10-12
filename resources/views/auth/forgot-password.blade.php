@@ -6,7 +6,7 @@
         <img class="mx-auto h-40 w-auto rounded-b-full" src="{{ asset('logoplc.png') }}" alt="GBI PLC Logo">
         <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-white">Reset/Buat Password</h2>
         <p class="mt-2 text-center text-sm text-gray-300">
-            Enter your email address and we'll send you a link to reset your password.
+            Masukkan alamat email Anda, dan kami akan mengirimkan tautan untuk mereset kata sandi Anda.
         </p>
     </div>
 

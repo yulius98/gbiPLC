@@ -7,7 +7,7 @@
         </h2>
     </div>
 
-    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm ">
         <form class="space-y-6" action="{{ route('login.post') }}" method="POST">
         @csrf
             @if ($errors->any())
@@ -40,7 +40,7 @@
             <div class="flex items-center justify-between">
                 <label for="password" class="block text-sm/6 font-semibold text-white">Password</label>
                <div class="text-sm">
-                    <a href="/forgot-password" class="font-semibold text-blue-300 hover:text-blue-700">Lupa/Buat password?</a>
+                    <a href="/forgot-password" class="font-semibold text-white hover:text-blue-400">Lupa/Buat password?</a>
                 </div>
             </div>
             <div class="mt-2">
