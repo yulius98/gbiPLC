@@ -8,6 +8,7 @@ use App\Http\Controllers\JemaatController;
 use App\Http\Controllers\PageJemaatController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\MateriKotbahController;
 
 // All web routes should be within web middleware group
 Route::middleware(['web'])->group(function () {
@@ -18,6 +19,10 @@ Route::middleware(['web'])->group(function () {
     })->name('register');
     Route::get('/event', [JemaatController::class, 'index'])->name('event');
     Route::get('/Daftar', [RegController::class, 'showJemaat']);
+    
+    // Materi Kotbah Routes
+    Route::get('/materi-kotbah', [MateriKotbahController::class, 'index'])->name('materi-kotbah');
+    Route::get('/materi-kotbah/download/{id}', [MateriKotbahController::class, 'download'])->name('materi-kotbah.download');
 
     // Authentication Routes
     Route::get('/login', function () {
@@ -47,6 +52,9 @@ Route::middleware(['web'])->group(function () {
 
     // Logout route (can be accessed by authenticated users)
     Route::post('/logout', [AuthLogin::class, 'logout'])->name('logout')->middleware('auth');
+    
+    // JWT Test route (for debugging, remove in production)
+    Route::get('/jwt-test', [App\Http\Controllers\JWTTestController::class, 'testToken']);
 
     // Protected Jemaat Routes (hanya untuk jemaat)
     Route::group(['middleware' => ['role:jemaat'], 'prefix' => 'jemaat'], function() {
