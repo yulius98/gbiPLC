@@ -9,6 +9,7 @@ use App\Http\Controllers\PageJemaatController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\MateriKotbahController;
+use App\Http\Controllers\ChunkUploadController;
 
 // All web routes should be within web middleware group
 Route::middleware(['web'])->group(function () {
@@ -66,6 +67,10 @@ Route::middleware(['web'])->group(function () {
 
     // Protected Admin Routes (hanya untuk pengurus)
     Route::group(['middleware' => ['role:pengurus'], 'prefix' => 'pengurus'], function () {
+        // Chunk upload routes untuk file besar
+        Route::match(['get', 'post'], '/chunk-upload', [ChunkUploadController::class, 'upload'])->name('chunk.upload');
+        Route::post('/chunk-cleanup', [ChunkUploadController::class, 'cleanup'])->name('chunk.cleanup');
+        
         Route::get('/dashboard_admin/{name_admin}', function () {
             return view('pengurus.dashboard_admin');
         });
@@ -92,6 +97,10 @@ Route::middleware(['web'])->group(function () {
 
         Route::get('/pastor_note', function () {
             return view('pengurus.pastor_note');
+        });
+
+        Route::get('/materi_kotbah', function () {
+            return view('pengurus.materi_kotbah');
         });
     });
 });

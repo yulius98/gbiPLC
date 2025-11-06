@@ -23,6 +23,22 @@ class EnsureUserHasRole
      */
     public function handle(Request $request, Closure $next, ?string $role = null): Response
     {
+        // Log to ensure middleware is invoked
+        Log::info('EnsureUserHasRole middleware triggered', [
+            'requested_url' => $request->fullUrl(),
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent()
+        ]);
+
+        // Log authentication status for debugging
+        Log::debug('EnsureUserHasRole middleware invoked', [
+            'is_authenticated' => Auth::check(),
+            'user_id' => Auth::id(),
+            'user_email' => Auth::check() ? Auth::user()->email : null,
+            'requested_url' => $request->fullUrl(),
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent()
+        ]);
         // First, check if user is authenticated
         if (!Auth::check()) {
             if ($request->expectsJson()) {
@@ -36,6 +52,8 @@ class EnsureUserHasRole
                 ->with('message', 'Silakan login terlebih dahulu untuk mengakses halaman ini.')
                 ->with('intended_url', $request->fullUrl());
         }
+
+        
 
         // If role is specified, check if user has the required role
         if ($role !== null) {

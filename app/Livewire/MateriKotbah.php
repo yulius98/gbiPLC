@@ -6,18 +6,31 @@ use App\Models\TblMateriKotbah;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Livewire\Component;
+use Illuminate\Support\Facades\Log;
 
 class MateriKotbah extends Component
 {
     use WithPagination, WithFileUploads; 
 
     public $tgl_kotbah, $judul, $filename, $path;
+    public $uploadedFilePath; // Untuk menyimpan path file yang sudah diupload via chunk
+    public $uploadProgress = 0; // Progress upload (0-100)
+    public $isUploading = false; // Status sedang upload atau tidak
     protected $paginationTheme = 'bootstrap';
     public $updatedata = false;
     public $kotbah_id;
     public $cari; 
     public $sortcolom ='tgl_kotbah'; 
     public $sortdirection = 'asc';
+
+    protected $listeners = ['fileUploaded' => 'handleFileUploaded'];
+
+    public function handleFileUploaded($filePath)
+    {
+        $this->uploadedFilePath = $filePath;
+        $this->isUploading = false;
+        $this->uploadProgress = 100;
+    }
 
     public function show_detail($id)
     {
@@ -42,32 +55,62 @@ class MateriKotbah extends Component
     {
         $rules = [
             'tgl_kotbah' => 'required|date',
-            'filename' => 'nullable|file|mimes:pdf,ppt,pptx|max:10240', // 10MB Max untuk file PDF/PowerPoint
         ];
         $messages = [
             'tgl_kotbah.required' => 'Tanggal tidak boleh kosong',
-            'filename.file' => 'File harus berupa file yang valid',
-            'filename.mimes' => 'File harus berupa PDF atau PowerPoint (ppt, pptx)',
-            'filename.max' => 'Ukuran file tidak boleh lebih dari 10MB',
         ];
-        $validated = $this->validate($rules, $messages);
+        
+        try {
+            $validated = $this->validate($rules, $messages);
+            
+            // Simpan data ke database
+            $data = [
+                'tgl_kotbah' => $this->tgl_kotbah,
+                'judul' => $this->judul,
+            ];
 
-        // Simpan data ke database
-        $data = [
-            'tgl_kotbah' => $this->tgl_kotbah,
-            'judul' => $this->judul,
-        ];
+            // Cek apakah ada file yang diupload via chunk upload
+            if ($this->uploadedFilePath) {
+                $data['filename'] = $this->uploadedFilePath;
+                Log::info('Using chunked upload file', ['path' => $this->uploadedFilePath]);
+            }
+            // Fallback ke upload biasa jika ada
+            elseif ($this->filename && is_object($this->filename)) {
+                Log::info('Attempting to upload file', [
+                    'original_name' => $this->filename->getClientOriginalName(),
+                    'mime_type' => $this->filename->getMimeType(),
+                    'size' => $this->filename->getSize()
+                ]);
+                
+                $filePath = $this->filename->store('materi-kotbah', 'public');
+                
+                if ($filePath) {
+                    $data['filename'] = $filePath;
+                    Log::info('File uploaded successfully', ['path' => $filePath]);
+                } else {
+                    Log::error('File upload returned false');
+                    session()->flash('error', 'Gagal menyimpan file.');
+                    return;
+                }
+            }
 
-        // Cek apakah ada file yang diupload
-        if ($this->filename != null) {
-            $data['filename'] = $this->filename->store('materi-kotbah', 'public');
+            // Simpan ke database
+            $saved = TblMateriKotbah::create($data);
+            Log::info('Data saved to database', ['id' => $saved->id]);
+            
+            session()->flash('message', 'Data Materi Kotbah berhasil disimpan.');
+            $this->clear();
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Re-throw validation exceptions so they display properly
+            throw $e;
+        } catch (\Exception $e) {
+            Log::error('Error saving materi kotbah', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            session()->flash('error', 'Gagal menyimpan data: ' . $e->getMessage());
         }
-
-        // Simpan ke database
-        TblMateriKotbah::create($data);
-        session()->flash('message', 'Data Materi Kotbah berhasil disimpan.');
-        $this->clear();
-        // Initialization code can go here
     }
 
     public function edit($id)
@@ -91,13 +134,9 @@ class MateriKotbah extends Component
     {
         $rules = [
             'tgl_kotbah' => 'required|date',
-            'filename' => 'nullable|file|mimes:pdf,ppt,pptx|max:10240', // 10MB Max untuk file PDF/PowerPoint
         ];
         $messages = [
             'tgl_kotbah.required' => 'Tanggal tidak boleh kosong',
-            'filename.file' => 'File harus berupa file yang valid',
-            'filename.mimes' => 'File harus berupa PDF atau PowerPoint (ppt, pptx)',
-            'filename.max' => 'Ukuran file tidak boleh lebih dari 10MB',
         ];
         $validated = $this->validate($rules, $messages);
         
@@ -107,8 +146,21 @@ class MateriKotbah extends Component
             'judul' => $this->judul,
         ];
 
-        // Cek apakah ada file yang diupload
-        if ($this->filename && is_object($this->filename)) {
+        // Cek apakah ada file yang diupload via chunk upload
+        if ($this->uploadedFilePath) {
+            // Hapus file lama jika ada
+            $materikotbah = TblMateriKotbah::find($this->kotbah_id);
+            if ($materikotbah && $materikotbah->filename) {
+                $oldFilePath = storage_path('app/public/' . $materikotbah->filename);
+                if (file_exists($oldFilePath)) {
+                    unlink($oldFilePath);
+                }
+            }
+            
+            $data['filename'] = $this->uploadedFilePath;
+        }
+        // Fallback ke upload biasa jika ada
+        elseif ($this->filename && is_object($this->filename)) {
             // Hapus file lama jika ada
             $materikotbah = TblMateriKotbah::find($this->kotbah_id);
             if ($materikotbah && $materikotbah->filename) {
@@ -132,10 +184,14 @@ class MateriKotbah extends Component
     {
         $this->tgl_kotbah = '';
         $this->judul = '';
-        $this->filename = '';
+        $this->filename = null;
+        $this->uploadedFilePath = null;
+        $this->uploadProgress = 0;
+        $this->isUploading = false;
         $this->updatedata = false;
         $this->kotbah_id = '';
-        $this->cari = '';   
+        $this->cari = '';
+        $this->resetValidation();
     }
 
     public function hapus()

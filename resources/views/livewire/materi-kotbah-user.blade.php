@@ -69,13 +69,7 @@
                             $fileExtension = pathinfo($selectedKotbah->filename, PATHINFO_EXTENSION);
                             $fileName = basename($selectedKotbah->filename);
                             $filePath = storage_path('app/public/' . $selectedKotbah->filename);
-                            $fileSize = file_exists($filePath) ? formatBytes(filesize($filePath)) : 'N/A';
-                            
-                            function formatBytes($size, $precision = 2) {
-                                $base = log($size, 1024);
-                                $suffixes = array('B', 'KB', 'MB', 'GB', 'TB');
-                                return round(pow(1024, $base - floor($base)), $precision) . ' ' . $suffixes[floor($base)];
-                            }
+                            $fileSize = file_exists($filePath) ? $this->formatBytes(filesize($filePath)) : 'N/A';
                         @endphp
 
                         @if (strtolower($fileExtension) === 'pdf')

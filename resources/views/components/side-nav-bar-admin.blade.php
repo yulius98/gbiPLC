@@ -19,6 +19,9 @@
                     <nav class="sb-sidenav-menu-nested nav">
                         <a class="nav-link" href="/pengurus/pastor_note">Suara Gembala</a>
                     </nav>
+                    <nav class="sb-sidenav-menu-nested nav">
+                        <a class="nav-link" href="/pengurus/materi_kotbah">Materi Kotbah</a>
+                    </nav>
 
                     
                 </div>

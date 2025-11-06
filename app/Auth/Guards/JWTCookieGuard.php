@@ -37,7 +37,7 @@ class JWTCookieGuard implements Guard
         if ($token = $this->request->cookie('jwt_token')) {
             try {
                 JWTAuth::setToken($token);
-                $user = JWTAuth::parseToken()->authenticate();
+                $user = JWTAuth::authenticate();
             } catch (JWTException $e) {
                 // Token invalid
             }
@@ -93,5 +93,35 @@ class JWTCookieGuard implements Guard
     protected function hasValidCredentials($user, $credentials)
     {
         return $user !== null && $this->provider->validateCredentials($user, $credentials);
+    }
+
+    /**
+     * Log a user into the application by their ID.
+     */
+    public function loginUsingId($id, $remember = false)
+    {
+        $user = $this->provider->retrieveById($id);
+
+        if ($user) {
+            $this->login($user, $remember);
+            return $user;
+        }
+
+        return null;
+    }
+
+    /**
+     * Log the given user ID into the application without sessions or cookies.
+     */
+    public function onceUsingId($id)
+    {
+        $user = $this->provider->retrieveById($id);
+
+        if ($user) {
+            $this->setUser($user);
+            return $user;
+        }
+
+        return null;
     }
 }

@@ -12,13 +12,21 @@
             </div>
         </div>
     @endif
+    
     @if (session()->has('message'))
         <div class="pt-3">
             <div id="flash-message"  class="alert alert-success">
                 {{ session('message') }}
             </div>
         </div>
-
+    @endif
+    
+    @if (session()->has('error'))
+        <div class="pt-3">
+            <div id="flash-error" class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        </div>
     @endif
 
 
@@ -47,18 +55,55 @@
                             <div class="form-group row">
                                 <label for="filename" class="col-sm-3 col-form-label">File Kotbah</label>
                                 <div class="col-sm-9">
-                                    <input
-                                        type="file"
-                                        class="form-control @error('filename') is-invalid @enderror"
-                                        id="filename"
-                                        wire:model="filename"
-                                        accept=".pdf,.ppt,.pptx"
-                                        onchange="document.getElementById('label-kotbah').innerText = this.files[0]?.name || 'Pilih File';"
-                                    >
-                                    <small id="label-kotbah" class="form-text text-muted">Pilih File</small>
-                                    @error('filename')
-                                        <span class="invalid-feedback d-block">{{ $message }}</span>
-                                    @enderror
+                                    <!-- Chunked Upload untuk file besar (>50MB) -->
+                                    <div id="chunked-upload-container" style="display: none;">
+                                        <button type="button" class="btn btn-secondary" id="browseButton">
+                                            <i class="fas fa-upload"></i> Pilih File (Upload Cepat)
+                                        </button>
+                                        <small class="form-text text-muted d-block">Untuk file besar (lebih dari 50MB)</small>
+                                        
+                                        <!-- Progress Bar -->
+                                        <div id="upload-progress-container" style="display: none;" class="mt-3">
+                                            <div class="progress">
+                                                <div id="upload-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" 
+                                                     role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                            </div>
+                                            <small id="upload-status" class="text-muted d-block mt-2">Siap upload...</small>
+                                        </div>
+                                        
+                                        <!-- Upload Success -->
+                                        <div id="upload-success" style="display: none;" class="alert alert-success mt-3">
+                                            <i class="fas fa-check-circle"></i> File berhasil diupload: <span id="uploaded-filename"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Upload biasa untuk file kecil -->
+                                    <div id="normal-upload-container">
+                                        <input
+                                            type="file"
+                                            class="form-control @error('filename') is-invalid @enderror"
+                                            id="filename"
+                                            wire:model="filename"
+                                            accept=".pdf,.ppt,.pptx"
+                                            onchange="handleFileSelect(this);"
+                                        >
+                                        <small id="label-kotbah" class="form-text text-muted">File kecil (< 50MB) menggunakan upload biasa</small>
+                                        <small class="form-text text-info d-block">Untuk file > 50MB, gunakan tombol "Upload Cepat"</small>
+                                        
+                                        <!-- Loading Indicator -->
+                                        <div wire:loading wire:target="filename" class="text-info mt-2">
+                                            <i class="fas fa-spinner fa-spin"></i> Mengupload file...
+                                        </div>
+                                        
+                                        @error('filename')
+                                            <span class="invalid-feedback d-block">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    
+                                    <!-- Toggle button -->
+                                    <button type="button" class="btn btn-link btn-sm mt-2" onclick="toggleUploadMethod()">
+                                        <span id="toggle-text">Gunakan Upload Cepat</span>
+                                    </button>
 
                                 </div>
                             </div>
@@ -71,9 +116,31 @@
             <div class="mb-3 row">
                 <div class="col-12 text-end">
                     @if ($updatedata == false)
-                        <button type="button" class="btn btn-primary" name="submit" wire:click="simpan()">SIMPAN</button>
+                        <button 
+                            type="button" 
+                            class="btn btn-primary" 
+                            name="submit" 
+                            wire:click="simpan()"
+                            wire:loading.attr="disabled"
+                            wire:target="simpan, filename">
+                            <span wire:loading.remove wire:target="simpan">SIMPAN</span>
+                            <span wire:loading wire:target="simpan">
+                                <i class="fas fa-spinner fa-spin"></i> Menyimpan...
+                            </span>
+                        </button>
                     @else
-                        <button type="button" class="btn btn-primary" name="submit" wire:click="update()">UPDATE</button>
+                        <button 
+                            type="button" 
+                            class="btn btn-primary" 
+                            name="submit" 
+                            wire:click="update()"
+                            wire:loading.attr="disabled"
+                            wire:target="update, filename">
+                            <span wire:loading.remove wire:target="update">UPDATE</span>
+                            <span wire:loading wire:target="update">
+                                <i class="fas fa-spinner fa-spin"></i> Memperbarui...
+                            </span>
+                        </button>
                     @endif
                     <button type="button" class="btn btn-secondary" name="submit" wire:click="clear()">Clear</button>
 
