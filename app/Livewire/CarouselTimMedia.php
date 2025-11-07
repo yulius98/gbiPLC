@@ -13,8 +13,10 @@ class CarouselTimMedia extends Component
     use WithPagination, WithFileUploads;
 
     // Form properties
-    public $filename;
-    public $imageUpload;
+    public $tema;
+    public $description;
+    public $filename; // For file upload
+    public $oldFilename; // For storing existing file path
 
     // Component state
     public $updatedata = false;
@@ -42,6 +44,8 @@ class CarouselTimMedia extends Component
     public function showDetail($id)
     {
         $carousel = TblCarousel::findOrFail($id);
+        $this->tema = $carousel->tema;
+        $this->description = $carousel->description;
         $this->filename = $carousel->filename;
         $this->updatedata = true;
         $this->carousel_id = $id;
@@ -49,11 +53,23 @@ class CarouselTimMedia extends Component
 
     public function simpan()
     {
-        $this->validate();
+        $rules = [
+            'filename' => 'nullable|image|max:1024', // 1MB Max
+        ];
+        $messages = [
+            'filename.image' => 'File harus berupa gambar',
+            'filename.max' => 'Ukuran gambar tidak boleh lebih dari 1MB',
+        ];
+        $validated = $this->validate($rules, $messages);
 
-        $data = [];
-        if ($this->imageUpload) {
-            $data['filename'] = $this->imageUpload->store('foto-carousel', 'public');
+        $data = [
+            'tema' => $this->tema,
+            'description' => $this->description,
+        ];
+        if ($this->filename != null) {
+            $data['filename'] = $this->filename->store('foto-carousel', 'public');
+        } else {
+            $data['filename'] = null;
         }
 
         TblCarousel::create($data);
@@ -64,25 +80,39 @@ class CarouselTimMedia extends Component
     public function edit($id)
     {
         $carousel = TblCarousel::findOrFail($id);
-        $this->filename = $carousel->filename;
+        $this->tema = $carousel->tema;
+        $this->description = $carousel->description;
+        $this->oldFilename = $carousel->filename; // Store old filename separately
+        $this->filename = null; // Reset file upload
         $this->updatedata = true;
         $this->carousel_id = $id;
     }
 
     public function update()
     {
-        $this->validate();
+        $rules = [
+            'filename' => 'nullable|image|max:1024', // 1MB Max
+        ];
+        $messages = [
+            'filename.image' => 'File harus berupa gambar',
+            'filename.max' => 'Ukuran gambar tidak boleh lebih dari 1MB',
+        ];
+        $validated = $this->validate($rules, $messages);
 
         $carousel = TblCarousel::findOrFail($this->carousel_id);
+        
+        $carousel->tema = $this->tema;
+        $carousel->description = $this->description;
 
         // Delete old image if exists and new image is uploaded
-        if ($this->imageUpload) {
+        if ($this->filename != null) {
             if ($carousel->filename && Storage::disk('public')->exists($carousel->filename)) {
                 Storage::disk('public')->delete($carousel->filename);
             }
-            $carousel->filename = $this->imageUpload->store('foto-carousel', 'public');
-            $carousel->save();
+            $carousel->filename = $this->filename->store('foto-carousel', 'public');
         }
+        
+        $carousel->save();
 
         session()->flash('message', 'Data Carousel berhasil diupdate.');
         $this->clear();
@@ -110,7 +140,7 @@ class CarouselTimMedia extends Component
 
     public function clear()
     {
-        $this->reset(['filename', 'imageUpload', 'cari', 'updatedata', 'carousel_id']);
+        $this->reset(['filename', 'oldFilename', 'tema', 'description', 'cari', 'updatedata', 'carousel_id']);
     }
 
     public function render()
