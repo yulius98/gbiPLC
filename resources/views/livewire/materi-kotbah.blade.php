@@ -177,8 +177,18 @@
                     <td>{{ $materikotbah->firstItem() + $key }}</td>
                     <td>{{ $value->tgl_kotbah  }}</td>
                     <td>{{ $value->judul }}</td>
-                    <td><img src="{{ asset('storage/' . $value->filename) }}" alt="File" class="p-0.5 object-contain rounded-full "
-                                style="width: 60px; height: 60px;"></td>
+                    <!--<td><img src="{{ asset('storage/' . $value->filename) }}" alt="File" class="p-0.5 object-contain rounded-full "
+                                style="width: 60px; height: 60px;">
+                    </td> -->
+
+                    <td data-label ="File Kotbah">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M4 2h10l6 6v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" fill="#f44336"/>
+                            <path d="M14 2v6h6" fill="#c62828"/>
+                            <text x="6" y="17" font-size="6" fill="white" font-family="Arial, sans-serif" font-weight="bold">PDF/PPT</text>
+                        </svg>
+                    </td>
+
                     <td>
                         <div class="d-flex gap-1">
                             <a wire:click="show_detail({{ $value->id }})" class="btn btn-warning btn-sm">Detail</a>

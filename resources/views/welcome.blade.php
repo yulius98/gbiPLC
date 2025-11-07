@@ -17,13 +17,14 @@
                 </main>
             </div>
         </section>
-    <section id="hero" class="w-full max-w-5xl mx-auto mt-7 bg-black/80 rounded-3xl shadow-xl">
-        <div id="heroCarousel" class="relative w-full rounded-3xl overflow-hidden">
+
+    <section id="hero" class="w-full max-w-7xl mx-auto mt-7 bg-gradient-to-r from-purple-900 via-purple-700 to-blue-800 rounded-3xl shadow-xl overflow-hidden">
+        <div id="heroCarousel" class="relative w-full">
             <!-- Carousel Indicators -->
-            <div class="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 space-x-2">
+            <div class="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 space-x-3">
                 @foreach ( $carousels as $key => $Ads)
                     <button type="button"
-                        class="h-2 w-2 rounded-full bg-white/50 hover:bg-white/80 transition-colors duration-200"
+                        class="h-3 w-3 rounded-full bg-white/50 hover:bg-white transition-all duration-200"
                         data-carousel-indicator="{{ $key }}"
                         aria-label="Slide {{ $key + 1 }}">
                     </button>
@@ -33,29 +34,61 @@
             <div class="flex transition-transform duration-500 ease-in-out" id="carouselItems">
                 @foreach ( $carousels as $key => $Ads)
                     <div class="min-w-full relative" data-carousel-item="{{ $key }}">
-                        <img src="{{ asset('storage/'. $Ads->filename) }}"
-                            class="w-full h-96 md:h-[500px] object-cover"
-                            alt="Slide {{ $key + 1 }}">
-                        <!--<div class="absolute inset-0 bg-black bg-opacity-30"></div> -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8 lg:p-12 min-h-[400px] lg:min-h-[500px] items-center">
+                            <!-- Left Side - Tema dan Description -->
+                            <div class="flex flex-col justify-center space-y-6 text-white order-2 lg:order-1">
+                                @if($Ads->tema)
+                                <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
+                                    {{ $Ads->tema }}
+                                </h2>
+                                @endif
+                                
+                                @if($Ads->description)
+                                <p class="text-base md:text-lg lg:text-xl text-gray-200 leading-relaxed">
+                                    {{ $Ads->description }}
+                                </p>
+                                @endif
+                                
+                                @if(!$Ads->tema && !$Ads->description)
+                                <div class="space-y-4">
+                                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
+                                        Welcome to GBI PLC
+                                    </h2>
+                                    <p class="text-base md:text-lg lg:text-xl text-gray-200 leading-relaxed">
+                                        Gereja Bethel Indonesia Philadelphia Life Center
+                                    </p>
+                                </div>
+                                @endif
+                            </div>
+
+                            <!-- Right Side - Image -->
+                            <div class="flex justify-center lg:justify-end order-1 lg:order-2">
+                                <div class="relative w-full max-w-md lg:max-w-lg">
+                                    <img src="{{ asset('storage/'. $Ads->filename) }}"
+                                        class="w-full h-64 md:h-80 lg:h-96 object-cover rounded-2xl shadow-2xl border-4 border-white/20"
+                                        alt="Slide {{ $key + 1 }}">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 @endforeach
             </div>
 
             <!-- Previous Control -->
-            <button class="absolute left-0 top-1/2 -translate-y-1/2 p-4 bg-black bg-opacity-30 hover:bg-opacity-50 transition-colors duration-200"
+            <button class="absolute left-2 lg:left-4 top-1/2 -translate-y-1/2 p-3 lg:p-4 bg-white/20 hover:bg-white/40 rounded-full transition-all duration-200 backdrop-blur-sm z-20"
                     type="button"
                     data-carousel-prev id="prevButton">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                 </svg>
                 <span class="sr-only">Previous</span>
             </button>
 
             <!-- Next Control -->
-            <button class="absolute right-0 top-1/2 -translate-y-1/2 p-4 bg-black bg-opacity-30 hover:bg-opacity-50 transition-colors duration-200"
+            <button class="absolute right-2 lg:right-4 top-1/2 -translate-y-1/2 p-3 lg:p-4 bg-white/20 hover:bg-white/40 rounded-full transition-all duration-200 backdrop-blur-sm z-20"
                     type="button"
                     data-carousel-next id="nextButton">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                 </svg>
                 <span class="sr-only">Next</span>
@@ -224,23 +257,79 @@
     </div>
     @endif
 
-    <footer class="bg-gray-900 text-purple-100 py-10 mt-16 border-t border-purple-900 ">
-        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-                <h3 class="font-semibold text-lg mb-0">Gembala</h3>
-                <h4 class="mt-0 mb-2">Pdm. DR. Jimmy Sugiarto, S.PSI, M.TH</h4>
-                <h5 class="font-semibold text-lg mb-0">Wakil Gembala</h5>
-                <h6 class="mt-0">Fredy Budiman SE, MTh</h6>
+</x-layout>
+
+{{-- Footer Section --}}
+<footer 
+    class="bg-gray-900 text-purple-100 py-10 border-t border-purple-900 mt-auto w-full"
+    role="contentinfo"
+    aria-label="Footer"
+>
+    <div class="w-full px-6 md:px-12 lg:px-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+                {{-- Pastors Section --}}
+                <div>
+                    <h3 class="font-semibold text-lg mb-4 text-purple-200">
+                        Pemimpin Gereja
+                    </h3>
+                    <div class="mb-3">
+                        <h4 class="font-medium text-purple-300 mb-1">
+                            Gembala
+                        </h4>
+                        <p class="text-gray-300">
+                            Pdm. DR. Jimmy Sugiarto, S.PSI, M.TH
+                        </p>
+                    </div>
+                    <div class="mb-3">
+                        <h4 class="font-medium text-purple-300 mb-1">
+                            Wakil Gembala
+                        </h4>
+                        <p class="text-gray-300">
+                            Fredy Budiman SE, MTh
+                        </p>
+                    </div>
+                </div>
+
+                {{-- Church Info Section --}}
+                <div class="lg:col-span-2">
+                    <h3 class="font-semibold text-lg mb-4 text-purple-200">
+                        GBI Philadelphia Life Center
+                    </h3>
+                    <div class="space-y-3">
+                        <div>
+                            <h4 class="font-medium text-purple-300 mb-1">Alamat</h4>
+                            <p class="text-gray-300 leading-relaxed">
+                                Jl. Babarsari No.45, Janti, Caturtunggal, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281
+                            </p>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-purple-300 mb-1">Kontak</h4>
+                            <a 
+                                href="https://wa.me/6285336618852"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="inline-flex items-center text-purple-300 hover:text-white font-bold hover:underline transition-colors duration-200"
+                                aria-label="Hubungi kami via WhatsApp di 0853-3661-8852"
+                            >
+                                <span class="mr-2">📞</span>
+                                Telp: 0853-3661-8852
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div>
-                <h3 class="font-semibold text-lg mb-2">GBI Philadelphia Life Center</h3>
-                <p class="mb-2">Alamat : Jl. Babarsari No.45, Janti, Caturtunggal, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281</p>
-                <a class="hover:underline font-bold text-purple-300" href="https://wa.me/6285336618852" target="_blank">Telp : 0853-3661-8852</a>
+
+            {{-- Copyright Section --}}
+            <div class="border-t border-purple-800 mt-8 pt-6 max-w-7xl mx-auto">
+                <div class="text-center">
+                    <p class="text-sm text-purple-400">
+                        &copy; {{ date('Y') }} GBI Philadelphia Life Center. All rights reserved.
+                    </p>
+                    <p class="text-xs text-gray-500 mt-1">
+                        Built with love for the Kingdom of God
+                    </p>
+                </div>
             </div>
         </div>
-        <div class="text-center text-xs text-purple-400 mt-8">&copy; {{ date('Y') }} GBI Philadelphia Life Center. All rights reserved.</div>
     </footer>
-
-
-
-</x-layout>
+    {{-- End Footer Section --}}

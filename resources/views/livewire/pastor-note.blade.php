@@ -64,7 +64,6 @@
                                     @isset($filename)
                                         @if ($filename instanceof \Illuminate\Http\UploadedFile)
                                             <div class="mt-3">
-                                                @dump($filename->temporaryURL())
                                                 <img src="{{ $filename->temporaryUrl() }}" alt="Preview Gambar" class="img-thumbnail object-contain rounded" style="max-height: 100px;">
                                             </div>
                                         @endif

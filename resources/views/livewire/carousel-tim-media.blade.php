@@ -29,7 +29,20 @@
                 <!-- Kolom Pertama -->
                 <div class="col-md-6">
                     <div>
+                        <div class="mb-3 row">
+                            <label for="tema" class="col-sm-3 col-form-label">Tema Carousel</label>
+                            <div class="col-sm-9">
+                                <input type="tema" class="form-control" id="tema" wire:model="tema">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="description" class="col-sm-3 col-form-label">Deskripsi Carousel</label>
+                            <div class="col-sm-9">
+                                <input type="description" class="form-control" id="description" wire:model="description">
+                            </div>
+                        </div>
                         <div class="form-group row">
+                            
                             <label for="filename" class="col-sm-3 col-form-label">Foto Carousel</label>
                             <div class="col-sm-9">
                                 <input
@@ -45,14 +58,21 @@
                                     <span class="invalid-feedback d-block">{{ $message }}</span>
                                 @enderror
 
-                                {{-- Preview Gambar --}}
-                                @isset($filename)
-                                    @if ($filename instanceof \Illuminate\Http\UploadedFile)
-                                        <div class="mt-3">
-                                            <img src="{{ $filename->temporaryUrl() }}" alt="Preview Gambar" class="img-thumbnail object-contain rounded" style="max-height: 100px;">
-                                        </div>
-                                    @endif
-                                @endisset
+                                {{-- Preview Gambar untuk file baru yang dipilih --}}
+                                @if ($filename)
+                                    <div class="mt-3">
+                                        <p class="text-muted small">Preview gambar baru:</p>
+                                        <img src="{{ $filename->temporaryUrl() }}" alt="Preview Gambar" class="img-thumbnail object-contain rounded" style="max-height: 100px;">
+                                    </div>
+                                @endif
+
+                                {{-- Tampilkan gambar lama saat mode edit --}}
+                                @if ($updatedata && $oldFilename && !$filename)
+                                    <div class="mt-3">
+                                        <p class="text-muted small">Gambar saat ini:</p>
+                                        <img src="{{ asset('storage/' . $oldFilename) }}" alt="Gambar Saat Ini" class="img-thumbnail object-contain rounded" style="max-height: 100px;">
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -88,6 +108,8 @@
             <thead>
                 <tr>
                     <th class="col-md-1">No</th>
+                    <th class="col-md-2 sort" >Tema Carousel</th>
+                    <th class="col-md-2 sort" >Deskripsi Carousel</th>
                     <th class="col-md-2 sort" >Foto</th>
                     <th class="col-md-2">Aksi</th>
                 </tr>
@@ -98,6 +120,8 @@
                 @foreach ($carousels as $key => $value)
                 <tr>
                     <td>{{ $carousels->firstItem() + $key }}</td>
+                    <td>{{ $value->tema }}</td>
+                    <td>{{ $value->description }}</td>
                     <td><img src="{{ asset('storage/' . $value->filename) }}" alt="Foto" class="p-0.5 object-contain rounded-full "
                                 style="width: 60px; height: 60px;"></td>
                     <td>

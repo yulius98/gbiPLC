@@ -101,8 +101,7 @@ class PastorNote extends Component
         ];
         $validated = $this->validate($rules, $messages);
         
-       
-         // Cek apakah ada gambar yang diupload
+        // Cek apakah ada gambar yang diupload
         if ($this->filename != null) {
             $data['filename'] = $this->filename->store('foto-pesangembala', 'public');
         } else {

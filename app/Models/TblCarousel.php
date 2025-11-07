@@ -13,6 +13,8 @@ class TblCarousel extends Model
     protected $table = 'tbl_carousels';
 
     protected $fillable = [
+        'tema',
+        'description',
         'filename',
         'path'
     ];
