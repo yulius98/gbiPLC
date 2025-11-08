@@ -106,9 +106,104 @@
                                 {{-- Preview Gambar --}}
                                 @isset($filename)
                                     @if ($filename instanceof \Illuminate\Http\UploadedFile)
-                                        <div class="mt-3">
-                                            <img src="{{ $filename->temporaryUrl() }}" alt="Preview Gambar" class="img-thumbnail object-contain rounded" style="max-height: 100px;">
-                                        </div>
+                                        @php
+                                            try {
+                                                // Method 1: Try temporary URL (server-side)
+                                                $tempUrl = $filename->temporaryUrl();
+                                                
+                                                // Method 2: Generate data URI for fallback (client-side independent)
+                                                $imageData = base64_encode(file_get_contents($filename->getRealPath()));
+                                                $mimeType = $filename->getMimeType();
+                                                $dataUri = "data:{$mimeType};base64,{$imageData}";
+                                                
+                                                // Log ke Laravel log
+                                                \Log::info('Kunjungan - Temporary URL Generated', [
+                                                    'url' => $tempUrl,
+                                                    'filename' => $filename->getClientOriginalName(),
+                                                    'size' => $filename->getSize(),
+                                                    'mime' => $filename->getMimeType(),
+                                                    'path' => $filename->getRealPath(),
+                                                    'dataUri_length' => strlen($dataUri)
+                                                ]);
+                                            } catch (\Exception $e) {
+                                                \Log::error('Kunjungan - Failed to generate preview', [
+                                                    'error' => $e->getMessage(),
+                                                    'filename' => $filename->getClientOriginalName()
+                                                ]);
+                                                $tempUrl = null;
+                                                $dataUri = null;
+                                            }
+                                        @endphp
+                                        
+                                        @if($dataUri)
+                                            <div class="mt-3 border p-2 rounded">
+                                                {{-- Use Data URI for immediate preview (always works) --}}
+                                                <img src="{{ $dataUri }}" 
+                                                     id="preview-img-kunjungan-{{ md5($filename->getClientOriginalName()) }}"
+                                                     alt="Preview Gambar" 
+                                                     class="img-thumbnail object-contain rounded d-block mb-2" 
+                                                     style="max-height: 150px;"
+                                                     onload="document.getElementById('img-success-kunjungan-{{ md5($filename->getClientOriginalName()) }}').style.display='block';">
+                                                
+                                                <!--     
+                                                <div id="img-success-kunjungan-{{ md5($filename->getClientOriginalName()) }}" class="alert alert-success mb-2" style="display:none;">
+                                                    <small>✓ Preview berhasil dimuat</small>
+                                                </div>
+                                                
+                                                <small class="d-block text-muted">
+                                                    <strong>File:</strong> {{ $filename->getClientOriginalName() }}<br>
+                                                    <strong>Size:</strong> {{ number_format($filename->getSize() / 1024, 2) }} KB<br>
+                                                    <strong>Type:</strong> {{ $filename->getMimeType() }}
+                                                </small>
+                                                -->
+                                                {{--
+                                                @if($tempUrl)
+                                                <details class="mt-2">
+                                                    <summary class="text-muted" style="cursor: pointer; font-size: 0.8rem;">Debug Info</summary>
+                                                    <small class="d-block text-muted mt-1" style="font-size: 0.7rem; word-break: break-all;">
+                                                        <strong>Temp URL:</strong> {{ $tempUrl }}<br>
+                                                        <strong>Preview Method:</strong> Data URI (Base64)
+                                                    </small>
+                                                </details>
+                                                @endif
+                                                --}} 
+                                            </div>
+                                            
+                                            <script>
+                                                (function() {
+                                                    console.log('=== Kunjungan - Image Preview ===');
+                                                    console.log('File name:', '{{ $filename->getClientOriginalName() }}');
+                                                    console.log('File size:', '{{ number_format($filename->getSize() / 1024, 2) }}', 'KB');
+                                                    console.log('Mime type:', '{{ $filename->getMimeType() }}');
+                                                    console.log('Preview method:', 'Data URI (Base64)');
+                                                    
+                                                    @if($tempUrl)
+                                                    console.log('Temporary URL (for reference):', '{{ $tempUrl }}');
+                                                    
+                                                    // Test temporary URL in background
+                                                    fetch('{{ $tempUrl }}', {
+                                                        method: 'GET',
+                                                        credentials: 'include'
+                                                    })
+                                                    .then(response => {
+                                                        console.log('Temp URL Status:', response.status, response.ok ? '✓ OK' : '✗ FAILED');
+                                                        if (!response.ok) {
+                                                            return response.text().then(text => {
+                                                                console.error('Temp URL Error:', text.substring(0, 200));
+                                                            });
+                                                        }
+                                                    })
+                                                    .catch(error => {
+                                                        console.error('Temp URL Fetch Error:', error.message);
+                                                    });
+                                                    @endif
+                                                })();
+                                            </script>
+                                        @else
+                                            <div class="mt-3 alert alert-info">
+                                                <small>File dipilih: {{ $filename->getClientOriginalName() }} (Preview tidak tersedia)</small>
+                                            </div>
+                                        @endif
                                     @endif
                                 @endisset
                             </div>

@@ -20,6 +20,11 @@ class JWTFromCookie
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Skip JWT check untuk route Livewire file preview/upload
+        if ($request->is('livewire/preview-file/*') || $request->is('livewire/upload-file')) {
+            return $next($request);
+        }
+
         // Log untuk memeriksa apakah token ditemukan di cookie
         if ($token = $request->cookie('jwt_token')) {
             Log::info('JWTFromCookie: Token ditemukan di cookie', ['token' => $token]);

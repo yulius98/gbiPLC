@@ -23,6 +23,11 @@ class EnsureUserHasRole
      */
     public function handle(Request $request, Closure $next, ?string $role = null): Response
     {
+        // Skip role check untuk route Livewire file preview/upload
+        if ($request->is('livewire/preview-file/*') || $request->is('livewire/upload-file')) {
+            return $next($request);
+        }
+
         // Log to ensure middleware is invoked
         Log::info('EnsureUserHasRole middleware triggered', [
             'requested_url' => $request->fullUrl(),

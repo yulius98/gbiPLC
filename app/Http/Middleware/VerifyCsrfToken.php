@@ -13,5 +13,7 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         // Add URIs here
+        'livewire/upload-file',
+        'livewire/preview-file/*',
     ];
 }

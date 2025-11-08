@@ -64,9 +64,9 @@ return [
     */
 
     'temporary_file_upload' => [
-        'disk' => 'local',        // Example: 'local', 's3'              | Default: 'default'
+        'disk' => 'public',        // Use public disk for preview
         'rules' => 'max:2048000', // Max 2GB (2048000 KB)
-        'directory' => 'livewire-tmp',   // Example: 'tmp'                      | Default: 'livewire-tmp'
+        'directory' => 'livewire-tmp',   // Directory in public disk
         'middleware' => 'throttle:600,1',  // Increased for large files - 600 requests per minute
         'preview_mimes' => [   // Supported file types for temporary pre-signed file URLs...
             'png', 'gif', 'bmp', 'svg', 'wav', 'mp4',
