@@ -22,16 +22,18 @@
                   <a href="{{ route('login') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Login</a>
               @endguest
               @auth
-
                 <span class="text-white text-sm mr-4">Welcome, {{ Auth::user()->name }}</span>
-                <a href="{{ route('myprofile') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">My Profile</a>
+                <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
+                  @if(Auth::user()->role === 'pengurus' || Auth::user()->role === 'pendeta')
+                    <a href="/pengurus/dashboard_admin/{{ Auth::user()->name }}" class="ml-2 rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Dashboard</a>
+                  @else
+                    <a href="{{ route('myprofile') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">My Profile</a>
+                  @endif  
+                </div>
                 <form action="{{ route('logout') }}" method="POST" class="inline">
-                      @csrf
-                      <button type="submit" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Logout</button>
+                  @csrf
+                  <button type="submit" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Logout</button>
                 </form>
-                @if(Auth::user()->role === 'pengurus' || Auth::user()->role === 'pendeta')
-                      <a href="/pengurus/dashboard_admin/{{ Auth::user()->name }}" class="ml-2 rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Dashboard</a>
-                 @endif
               @endauth
           </div>
         </div>
@@ -68,14 +70,20 @@
               <a href="{{ route('login') }}" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Login</a>
           @endguest
           @auth
-              <div class="px-3 py-2 text-sm text-white">Welcome, {{ Auth::user()->name }}</div>
+            <span class="text-white text-sm mr-4">Welcome, {{ Auth::user()->name }}</span>
+            <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
               @if(Auth::user()->role === 'pengurus' || Auth::user()->role === 'pendeta')
-                  <a href="/pengurus/dashboard_admin/{{ Auth::user()->name }}" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Dashboard</a>
+                <a href="/pengurus/dashboard_admin/{{ Auth::user()->name }}" class="ml-2 rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Dashboard</a>
+              @else
+                <a href="{{ route('myprofile') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">My Profile</a>
               @endif
-              <form action="{{ route('logout') }}" method="POST" class="block">
-                  @csrf
-                  <button type="submit" class="w-full text-left block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Logout</button>
-              </form>
+              
+            </div>
+            <form action="{{ route('logout') }}" method="POST" class="inline">
+              @csrf
+              <button type="submit" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Logout</button>
+            </form>
+            
           @endauth
         </div>
       </div>
