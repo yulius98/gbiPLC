@@ -16,6 +16,14 @@ class ChunkUploadController extends Controller
     public function upload(Request $request)
     {
         try {
+            // Log semua request untuk debugging
+            Log::info('Chunk upload request received', [
+                'method' => $request->method(),
+                'all_inputs' => $request->all(),
+                'has_file' => $request->hasFile('file'),
+                'files' => $request->allFiles(),
+            ]);
+            
             // Get request parameters
             $resumableIdentifier = $request->input('resumableIdentifier');
             $resumableFilename = $request->input('resumableFilename');
@@ -55,6 +63,20 @@ class ChunkUploadController extends Controller
             }
 
             // Handle POST request - simpan chunk
+            if (!$request->hasFile('file')) {
+                Log::error('No file in request', [
+                    'method' => $request->method(),
+                    'content_type' => $request->header('Content-Type'),
+                    'all_files' => $request->allFiles(),
+                    'inputs' => $request->all()
+                ]);
+                
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'No file found in request. Please check your upload configuration.'
+                ], 400);
+            }
+            
             if ($request->hasFile('file')) {
                 $file = $request->file('file');
                 $file->move($chunkDir, 'chunk_' . $resumableChunkNumber);
@@ -119,6 +141,12 @@ class ChunkUploadController extends Controller
                     'chunk' => $resumableChunkNumber
                 ], 200);
             }
+            
+            // Jika sampai di sini berarti tidak ada file yang ditemukan
+            Log::error('Reached end of upload function without file', [
+                'has_file' => $request->hasFile('file'),
+                'method' => $request->method()
+            ]);
 
             return response()->json([
                 'status' => 'error',

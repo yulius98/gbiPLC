@@ -55,7 +55,15 @@ function initResumable() {
     if (resumable) return; // Sudah diinisialisasi
     
     // Get CSRF token from meta tag
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    
+    if (!csrfToken) {
+        console.error('CSRF token not found in meta tag');
+        alert('Error: CSRF token tidak ditemukan. Silakan refresh halaman.');
+        return;
+    }
+    
+    console.log('Initializing Resumable.js with CSRF token:', csrfToken);
     
     resumable = new Resumable({
         target: window.chunkUploadRoute || '/pengurus/chunk-upload',
@@ -69,7 +77,15 @@ function initResumable() {
         testChunks: true, // Cek chunk yang sudah ada (untuk resume upload)
         throttleProgressCallbacks: 1,
         headers: {
-            'X-CSRF-TOKEN': csrfToken
+            'X-CSRF-TOKEN': csrfToken,
+            'Accept': 'application/json'
+        },
+        // Tambahan konfigurasi untuk cPanel
+        maxFileSize: 2 * 1024 * 1024 * 1024, // 2GB
+        fileParameterName: 'file', // Pastikan nama parameter konsisten
+        generateUniqueIdentifier: function(file) {
+            var relativePath = file.relativePath || file.webkitRelativePath || file.fileName || file.name;
+            return file.size + '-' + relativePath.replace(/[^0-9a-zA-Z_-]/img, '');
         }
     });
     
@@ -78,7 +94,9 @@ function initResumable() {
     
     // Event: File added
     resumable.on('fileAdded', function (file) {
-        console.log('File added:', file.fileName);
+        console.log('File added:', file.fileName, 'Size:', file.size);
+        console.log('File unique identifier:', file.uniqueIdentifier);
+        
         document.getElementById('upload-progress-container').style.display = 'block';
         document.getElementById('upload-success').style.display = 'none';
         document.getElementById('upload-status').textContent = 'Memulai upload: ' + file.fileName + ' (' + formatFileSize(file.size) + ')';
@@ -90,7 +108,10 @@ function initResumable() {
         progressBar.className = 'progress-bar progress-bar-striped progress-bar-animated';
         
         // Mulai upload otomatis
-        resumable.upload();
+        setTimeout(function() {
+            console.log('Starting upload...');
+            resumable.upload();
+        }, 100);
     });
     
     // Event: Upload progress
@@ -144,12 +165,28 @@ function initResumable() {
     // Event: Upload error
     resumable.on('fileError', function (file, message) {
         console.error('Upload error:', message);
+        console.error('File details:', {
+            name: file.fileName,
+            size: file.size,
+            chunks: file.chunks.length
+        });
+        
         const progressBar = document.getElementById('upload-progress-bar');
         progressBar.classList.remove('progress-bar-animated');
         progressBar.classList.add('bg-danger');
-        document.getElementById('upload-status').textContent = 'Upload gagal: ' + message;
         
-        alert('Upload gagal: ' + message + '\n\nSilakan coba lagi.');
+        // Parse error message jika berupa JSON
+        let errorMessage = message;
+        try {
+            const errorObj = JSON.parse(message);
+            errorMessage = errorObj.message || message;
+        } catch (e) {
+            // Bukan JSON, gunakan message asli
+        }
+        
+        document.getElementById('upload-status').textContent = 'Upload gagal:\n' + errorMessage;
+        
+        alert('Upload gagal:\n' + errorMessage + '\n\nSilakan coba lagi');
     });
     
     // Event: Upload complete

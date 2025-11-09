@@ -15,5 +15,6 @@ class VerifyCsrfToken extends Middleware
         // Add URIs here
         'livewire/upload-file',
         'livewire/preview-file/*',
+        'pengurus/chunk-upload',  // Chunk upload untuk file besar
     ];
 }
