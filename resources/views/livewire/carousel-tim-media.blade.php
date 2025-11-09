@@ -38,7 +38,7 @@
                         <div class="mb-3 row">
                             <label for="description" class="col-sm-3 col-form-label">Deskripsi Carousel</label>
                             <div class="col-sm-9">
-                                <input type="description" class="form-control" id="description" wire:model="description">
+                                <textarea class="form-control" id="description" wire:model="description"></textarea>
                             </div>
                         </div>
                         <div class="form-group row">

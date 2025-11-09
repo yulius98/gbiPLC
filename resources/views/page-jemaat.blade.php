@@ -45,7 +45,7 @@
                                 
                                 @if($Ads->description)
                                 <p class="text-base md:text-lg lg:text-xl text-gray-200 leading-relaxed">
-                                    {{ $Ads->description }}
+                                    {!! nl2br(e($Ads->description)) !!}
                                 </p>
                                 @endif
                                 
@@ -65,7 +65,7 @@
                             <div class="flex justify-center lg:justify-end order-1 lg:order-2">
                                 <div class="relative w-full max-w-md lg:max-w-lg">
                                     <img src="{{ asset('storage/'. $Ads->filename) }}"
-                                        class="w-full h-64 md:h-80 lg:h-96 object-cover rounded-2xl shadow-2xl border-4 border-white/20"
+                                        class="w-full h-64 md:h-80 lg:h-96 object-contain rounded-2xl"
                                         alt="Slide {{ $key + 1 }}">
                                 </div>
                             </div>
@@ -223,7 +223,7 @@
                 </div>
                 <div class="flex flex-col justify-center space-y-3">
                     <time class="text-gray-300 text-sm">Tanggal : {{ \Carbon\Carbon::parse($latestPastorNote->tgl_note)->format('d-m-Y') }}</time>
-                    <p class="text-white text-lg leading-relaxed">{{ $latestPastorNote->note }}</p>
+                    <p class="text-white text-lg leading-relaxed">{!! nl2br(e($latestPastorNote->note)) !!}</p>
                 </div>
             </div>
         @endif
@@ -256,25 +256,81 @@
         </div>
     </div>
     @endif
+</x-layout>
 
-    <footer class="bg-gray-900 text-purple-100 py-10 mt-16 border-t border-purple-900 ">
-        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-                <h3 class="font-semibold text-lg mb-0">Gembala</h3>
-                <h4 class="mt-0 mb-2">Pdm. DR. Jimmy Sugiarto, S.PSI, M.TH</h4>
-                <h5 class="font-semibold text-lg mb-0">Wakil Gembala</h5>
-                <h6 class="mt-0">Fredy Budiman SE, MTh</h6>
+{{-- Footer Section --}}
+<footer 
+    class="bg-gray-900 text-purple-100 py-10 border-t border-purple-900 mt-auto w-full"
+    role="contentinfo"
+    aria-label="Footer"
+>
+    <div class="w-full px-6 md:px-12 lg:px-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+                {{-- Pastors Section --}}
+                <div>
+                    <h3 class="font-semibold text-lg mb-4 text-purple-200">
+                        Pemimpin Gereja
+                    </h3>
+                    <div class="mb-3">
+                        <h4 class="font-medium text-purple-300 mb-1">
+                            Gembala
+                        </h4>
+                        <p class="text-gray-300">
+                            Pdm. DR. Jimmy Sugiarto, S.PSI, M.TH
+                        </p>
+                    </div>
+                    <div class="mb-3">
+                        <h4 class="font-medium text-purple-300 mb-1">
+                            Wakil Gembala
+                        </h4>
+                        <p class="text-gray-300">
+                            Fredy Budiman SE, MTh
+                        </p>
+                    </div>
+                </div>
+
+                {{-- Church Info Section --}}
+                <div class="lg:col-span-2">
+                    <h3 class="font-semibold text-lg mb-4 text-purple-200">
+                        GBI Philadelphia Life Center
+                    </h3>
+                    <div class="space-y-3">
+                        <div>
+                            <h4 class="font-medium text-purple-300 mb-1">Alamat</h4>
+                            <p class="text-gray-300 leading-relaxed">
+                                Jl. Babarsari No.45, Janti, Caturtunggal, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281
+                            </p>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-purple-300 mb-1">Kontak</h4>
+                            <a 
+                                href="https://wa.me/6285336618852"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="inline-flex items-center text-purple-300 hover:text-white font-bold hover:underline transition-colors duration-200"
+                                aria-label="Hubungi kami via WhatsApp di 0853-3661-8852"
+                            >
+                                <span class="mr-2">📞</span>
+                                Telp: 0853-3661-8852
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div>
-                <h3 class="font-semibold text-lg mb-2">GBI Philadelphia Life Center</h3>
-                <p class="mb-2">Alamat : Jl. Babarsari No.45, Janti, Caturtunggal, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281</p>
-                <a class="hover:underline font-bold text-purple-300" href="https://wa.me/6285336618852" target="_blank">Telp : 0853-3661-8852</a>
+
+            {{-- Copyright Section --}}
+            <div class="border-t border-purple-800 mt-8 pt-6 max-w-7xl mx-auto">
+                <div class="text-center">
+                    <p class="text-sm text-purple-400">
+                        &copy; {{ date('Y') }} GBI Philadelphia Life Center. All rights reserved.
+                    </p>
+                    <p class="text-xs text-gray-500 mt-1">
+                        Built with love for the Kingdom of God
+                    </p>
+                </div>
             </div>
         </div>
-        <div class="text-center text-xs text-purple-400 mt-8">&copy; {{ date('Y') }} GBI Philadelphia Life Center. All rights reserved.</div>
     </footer>
+    {{-- End Footer Section --}}
 
-
-
-</x-layout>
 

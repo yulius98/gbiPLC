@@ -45,7 +45,7 @@
                                 
                                 @if($Ads->description)
                                 <p class="text-base md:text-lg lg:text-xl text-gray-200 leading-relaxed">
-                                    {{ $Ads->description }}
+                                    {!! nl2br(e($Ads->description)) !!}
                                 </p>
                                 @endif
                                 
@@ -65,7 +65,7 @@
                             <div class="flex justify-center lg:justify-end order-1 lg:order-2">
                                 <div class="relative w-full max-w-md lg:max-w-lg">
                                     <img src="{{ asset('storage/'. $Ads->filename) }}"
-                                        class="w-full h-64 md:h-80 lg:h-96 object-cover rounded-2xl shadow-2xl border-4 border-white/20"
+                                        class="w-full h-64 md:h-80 lg:h-96 object-contain rounded-2xl"
                                         alt="Slide {{ $key + 1 }}">
                                 </div>
                             </div>
@@ -223,7 +223,7 @@
                 </div>
                 <div class="flex flex-col justify-center space-y-3">
                     <time class="text-gray-300 text-sm">Tanggal : {{ \Carbon\Carbon::parse($latestPastorNote->tgl_note)->format('d-m-Y') }}</time>
-                    <p class="text-white text-lg leading-relaxed">{{ $latestPastorNote->note }}</p>
+                    <p class="text-white text-lg leading-relaxed">{!! nl2br(e($latestPastorNote->note)) !!}</p>
                 </div>
             </div>
         @endif
