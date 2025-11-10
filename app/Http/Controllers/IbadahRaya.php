@@ -12,7 +12,7 @@ class IbadahRaya extends Controller
      */
     public function index()
     {
-        return view('ibadahraya');
+        return view('ibadahraya', ['ibadahRaya' => null]);
     }
 
     /**

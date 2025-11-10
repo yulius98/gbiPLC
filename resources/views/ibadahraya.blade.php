@@ -67,6 +67,31 @@
   #camera-controls button {
     margin-right: 10px;
   }
+
+  /* Fix untuk Date Input */
+  input[type="date"] {
+    position: relative;
+    background-color: #1a1a1a !important;
+    color: white !important;
+    color-scheme: dark;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(1);
+    opacity: 0.8;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+  }
+
+  /* Untuk Firefox */
+  input[type="date"]::-moz-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(1);
+    opacity: 0.8;
+  }
 </style>
 
 <div class="flex flex-col justify-center items-center bg-black text-white pt-16">
@@ -108,7 +133,9 @@
                 <div>
                     <label for="tgl_ibadah" class="block mb-1 text-white">Tanggal Ibadah</label>
                     <input type="date" id="tgl_ibadah" name="tgl_ibadah"
-                        class="form-control w-full px-4 py-2 bg-black border rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition {{ $errors->has('tgl_ibadah') ? 'border-red-500' : 'border-white' }} text-white" value="{{ old('tgl_ibadah', request('tgl_ibadah')) }}" />
+                        class="form-control w-full px-4 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition {{ $errors->has('tgl_ibadah') ? 'border-red-500' : 'border-white' }}" 
+                        value="{{ old('tgl_ibadah', request('tgl_ibadah')) }}" 
+                        style="background-color: #f3eeee; color: white; color-scheme: dark;" />
                     @error('tgl_ibadah')
                         <span class="text-red-500 text-xs">{{ $message }}</span>
                     @enderror
@@ -140,7 +167,7 @@
                     <h3 class="text-2xl font-bold text-white mb-4">Hasil Pencarian</h3>
                     <div class="mb-4">
                         <p class="text-white"><strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($ibadahRaya->tgl_ibadah)->format('d F Y') }}</p>
-                        <p class="text-white"><strong>Ibadah Ke:</strong> {{ $ibadahRaya->ibadah_ke }}</p>
+                        <p class="text-white"><strong>{{ $ibadahRaya->ibadah_ke }}</p>
                     </div>
                     
                     @if($ibadahRaya->link_ibadah)
@@ -154,15 +181,15 @@
                     @php
                         // Extract YouTube video ID from various YouTube URL formats
                         $youtubeId = null;
-                        if (preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\?\/]+)/', $ibadahRaya->link_ibadah, $matches)) {
+                        if (preg_match('/(?:youtube\.com\/(?:watch\?v=|live\/|embed\/)|youtu\.be\/)([^&\?\/]+)/', $ibadahRaya->link_ibadah, $matches)) {
                             $youtubeId = $matches[1];
                         }
                     @endphp
 
                     @if($youtubeId)
-                    <div class="mt-6">
-                        <h4 class="text-xl font-semibold text-white mb-3">Video Ibadah</h4>
-                        <div class="relative" style="padding-bottom: 56.25%; height: 0; overflow: hidden;">
+                    <div class="mt-6 border border-white p-4 rounded-lg">
+                        <h4 class="text-xl font-semibold text-white mb-3">📹 Video Ibadah</h4>
+                        <div class="relative bg-black" style="padding-bottom: 56.25%; height: 0; overflow: hidden;">
                             <iframe 
                                 class="absolute top-0 left-0 w-full h-full rounded-lg"
                                 src="https://www.youtube.com/embed/{{ $youtubeId }}" 
@@ -171,6 +198,11 @@
                                 allowfullscreen>
                             </iframe>
                         </div>
+                    </div>
+                    @else
+                    <div class="mt-6 bg-yellow-900 border border-yellow-600 p-4 rounded-lg">
+                        <p class="text-yellow-200">⚠️ Link yang disimpan bukan format YouTube yang valid.</p>
+                        <p class="text-yellow-200 text-sm mt-2">Format yang didukung: youtube.com/watch?v=xxx atau youtu.be/xxx</p>
                     </div>
                     @endif
                     @else
@@ -191,4 +223,21 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Pastikan date input berfungsi dengan baik
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateInput = document.getElementById('tgl_ibadah');
+        
+        // Set max date ke hari ini
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.setAttribute('max', today);
+        
+        // Jika ada error atau data tidak ditemukan, fokus ke input
+        @if(request('tgl_ibadah') && request('ibadah_ke') && !isset($ibadahRaya))
+            dateInput.focus();
+        @endif
+    });
+</script>
+
 </x-layout>
