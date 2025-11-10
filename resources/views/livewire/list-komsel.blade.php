@@ -29,29 +29,30 @@
                 <!-- Kolom Pertama -->
                 <div class="col-md-6">
                     <div class="mb-3 row">
-                        <label for="tgl_ibadah" class="col-sm-3 col-form-label">Tanggal Ibadah</label>
+                        <label for="nama_komsel" class="col-sm-3 col-form-label">Nama Komsel</label>
                         <div class="col-sm-9">
-                            <input type="date" class="form-control" id="tgl_ibadah" wire:model="tgl_ibadah">
+                            <input type="text" class="form-control" id="nama_komsel" wire:model="nama_komsel">
                         </div>
                     </div>
 
                     <div class="mb-3 row">
-                        <label for="ibadah_ke" class="col-sm-3 col-form-label">Ibadah</label>
+                        <label for="ketua_komsel" class="col-sm-3 col-form-label">Ketua Komsel</label>
                         <div class="col-sm-9">
-                            <select id="ibadah_ke" name="ibadah_ke"
-                                class="form-control"
-                                wire:model="ibadah_ke">
-                                <option value="">-- Pilih Ibadah --</option>
-                                <option value="Ibadah 1">Ibadah I</option>
-                                <option value="Ibadah 2">Ibadah II</option>
-                            </select>
+                            <input type="text" class="form-control" id="ketua_komsel" wire:model="ketua_komsel">
                         </div>
                     </div>
 
                     <div class="mb-3 row">
-                        <label for="link_ibadah" class="col-sm-3 col-form-label">Link Ibadah</label>
+                        <label for="no_telp" class="col-sm-3 col-form-label">Nomor Telp</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="link_ibadah" wire:model="link_ibadah">
+                            <input type="text" class="form-control" id="no_telp" wire:model="no_telp">
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label for="alamat" class="col-sm-3 col-form-label">Alamat</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="alamat" wire:model="alamat">
                         </div>
                     </div>
 
@@ -78,29 +79,30 @@
     <!-- START DATA -->
 
     <div class="my-3 p-3 bg-body rounded shadow-sm">
-        <h4 class="font-medium">Data Ibadah Raya</h4>
+        <h4 class="font-medium">Daftar Komsel</h4>
         <div class="pb-3 pt-3">
             <input type="text" class="form-control mb-3 w-25" placeholder="Search..." wire:model.live="cari">
         </div>
-        {{ $ibadah->links() }}
+        {{ $komsel->links() }}
         <table class="table table-striped table-sortable ">
             <thead>
                 <tr>
                     <th class="col-md-1">No</th>
-                    <th class="col-md-4 sort" @if ($sortcolom == 'tgl_ibadah') {{ $sortdirection }} @endif wire:click="sort('tgl_ibadah')">Tanggal Ibadah</th>
-                    <th class="col-md-3 sort" >Ibadah Ke</th>
-                    <th class="col-md-2 sort" >Link Ibadah</th>
+                    <th class="col-md-4 sort" @if ($sortcolom == 'nama_komsel') {{ $sortdirection }} @endif wire:click="sort('nama_komsel')">Nama Komsel</th>
+                    <th class="col-md-3 sort" >Ketua Komsel</th>
+                    <th class="col-md-2 sort" >No Telp</th>
+                    <th class="col-md-2 sort" >Alamat</th>
                     <th class="col-md-2">Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($ibadah as $key => $value)
+                @foreach ($komsel as $key => $value)
 
                 <tr>
-                    <td>{{ $ibadah->firstItem() + $key }}</td>
-                    <td>{{ $value->tgl_ibadah  }}</td>
-                    <td>{{ $value->ibadah_ke }}</td>
-                    <td>{{ $value->link_ibadah }}</td>
+                    <td>{{ $komsel->firstItem() + $key }}</td>
+                    <td>{{ $value->ketua_komsel  }}</td>
+                    <td>{{ $value->no_telp }}</td>
+                    <td>{{ $value->alamat }}</td>
                     <td>
                         <div class="d-flex gap-1">
                             <a wire:click="show_detail({{ $value->id }})" class="btn btn-warning btn-sm">Detail</a>
@@ -134,6 +136,7 @@
         </div>
     </div>
 </div>
+
 
 
 

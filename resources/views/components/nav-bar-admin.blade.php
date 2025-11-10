@@ -1,4 +1,4 @@
-<nav class="sb-topnav navbar navbar-expand navbar-dark bg-light">
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-black ">
     <!-- Navbar Brand -->
     <a class="navbar-brand ps-3" href="index.html">Dashboard Admin</a>
     <!-- Sidebar Toggle -->

@@ -11,6 +11,7 @@ use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\MateriKotbahController;
 use App\Http\Controllers\ChunkUploadController;
 use App\Http\Controllers\IbadahRaya;
+use App\Http\Controllers\ListKomselController;
 
 // All web routes should be within web middleware group
 Route::middleware(['web'])->group(function () {
@@ -23,6 +24,7 @@ Route::middleware(['web'])->group(function () {
     Route::get('/Getlink',[IbadahRaya::class,'getLink'])->name('ibadah-raya.getlink');
     Route::get('/event', [JemaatController::class, 'index'])->name('event');
     Route::get('/Daftar', [RegController::class, 'showJemaat']);
+    Route::get('/list-komsel',[ListKomselController::class,'index'])->name('list-komsel');
     
     // Materi Kotbah Routes
     Route::get('/materi-kotbah', [MateriKotbahController::class, 'index'])->name('materi-kotbah');
@@ -108,6 +110,10 @@ Route::middleware(['web'])->group(function () {
 
         Route::get('/link_ibadah', function () {
             return view('pengurus.link_ibadah');
+        });
+
+        Route::get('/list_komsel', function () {
+            return view('pengurus.list_komsel');
         });
     });
 });

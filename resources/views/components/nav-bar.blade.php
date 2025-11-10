@@ -1,4 +1,4 @@
-<nav class="fixed w-full top-0 z-50 shadow-[0_0_10px_white] bg-black transition-all duration-300 " x-data="{ isOpen: false }">
+<nav class="fixed w-full top-0 z-50 shadow-[0_0_10px_white] bg-black transition-all duration-300 " x-data="{ isOpen: false, dropdownOpen: false }">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">  
       <div class="flex h-16 items-center justify-between">
         <div class="flex items-center">
@@ -10,8 +10,19 @@
           <div class="hidden md:block">
             <div class="ml-10 flex items-baseline space-x-4">
               <a href="{{ route('home') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Home</a>
-              <a href="{{ route('materi-kotbah') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Materi Kotbah</a>
-              <a href="{{ route('ibadah-raya') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Ibadah Raya</a>
+              
+              <!-- Dropdown Menu untuk Ibadah Raya -->
+              <x-dropdown-menu label="Ibadah Raya">
+                <x-dropdown-item href="{{ route('materi-kotbah') }}">Materi Kotbah</x-dropdown-item>
+                <x-dropdown-item href="{{ route('ibadah-raya') }}">Ibadah Raya</x-dropdown-item>
+              </x-dropdown-menu>
+
+              <!-- Dropdown Menu untuk Komsel -->
+              <x-dropdown-menu label="Komsel Yuk">
+                <x-dropdown-item href="#">Materi Komsel</x-dropdown-item>
+                <x-dropdown-item href="{{ route('list-komsel') }}">Daftar Komsel</x-dropdown-item>
+              </x-dropdown-menu>
+              
               <a href="{{ route('event') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Event</a>
             </div>
           </div>
@@ -61,8 +72,19 @@
     <div x-show="isOpen" class="md:hidden" id="mobile-menu">
       <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
             <a href="{{ route('home') }}" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Home</a>
-            <a href="{{ route('materi-kotbah') }}" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Materi Kotbah</a>
-            <a href="{{ route('ibadah-raya') }}" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Ibadah Raya</a>
+            
+            <!-- Dropdown Menu untuk Ibadah Raya di Mobile -->
+            <x-mobile-dropdown-menu label="Ibadah Raya">
+              <x-mobile-dropdown-item href="{{ route('materi-kotbah') }}">Materi Kotbah</x-mobile-dropdown-item>
+              <x-mobile-dropdown-item href="{{ route('ibadah-raya') }}">Ibadah Raya</x-mobile-dropdown-item>
+            </x-mobile-dropdown-menu>
+
+            <!-- Dropdown Menu untuk Komsel di Mobile -->
+            <x-mobile-dropdown-menu label="Komsel Yuk">
+              <x-mobile-dropdown-item href="#">Materi Komsel</x-mobile-dropdown-item>
+              <x-mobile-dropdown-item href="{{ route('list-komsel') }}">Daftar Komsel</x-mobile-dropdown-item>
+            </x-mobile-dropdown-menu>
+            
             <a href="{{ route('event') }}" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Event</a>
       </div>
       <div class="border-t border-gray-700 pt-4 pb-3">
