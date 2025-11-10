@@ -1,13 +1,113 @@
 <x-nav-bar/>
+<section id="hero" class="w-full bg-gradient-to-r from-purple-900 via-purple-700 to-blue-800 shadow-xl overflow-hidden">
+    <div id="heroCarousel" class="relative w-full">
+        <!-- Carousel Indicators -->
+        <div class="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 space-x-3">
+            @foreach ( $carousels as $key => $Ads)
+                <button type="button"
+                    class="h-3 w-3 rounded-full bg-white/50 hover:bg-white transition-all duration-200"
+                    data-carousel-indicator="{{ $key }}"
+                    aria-label="Slide {{ $key + 1 }}">
+                </button>
+            @endforeach
+        </div>
+
+        <div class="flex transition-transform duration-500 ease-in-out" id="carouselItems">
+            @foreach ( $carousels as $key => $Ads)
+                <div class="min-w-full relative" data-carousel-item="{{ $key }}">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8 lg:p-12 min-h-[400px] lg:min-h-[500px] items-center">
+                        <!-- Left Side - Tema dan Description -->
+                        <div class="flex flex-col justify-center space-y-6 text-white order-2 lg:order-1">
+                            @if($Ads->tema)
+                            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
+                                {{ $Ads->tema }}
+                            </h2>
+                            @endif
+                            
+                            @if($Ads->description)
+                            <p class="text-base md:text-lg lg:text-xl text-gray-200 leading-relaxed">
+                                {!! nl2br(e($Ads->description)) !!}
+                            </p>
+                            @endif
+                            
+                            @if(!$Ads->tema && !$Ads->description)
+                            <div class="space-y-4">
+                                <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
+                                    Welcome to GBI PLC
+                                </h2>
+                                <p class="text-base md:text-lg lg:text-xl text-gray-200 leading-relaxed">
+                                    Gereja Bethel Indonesia Philadelphia Life Center
+                                </p>
+                            </div>
+                            @endif
+                        </div>
+
+                        <!-- Right Side - Image -->
+                        <div class="flex justify-center lg:justify-end order-1 lg:order-2 mt-10">
+                            <div class="relative w-full max-w-md lg:max-w-lg">
+                                <img src="{{ asset('storage/'. $Ads->filename) }}"
+                                    class="w-full h-64 md:h-80 lg:h-96 object-contain rounded-2xl"
+                                    alt="Slide {{ $key + 1 }}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
+        <!-- Previous Control -->
+        <button class="absolute left-2 lg:left-4 top-1/2 -translate-y-1/2 p-3 lg:p-4 bg-white/20 hover:bg-white/40 rounded-full transition-all duration-200 backdrop-blur-sm z-20"
+                type="button"
+                data-carousel-prev id="prevButton">
+            <svg class="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            <span class="sr-only">Previous</span>
+        </button>
+
+        <!-- Next Control -->
+        <button class="absolute right-2 lg:right-4 top-1/2 -translate-y-1/2 p-3 lg:p-4 bg-white/20 hover:bg-white/40 rounded-full transition-all duration-200 backdrop-blur-sm z-20"
+                type="button"
+                data-carousel-next id="nextButton">
+            <svg class="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+            <span class="sr-only">Next</span>
+        </button>
+    </div>
+</section>
+
+<script>
+    const carouselItems = document.getElementById('carouselItems');
+    const prevButton = document.getElementById('prevButton');
+    const nextButton = document.getElementById('nextButton');
+    const totalItems = carouselItems.children.length;
+    let currentIndex = 0;
+
+    function updateCarousel() {
+        const offset = -currentIndex * 100;
+        carouselItems.style.transform = `translateX(${offset}%)`;
+    }
+
+    prevButton.addEventListener('click', () => {
+        currentIndex = (currentIndex > 0) ? currentIndex - 1 : totalItems - 1;
+        updateCarousel();
+    });
+
+    nextButton.addEventListener('click', () => {
+        currentIndex = (currentIndex < totalItems - 1) ? currentIndex + 1 : 0;
+        updateCarousel();
+    });
+</script>
 <x-layout>
     <div style="height: 100vh; width: 100%; background-size: cover; background-position: center; position: absolute; top: 0; left: 0; z-index: -1;"></div>
-    <div style="margin: auto; padding: 50px; border-radius: 8px; width: auto;">
+    <div style="margin: auto; padding: 20px 50px; border-radius: 8px; width: auto;">
         <section class="hero" id="home">
             <div class="mask-container">
                 <main class="content">
-                    <h1 style="font-size: xx-large; color: #D8B4FE; text-align: center; font-family: 'Times New Roman', Times, serif; font-weight: 400; text-shadow: 0 0 5px #D8B4FE, 0 0 10px #D8B4FE, 0 0 20px #A855F7;">
+                    <!--<h1 style="font-size: xx-large; color: #D8B4FE; text-align: center; font-family: 'Times New Roman', Times, serif; font-weight: 400; text-shadow: 0 0 5px #D8B4FE, 0 0 10px #D8B4FE, 0 0 20px #A855F7;">
                         WELCOME HOME
-                    </h1>
+                    </h1> -->
                     <marquee behavior="scroll" direction="left" scrollamount="5">
                         <p style="color: white; mix-blend-mode: difference; font-family: 'Times New Roman', Times, serif; font-weight: 400; text-align: justify; text-justify: inter-word; font-size: medium;">
                             Dan orang-orang bijaksana akan bercahaya seperti cahaya cakrawala dan yang telah menuntun banyak orang kepada kebenaran seperti bintang-bintang tetap untuk selama-lamanya
@@ -17,108 +117,6 @@
                 </main>
             </div>
         </section>
-
-    <section id="hero" class="w-full max-w-7xl mx-auto mt-7 bg-gradient-to-r from-purple-900 via-purple-700 to-blue-800 rounded-3xl shadow-xl overflow-hidden">
-        <div id="heroCarousel" class="relative w-full">
-            <!-- Carousel Indicators -->
-            <div class="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 space-x-3">
-                @foreach ( $carousels as $key => $Ads)
-                    <button type="button"
-                        class="h-3 w-3 rounded-full bg-white/50 hover:bg-white transition-all duration-200"
-                        data-carousel-indicator="{{ $key }}"
-                        aria-label="Slide {{ $key + 1 }}">
-                    </button>
-                @endforeach
-            </div>
-
-            <div class="flex transition-transform duration-500 ease-in-out" id="carouselItems">
-                @foreach ( $carousels as $key => $Ads)
-                    <div class="min-w-full relative" data-carousel-item="{{ $key }}">
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8 lg:p-12 min-h-[400px] lg:min-h-[500px] items-center">
-                            <!-- Left Side - Tema dan Description -->
-                            <div class="flex flex-col justify-center space-y-6 text-white order-2 lg:order-1">
-                                @if($Ads->tema)
-                                <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
-                                    {{ $Ads->tema }}
-                                </h2>
-                                @endif
-                                
-                                @if($Ads->description)
-                                <p class="text-base md:text-lg lg:text-xl text-gray-200 leading-relaxed">
-                                    {!! nl2br(e($Ads->description)) !!}
-                                </p>
-                                @endif
-                                
-                                @if(!$Ads->tema && !$Ads->description)
-                                <div class="space-y-4">
-                                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
-                                        Welcome to GBI PLC
-                                    </h2>
-                                    <p class="text-base md:text-lg lg:text-xl text-gray-200 leading-relaxed">
-                                        Gereja Bethel Indonesia Philadelphia Life Center
-                                    </p>
-                                </div>
-                                @endif
-                            </div>
-
-                            <!-- Right Side - Image -->
-                            <div class="flex justify-center lg:justify-end order-1 lg:order-2">
-                                <div class="relative w-full max-w-md lg:max-w-lg">
-                                    <img src="{{ asset('storage/'. $Ads->filename) }}"
-                                        class="w-full h-64 md:h-80 lg:h-96 object-contain rounded-2xl"
-                                        alt="Slide {{ $key + 1 }}">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-
-            <!-- Previous Control -->
-            <button class="absolute left-2 lg:left-4 top-1/2 -translate-y-1/2 p-3 lg:p-4 bg-white/20 hover:bg-white/40 rounded-full transition-all duration-200 backdrop-blur-sm z-20"
-                    type="button"
-                    data-carousel-prev id="prevButton">
-                <svg class="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                </svg>
-                <span class="sr-only">Previous</span>
-            </button>
-
-            <!-- Next Control -->
-            <button class="absolute right-2 lg:right-4 top-1/2 -translate-y-1/2 p-3 lg:p-4 bg-white/20 hover:bg-white/40 rounded-full transition-all duration-200 backdrop-blur-sm z-20"
-                    type="button"
-                    data-carousel-next id="nextButton">
-                <svg class="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                </svg>
-                <span class="sr-only">Next</span>
-            </button>
-        </div>
-    </section>
-
-    <script>
-        const carouselItems = document.getElementById('carouselItems');
-        const prevButton = document.getElementById('prevButton');
-        const nextButton = document.getElementById('nextButton');
-        const totalItems = carouselItems.children.length;
-        let currentIndex = 0;
-
-        function updateCarousel() {
-            const offset = -currentIndex * 100;
-            carouselItems.style.transform = `translateX(${offset}%)`;
-        }
-
-        prevButton.addEventListener('click', () => {
-            currentIndex = (currentIndex > 0) ? currentIndex - 1 : totalItems - 1;
-            updateCarousel();
-        });
-
-        nextButton.addEventListener('click', () => {
-            currentIndex = (currentIndex < totalItems - 1) ? currentIndex + 1 : 0;
-            updateCarousel();
-        });
-    </script>
-
     <!-- Popup Ads -->
     @if ($popupAds && $popupAds->count() > 0)
         @foreach ($popupAds as $popup)
@@ -217,7 +215,7 @@
     <div class="mt-16 border-t border-gray-700 pt-10 pb-8 w-full max-w-5xl mx-auto">
         @if ($latestPastorNote)
             <h2 class="text-3xl md:text-4xl font-bold text-center text-purple-200 mb-8 tracking-wide">Suara Gembala</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div class="grid grid-cols-1 md:grid-cols-1 gap-8 items-center">
                 <div class="flex justify-center">
                     <img src="{{ asset('storage/'. $latestPastorNote->filename) }}" alt="foto" class="max-h-72 rounded-3xl shadow-lg border-4 border-purple-200 bg-gray-50" />
                 </div>

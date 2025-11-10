@@ -1,10 +1,10 @@
 <nav class="fixed w-full top-0 z-50 shadow-[0_0_10px_white] bg-black transition-all duration-300 " x-data="{ isOpen: false }">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">  
       <div class="flex h-16 items-center justify-between">
         <div class="flex items-center">
           <div class="shrink-0 flex items-center">
             <img class="h-14 w-auto rounded-full shadow-md object-cover my-1 hover:opacity-90" src="{{ asset('logoplc.png') }}" alt="GBI PLC">
-            <h2 class="text-white text-lg font-semibold ml-3">GBI Philadelphia Life Center</h2>
+            <h2 class="text-white text-lg font-semibold ml-3">GBI PLC</h2>
           </div>
 
           <div class="hidden md:block">
@@ -16,7 +16,7 @@
             </div>
           </div>
         </div>
-        <div class="hidden md:block">
+        <div class="hidden mr-2 md:block">
           <div class="ml-4 flex items-center md:ml-6">
               @guest
                   <a href="{{ route('register') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Register</a>
@@ -77,7 +77,7 @@
               @if(Auth::user()->role === 'pengurus' || Auth::user()->role === 'pendeta')
                 <a href="/pengurus/dashboard_admin/{{ Auth::user()->name }}" class="ml-2 rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Dashboard</a>
               @else
-                <a href="{{ route('myprofile') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">My Profile</a>
+                <a href="{{ route('myprofile') }}" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">My Profile</a>
               @endif
               
             </div>
