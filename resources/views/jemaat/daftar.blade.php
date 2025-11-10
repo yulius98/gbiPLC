@@ -118,10 +118,10 @@
         </section>
     </div>
     <!-- START FORM -->
-    <div class=" w-full max-w-3xl p-6 rounded-2xl neon-glow transition">
+    <div class=" w-full max-w-3xl p-8 rounded-2xl neon-glow transition">
         <form id="daftar" action="/Daftar" method="post" class="space-y-6" enctype="multipart/form-data" onsubmit="return preparePhotoForSubmit()">
             @csrf
-            <div class=" w-full max-3-3xl grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class=" w-full max-3-3xl grid grid-cols-1 md:grid-cols-1 gap-6">
                 <!-- Kolom Kiri -->
                 <div class="space-y-4">
                     {{-- Nama --}}

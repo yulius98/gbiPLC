@@ -23,7 +23,7 @@
                   <a href="{{ route('login') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Login</a>
               @endguest
               @auth
-                <span class="text-white text-sm mr-4">Welcome, {{ Auth::user()->name }}</span>
+                <span class="text-white text-sm mr-4">Welcome, {{ explode(' ', Auth::user()->name)[0] }}</span>
                 <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
                   @if(Auth::user()->role === 'pengurus' || Auth::user()->role === 'pendeta')
                     <a href="/pengurus/dashboard_admin/{{ Auth::user()->name }}" class="ml-2 rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Dashboard</a>
@@ -72,7 +72,7 @@
               <a href="{{ route('login') }}" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Login</a>
           @endguest
           @auth
-            <span class="text-white text-sm mr-4">Welcome, {{ Auth::user()->name }}</span>
+            <span class="text-white text-sm mr-4">Welcome, {{ explode(' ', Auth::user()->name)[0] }}</span>
             <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
               @if(Auth::user()->role === 'pengurus' || Auth::user()->role === 'pendeta')
                 <a href="/pengurus/dashboard_admin/{{ Auth::user()->name }}" class="ml-2 rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Dashboard</a>
