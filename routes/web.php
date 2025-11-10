@@ -10,6 +10,7 @@ use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\MateriKotbahController;
 use App\Http\Controllers\ChunkUploadController;
+use App\Http\Controllers\IbadahRaya;
 
 // All web routes should be within web middleware group
 Route::middleware(['web'])->group(function () {
@@ -18,6 +19,8 @@ Route::middleware(['web'])->group(function () {
     Route::get('/register', function () {
         return view('jemaat.daftar');
     })->name('register');
+    Route::get('/ibadah-raya',[IbadahRaya::class,'index'])->name('ibadah-raya');
+    Route::get('/Getlink',[IbadahRaya::class,'getLink'])->name('ibadah-raya.getlink');
     Route::get('/event', [JemaatController::class, 'index'])->name('event');
     Route::get('/Daftar', [RegController::class, 'showJemaat']);
     
@@ -101,6 +104,10 @@ Route::middleware(['web'])->group(function () {
 
         Route::get('/materi_kotbah', function () {
             return view('pengurus.materi_kotbah');
+        });
+
+        Route::get('/link_ibadah', function () {
+            return view('pengurus.link_ibadah');
         });
     });
 });

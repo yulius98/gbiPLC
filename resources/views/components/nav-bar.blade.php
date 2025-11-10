@@ -11,6 +11,7 @@
             <div class="ml-10 flex items-baseline space-x-4">
               <a href="{{ route('home') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Home</a>
               <a href="{{ route('materi-kotbah') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Materi Kotbah</a>
+              <a href="{{ route('ibadah-raya') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Ibadah Raya</a>
               <a href="{{ route('event') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Event</a>
             </div>
           </div>
@@ -61,6 +62,7 @@
       <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
             <a href="{{ route('home') }}" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Home</a>
             <a href="{{ route('materi-kotbah') }}" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Materi Kotbah</a>
+            <a href="{{ route('ibadah-raya') }}" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Ibadah Raya</a>
             <a href="{{ route('event') }}" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Event</a>
       </div>
       <div class="border-t border-gray-700 pt-4 pb-3">

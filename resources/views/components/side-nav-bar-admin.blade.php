@@ -10,6 +10,7 @@
                 <a class="nav-link" href="/pengurus/pendaftara">Registrasi</a>
                 <a class="nav-link" href="/pengurus/pastor_note">Saat Teduh</a>
                 <a class="nav-link" href="/pengurus/materi_kotbah">Materi Kotbah</a>
+                <a class="nav-link" href="/pengurus/link_ibadah">Link Ibadah Raya</a>
                 <a class="nav-link" href="/pengurus/dashboard_timmultimedia">Event dan Carousel</a>
                 <a class="nav-link" href="/pengurus/dashboard_popup" >Popup Ads</a>
                 <!--
