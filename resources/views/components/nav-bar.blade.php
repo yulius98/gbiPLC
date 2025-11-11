@@ -80,9 +80,9 @@
             </x-mobile-dropdown-menu>
 
             <!-- Dropdown Menu untuk Komsel di Mobile -->
-            <x-mobile-dropdown-menu label="Komsel Yuk">
-              <x-mobile-dropdown-item href="#">Materi Komsel</x-mobile-dropdown-item>
-              <x-mobile-dropdown-item href="{{ route('list-komsel') }}">Daftar Komsel</x-mobile-dropdown-item>
+            <x-mobile-dropdown-menu label="Life Group">
+              <x-mobile-dropdown-item href="{{ route('materi-komsel') }}">Materi Life Group</x-mobile-dropdown-item>
+              <x-mobile-dropdown-item href="{{ route('list-komsel') }}">Daftar Life Group</x-mobile-dropdown-item>
             </x-mobile-dropdown-menu>
             
             <a href="{{ route('event') }}" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Event</a>
