@@ -3,7 +3,7 @@
     <div class="bg-black py-24 sm:py-32">
         <div class="mx-auto grid max-w-7xl gap-20 px-6 lg:px-8 xl:grid-cols-3">
             <div class="max-w-xl">
-                <h2 class="text-3xl font-semibold tracking-tight text-pretty text-white sm:text-4xl">Komsel GBI Philadelphia Life Center</h2>
+                <h2 class="text-3xl font-semibold tracking-tight text-pretty text-white sm:text-4xl">Life Group GBI Philadelphia Life Center</h2>
 
             </div>
 
@@ -12,8 +12,8 @@
                     <li>
                         <div class="items-center grid grid-cols-1 lg:grid-cols-1 gap-x-6 bg-gray-900 p-6 rounded-lg shadow-lg border border-white">
                             <div>
-                                <h3 class="text-base/7 font-semibold tracking-tight text-white">Nama Komsel : {{ $item->nama_komsel }}</h3>
-                                <h4 class="text-sm text-white">Ketua Komsel : {{ $item->ketua_komsel }}</h4>
+                                <h3 class="text-base/7 font-semibold tracking-tight text-white">Nama Life Group : {{ $item->nama_komsel }}</h3>
+                                <h4 class="text-sm text-white">Ketua : {{ $item->ketua_komsel }}</h4>
                                 <h5 class="text-sm text-white">No Telp : {{ $item->no_telp }}</h5>
                                 <p class="text-sm text-white">Alamat : {{ $item->alamat }}</p>
                             </div>

@@ -28,15 +28,15 @@
 
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts2" aria-expanded="false" aria-controls="collapseLayouts3">
                     <div class="sb-nav-link-icon"><i class="fa fa-home fa-fw" style="color:#2956d1"></i></div>
-                        Komsel
+                        Life Group
                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                 </a>
                 <div class="collapse" id="collapseLayouts2" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" href="/pengurus/materi_kotbah">Materi Komsel</a>
+                        <a class="nav-link" href="/pengurus/materi_komsel">Materi Life Group</a>
                     </nav>
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" href="/pengurus/list_komsel">Daftar Komsel</a>
+                        <a class="nav-link" href="/pengurus/list_komsel">Daftar Life Group</a>
                     </nav>     
                 </div>
                 

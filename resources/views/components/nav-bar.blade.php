@@ -18,9 +18,9 @@
               </x-dropdown-menu>
 
               <!-- Dropdown Menu untuk Komsel -->
-              <x-dropdown-menu label="Komsel Yuk">
-                <x-dropdown-item href="#">Materi Komsel</x-dropdown-item>
-                <x-dropdown-item href="{{ route('list-komsel') }}">Daftar Komsel</x-dropdown-item>
+              <x-dropdown-menu label="Life Group">
+                <x-dropdown-item href="{{ route('materi-komsel') }}">Materi Life Group</x-dropdown-item>
+                <x-dropdown-item href="{{ route('list-komsel') }}">Daftar Life Group</x-dropdown-item>
               </x-dropdown-menu>
               
               <a href="{{ route('event') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Event</a>

@@ -31,8 +31,8 @@
                     <div id="content-area" class="mt-5 container">
                         
                         <div class="mb-5 p-4 bg-white rounded shadow-2xl shadow-black">
-                            <h2 class="h4 mb-3 text-dark">Daftar Life Group</h2>
-                            @livewire('list-komsel')
+                            <h2 class="h4 mb-3 text-dark">Data Materi Life Group</h2>
+                            @livewire('materi-komsel')
                         </div>
                        
                     </div>

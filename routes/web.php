@@ -12,6 +12,7 @@ use App\Http\Controllers\MateriKotbahController;
 use App\Http\Controllers\ChunkUploadController;
 use App\Http\Controllers\IbadahRaya;
 use App\Http\Controllers\ListKomselController;
+use App\Http\Controllers\MateriKomselController;
 
 // All web routes should be within web middleware group
 Route::middleware(['web'])->group(function () {
@@ -21,11 +22,13 @@ Route::middleware(['web'])->group(function () {
         return view('jemaat.daftar');
     })->name('register');
     Route::get('/ibadah-raya',[IbadahRaya::class,'index'])->name('ibadah-raya');
-    Route::get('/Getlink',[IbadahRaya::class,'getLink'])->name('ibadah-raya.getlink');
+    Route::get('/ibadah-raya/getlink',[IbadahRaya::class,'getLink'])->name('ibadah-raya.getlink');
     Route::get('/event', [JemaatController::class, 'index'])->name('event');
     Route::get('/Daftar', [RegController::class, 'showJemaat']);
     Route::get('/list-komsel',[ListKomselController::class,'index'])->name('list-komsel');
-    
+    Route::get('/materi-komsel',[MateriKomselController::class,'index'])->name('materi-komsel');
+    Route::get('/materi-komsel/getlink',[MateriKomselController::class,'getLink'])->name('materi-komsel.getlink');
+
     // Materi Kotbah Routes
     Route::get('/materi-kotbah', [MateriKotbahController::class, 'index'])->name('materi-kotbah');
     Route::get('/materi-kotbah/download/{id}', [MateriKotbahController::class, 'download'])->name('materi-kotbah.download');
@@ -114,6 +117,10 @@ Route::middleware(['web'])->group(function () {
 
         Route::get('/list_komsel', function () {
             return view('pengurus.list_komsel');
+        });
+
+        Route::get('/materi_komsel', function () {
+            return view('pengurus.materi_komsel');
         });
     });
 });

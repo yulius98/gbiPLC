@@ -126,29 +126,32 @@
     <div class="bg-black py-24 sm:py-32">
         <div class="mx-auto grid max-w-7xl gap-20 px-6 lg:px-8 xl:grid-cols-2">
             <div class="max-w-xl">
-                <h2 class="text-3xl font-semibold tracking-tight text-pretty text-white sm:text-4xl">Ibadah Raya GBI Philadelphia Life Center</h2>
+                <h2 class="text-3xl font-semibold tracking-tight text-pretty text-white sm:text-4xl">Materi Life Group GBI Philadelphia Life Center</h2>
             </div>
-            <form id="ibadahraya" action="{{ route('ibadah-raya.getlink') }}" method="get" class="space-y-6" enctype="multipart/form-data" onsubmit="return preparePhotoForSubmit()">
+            <form id="materikomsel" action="{{ route('materi-komsel.getlink') }}" method="get" class="space-y-6" enctype="multipart/form-data" onsubmit="return preparePhotoForSubmit()">
             @csrf
                 <div>
-                    <label for="tgl_ibadah" class="block mb-1 text-white">Tanggal Ibadah</label>
-                    <input type="date" id="tgl_ibadah" name="tgl_ibadah"
-                        class="form-control w-full px-4 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition {{ $errors->has('tgl_ibadah') ? 'border-red-500' : 'border-white' }}" 
-                        value="{{ old('tgl_ibadah', request('tgl_ibadah')) }}" 
+                    <label for="tgl_komsel" class="block mb-1 text-white">Tanggal Life Group</label>
+                    <input type="date" id="tgl_komsel" name="tgl_komsel"
+                        class="form-control w-full px-4 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition {{ $errors->has('tgl_komsel') ? 'border-red-500' : 'border-white' }}" 
+                        value="{{ old('tgl_komsel', request('tgl_komsel')) }}" 
                         style="background-color: #f3eeee; color: white; color-scheme: dark;" />
-                    @error('tgl_ibadah')
+                    @error('tgl_komsel')
                         <span class="text-red-500 text-xs">{{ $message }}</span>
                     @enderror
                 </div>
                 <div>
-                    <label for="ibadah_ke" class="block mb-1 text-white">Ibadah ke..</label>
-                    <select id="ibadah_ke" name="ibadah_ke"
-                        class="form-control w-full px-4 py-2 bg-black border rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition {{ $errors->has('ibadah_ke') ? 'border-red-500' : 'border-white' }} text-white">
-                        <option value="">-- Pilih Ibadah --</option>
-                        <option value="Ibadah 1" {{ old('ibadah_ke', request('ibadah_ke')) == '1' ? 'selected' : '' }}>Ibadah 1</option>
-                        <option value="Ibadah 2" {{ old('ibadah_ke', request('ibadah_ke')) == '2' ? 'selected' : '' }}>Ibadah 2</option>
+                    <label for="judul" class="block mb-1 text-white">Materi Life Group</label>
+                    <select id="judul" name="judul"
+                        class="form-control w-full px-4 py-2 bg-black border rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition {{ $errors->has('judul') ? 'border-red-500' : 'border-white' }} text-white">
+                        <option value="">-- Pilih Materi --</option>
+                        @foreach($judul as $item)
+                            <option value="{{ $item->judul }}" {{ old('judul', request('judul')) == $item->judul ? 'selected' : '' }}>
+                                {{ $item->judul }}
+                            </option>
+                        @endforeach
                     </select>
-                    @error('ibadah_ke')
+                    @error('judul')
                         <span class="text-red-500 text-xs">{{ $message }}</span>
                     @enderror
                 </div>
@@ -161,34 +164,62 @@
                 </div>
             </form>
 
-            @if(isset($ibadahRaya) && $ibadahRaya)
+            @if(isset($materi) && $materi)
             <div class="col-span-2">
                 <div class="bg-gray-900 p-6 rounded-lg shadow-lg border border-white">
                     <h3 class="text-2xl font-bold text-white mb-4">Hasil Pencarian</h3>
                     <div class="mb-4">
-                        <p class="text-white"><strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($ibadahRaya->tgl_ibadah)->format('d F Y') }}</p>
-                        <p class="text-white"><strong>{{ $ibadahRaya->ibadah_ke }}</p>
+                        <p class="text-white"><strong>Tanggal Life Group:</strong> {{ \Carbon\Carbon::parse($materi->tgl_komsel)->format('d F Y') }}</p>
+                        <p class="text-white"><strong>Judul Materi : {{ $materi->judul }}</p>
                     </div>
                     
-                    @if($ibadahRaya->link_ibadah)
+                    @if($materi->path)
                     <div class="mb-4">
-                        <p class="text-white mb-2"><strong>Link Ibadah:</strong></p>
-                        <a href="{{ $ibadahRaya->link_ibadah }}" target="_blank" class="text-blue-400 hover:text-blue-300 underline break-all">
-                            {{ $ibadahRaya->link_ibadah }}
+                        <p class="text-white mb-2"><strong>Link Materi:</strong></p>
+                        <a href="{{ $materi->path }}" target="_blank" class="text-blue-400 hover:text-blue-300 underline break-all">
+                            {{ $materi->path }}
                         </a>
                     </div>
 
                     @php
-                        // Extract YouTube video ID from various YouTube URL formats
+                        // Deteksi tipe file dari path
+                        $isPDF = preg_match('/\.pdf$/i', $materi->path);
+                        
+                        // Extract YouTube video ID dari berbagai format URL YouTube
                         $youtubeId = null;
-                        if (preg_match('/(?:youtube\.com\/(?:watch\?v=|live\/|embed\/)|youtu\.be\/)([^&\?\/]+)/', $ibadahRaya->link_ibadah, $matches)) {
+                        if (preg_match('/(?:youtube\.com\/(?:watch\?v=|live\/|embed\/)|youtu\.be\/)([^&\?\/]+)/', $materi->path, $matches)) {
                             $youtubeId = $matches[1];
                         }
                     @endphp
 
-                    @if($youtubeId)
+                    @if($isPDF)
+                    {{-- Tampilan untuk file PDF --}}
                     <div class="mt-6 border border-white p-4 rounded-lg">
-                        <h4 class="text-xl font-semibold text-white mb-3">📹 Video Ibadah</h4>
+                        <h4 class="text-xl font-semibold text-white mb-3">📄 Materi PDF</h4>
+                        <div class="relative bg-black" style="padding-bottom: 100%; height: 0; overflow: hidden;">
+                            <iframe 
+                                class="absolute top-0 left-0 w-full h-full rounded-lg"
+                                src="{{ $materi->path }}" 
+                                type="application/pdf"
+                                frameborder="0">
+                                <p class="text-white p-4">Browser Anda tidak mendukung tampilan PDF. 
+                                    <a href="{{ $materi->path }}" target="_blank" class="text-blue-400 hover:text-blue-300 underline">
+                                        Klik di sini untuk mengunduh
+                                    </a>
+                                </p>
+                            </iframe>
+                        </div>
+                        <div class="mt-3 text-center">
+                            <a href="{{ $materi->path }}" target="_blank" 
+                               class="inline-block px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition">
+                                📥 Download PDF
+                            </a>
+                        </div>
+                    </div>
+                    @elseif($youtubeId)
+                    {{-- Tampilan untuk video YouTube --}}
+                    <div class="mt-6 border border-white p-4 rounded-lg">
+                        <h4 class="text-xl font-semibold text-white mb-3">📹 Video Materi</h4>
                         <div class="relative bg-black" style="padding-bottom: 56.25%; height: 0; overflow: hidden;">
                             <iframe 
                                 class="absolute top-0 left-0 w-full h-full rounded-lg"
@@ -200,22 +231,23 @@
                         </div>
                     </div>
                     @else
+                    {{-- Tampilan untuk link lainnya --}}
                     <div class="mt-6 bg-yellow-900 border border-yellow-600 p-4 rounded-lg">
-                        <p class="text-yellow-200">⚠️ Link yang disimpan bukan format YouTube yang valid.</p>
-                        <p class="text-yellow-200 text-sm mt-2">Format yang didukung: youtube.com/watch?v=xxx atau youtu.be/xxx</p>
+                        <p class="text-yellow-200">⚠️ Format file tidak dikenali.</p>
+                        <p class="text-yellow-200 text-sm mt-2">Format yang didukung: PDF (.pdf), YouTube (youtube.com/watch?v=xxx atau youtu.be/xxx)</p>
                     </div>
                     @endif
                     @else
                     <div class="text-yellow-400">
-                        <p>Link ibadah belum tersedia.</p>
+                        <p>Link materi belum tersedia.</p>
                     </div>
                     @endif
                 </div>
             </div>
-            @elseif(request('tgl_ibadah') && request('ibadah_ke'))
+            @elseif(request('tgl_komsel') && request('judul'))
             <div class="col-span-2">
                 <div class="bg-gray-900 p-6 rounded-lg shadow-lg border border-white">
-                    <p class="text-red-400 text-lg">Data tidak ditemukan untuk tanggal dan ibadah yang dipilih.</p>
+                    <p class="text-red-400 text-lg">Data tidak ditemukan untuk tanggal dan judul materi yang dipilih.</p>
                 </div>
             </div>
             @endif
@@ -241,3 +273,4 @@
 </script>
 
 </x-layout>
+

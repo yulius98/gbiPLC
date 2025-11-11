@@ -29,30 +29,23 @@
                 <!-- Kolom Pertama -->
                 <div class="col-md-6">
                     <div class="mb-3 row">
-                        <label for="nama_komsel" class="col-sm-3 col-form-label">Nama Life Group</label>
+                        <label for="tgl_komsel" class="col-sm-3 col-form-label">Tanggal Life Group</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="nama_komsel" wire:model="nama_komsel">
+                            <input type="date" class="form-control" id="tgl_komsel" wire:model="tgl_komsel">
                         </div>
                     </div>
 
                     <div class="mb-3 row">
-                        <label for="ketua_komsel" class="col-sm-3 col-form-label">Ketua Life Group</label>
+                        <label for="judul" class="col-sm-3 col-form-label">Judul Materi</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="ketua_komsel" wire:model="ketua_komsel">
+                            <input type="text" class="form-control" id="judul" wire:model="judul">
                         </div>
                     </div>
 
                     <div class="mb-3 row">
-                        <label for="no_telp" class="col-sm-3 col-form-label">Nomor Telp</label>
+                        <label for="path" class="col-sm-3 col-form-label">Link Materi</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="no_telp" wire:model="no_telp">
-                        </div>
-                    </div>
-
-                    <div class="mb-3 row">
-                        <label for="alamat" class="col-sm-3 col-form-label">Alamat</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" id="alamat" wire:model="alamat">
+                            <input type="text" class="form-control" id="path" wire:model="path">
                         </div>
                     </div>
 
@@ -79,31 +72,29 @@
     <!-- START DATA -->
 
     <div class="my-3 p-3 bg-body rounded shadow-sm">
-        <h4 class="font-medium">Daftar Life Group</h4>
+        <h4 class="font-medium">Data Materi Life Group</h4>
         <div class="pb-3 pt-3">
             <input type="text" class="form-control mb-3 w-25" placeholder="Search..." wire:model.live="cari">
         </div>
-        {{ $komsel->links() }}
+        {{ $materi->links() }}
         <table class="table table-striped table-sortable ">
             <thead>
                 <tr>
                     <th class="col-md-1">No</th>
-                    <th class="col-md-4 sort" @if ($sortcolom == 'nama_komsel') {{ $sortdirection }} @endif wire:click="sort('nama_komsel')">Nama Life Group</th>
-                    <th class="col-md-3 sort" >Ketua Life Group</th>
-                    <th class="col-md-2 sort" >No Telp</th>
-                    <th class="col-md-2 sort" >Alamat</th>
+                    <th class="col-md-4 sort" @if ($sortcolom == 'tgl_komsel') {{ $sortdirection }} @endif wire:click="sort('tgl_komsel')">Tanggal Life Group</th>
+                    <th class="col-md-3 sort" >Judul</th>
+                    <th class="col-md-2 sort" >Link Materi</th>
                     <th class="col-md-2">Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($komsel as $key => $value)
+                @foreach ($materi as $key => $value)
 
                 <tr>
-                    <td>{{ $komsel->firstItem() + $key }}</td>
-                    <td>{{ $value->nama_komsel  }}</td>
-                    <td>{{ $value->ketua_komsel  }}</td>
-                    <td>{{ $value->no_telp }}</td>
-                    <td>{{ $value->alamat }}</td>
+                    <td>{{ $materi->firstItem() + $key }}</td>
+                    <td>{{ $value->tgl_komsel  }}</td>
+                    <td>{{ $value->judul }}</td>
+                    <td>{{ $value->path }}</td>
                     <td>
                         <div class="d-flex gap-1">
                             <a wire:click="show_detail({{ $value->id }})" class="btn btn-warning btn-sm">Detail</a>
