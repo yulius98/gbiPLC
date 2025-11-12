@@ -35,11 +35,6 @@ return [
         ],
     ],
 
-    // config/services.php
-    'firebase' => [
-        'credentials' => storage_path('app/firebase/gbi-plc-firebase-adminsdk-fbsvc-25a8a2653c.json'),
-        'database_url' => env('FIREBASE_DATABASE_URL'),
-        'storage_bucket' => env('FIREBASE_STORAGE_BUCKET'),
-    ],
+    
 
 ];
