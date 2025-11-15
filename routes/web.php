@@ -29,6 +29,7 @@ Route::middleware(['web'])->group(function () {
     Route::get('/materi-komsel',[MateriKomselController::class,'index'])->name('materi-komsel');
     Route::get('/materi-komsel/getlink',[MateriKomselController::class,'getLink'])->name('materi-komsel.getlink');
 
+    
     // Materi Kotbah Routes
     Route::get('/materi-kotbah', [MateriKotbahController::class, 'index'])->name('materi-kotbah');
     Route::get('/materi-kotbah/download/{id}', [MateriKotbahController::class, 'download'])->name('materi-kotbah.download');
