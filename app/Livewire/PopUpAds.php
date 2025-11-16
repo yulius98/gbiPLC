@@ -119,7 +119,7 @@ class PopUpAds extends Component
     public function hapus()
     {
 
-        $id = $this->caraousel_id;
+        $id = $this->popupads_id;
         $popup = TblPopupAds::find($id);
         if ($popup) {
 
