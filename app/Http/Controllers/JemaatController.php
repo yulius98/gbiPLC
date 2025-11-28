@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\TblEvent;
 use Carbon\Carbon;
 
+use function Symfony\Component\Clock\now;
+
 class JemaatController extends Controller
 {
     /**
@@ -12,15 +14,10 @@ class JemaatController extends Controller
      */
     public function index()
     {
-        $events = cache()->remember(
-            'monthly_events_' . Carbon::now()->month . '_' . Carbon::now()->year,
-            now()->addHours(1),
-            function () {
-                return TblEvent::thisMonth()
-                    ->orderBy('tgl_event', 'asc')
-                    ->paginate(10);
-            }
-        );
+   
+        $events = TblEvent::whereMonth('tgl_event', Carbon::now()->month)
+            ->orderBy('tgl_event', 'asc')
+            ->paginate(10);
 
         return view('jemaat', compact('events'));
     }
