@@ -23,6 +23,8 @@
                 <x-dropdown-item href="{{ route('list-komsel') }}">Daftar Life Group</x-dropdown-item>
               </x-dropdown-menu>
               
+              
+              <a href="{{ route('youth') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Youth</a>
               <a href="{{ route('event') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Event</a>
             </div>
           </div>
@@ -85,6 +87,7 @@
               <x-mobile-dropdown-item href="{{ route('list-komsel') }}">Daftar Life Group</x-mobile-dropdown-item>
             </x-mobile-dropdown-menu>
             
+            <a href="{{ route('youth') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Youth</a>
             <a href="{{ route('event') }}" class="block rounded-md px-3 py-2 text-sm font-medium text-white border border-transparent hover:border-white hover:shadow-[0_0_10px_white] hover:bg-black hover:text-white transition duration-300">Event</a>
       </div>
       <div class="border-t border-gray-700 pt-4 pb-3">

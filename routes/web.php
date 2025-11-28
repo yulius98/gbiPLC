@@ -2,17 +2,19 @@
 <?php
 
 use App\Http\Controllers\AuthLogin;
+use App\Http\Controllers\IbadahRaya;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegController;
+use App\Http\Controllers\YouthController;
 use App\Http\Controllers\JemaatController;
-use App\Http\Controllers\PageJemaatController;
 use App\Http\Controllers\WelcomeController;
-use App\Http\Controllers\ResetPasswordController;
-use App\Http\Controllers\MateriKotbahController;
-use App\Http\Controllers\ChunkUploadController;
-use App\Http\Controllers\IbadahRaya;
 use App\Http\Controllers\ListKomselController;
+use App\Http\Controllers\PageJemaatController;
+use App\Http\Controllers\ChunkUploadController;
 use App\Http\Controllers\MateriKomselController;
+use App\Http\Controllers\MateriKotbahController;
+use App\Http\Controllers\YouthProgramController;
+use App\Http\Controllers\ResetPasswordController;
 
 // All web routes should be within web middleware group
 Route::middleware(['web'])->group(function () {
@@ -23,6 +25,7 @@ Route::middleware(['web'])->group(function () {
     })->name('register');
     Route::get('/ibadah-raya',[IbadahRaya::class,'index'])->name('ibadah-raya');
     Route::get('/ibadah-raya/getlink',[IbadahRaya::class,'getLink'])->name('ibadah-raya.getlink');
+    Route::get('/youth', [YouthController::class, 'index'])->name('youth');
     Route::get('/event', [JemaatController::class, 'index'])->name('event');
     Route::get('/Daftar', [RegController::class, 'showJemaat']);
     Route::get('/list-komsel',[ListKomselController::class,'index'])->name('list-komsel');
