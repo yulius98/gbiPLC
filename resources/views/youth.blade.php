@@ -198,12 +198,17 @@
                 @foreach ( $galleries as $galleri )
                     <div class="gallery-item" data-aos="fade-up" data-aos-delay="100">
                         <div class="aspect-square bg-gradient-to-br from-gold to-yellow-600 rounded-lg overflow-hidden relative group cursor-pointer">
-                            <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-70 transition-all duration-300 flex items-center justify-center">
-                                <svg class="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                </svg>
-                            </div>
+                            @php
+                                $ext = strtolower(pathinfo($galleri->file_path, PATHINFO_EXTENSION));
+                            @endphp
+                                @if(in_array($ext, ['jpg','jpeg','png','gif','webp']))
+                                    <img src="{{ asset($galleri->file_path) }}" alt="{{ $galleri->title }}" class="w-full h-full object-cover absolute inset-0" />
+                                @elseif(in_array($ext, ['mp4','webm','ogg']))
+                                    <video controls class="w-full h-full object-cover absolute inset-0 bg-black">
+                                        <source src="{{ asset('storage/'. $galleri->file_path) }}" type="video/{{ $ext }}">
+                                        Browser Anda tidak mendukung video.
+                                    </video>
+                                @endif
                             <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
                                 <p class="text-sm font-semibold">{{ $galleri->title }}</p>
                             </div>
@@ -323,7 +328,7 @@
         <div class="container mx-auto px-6 relative z-10">
             <div class="max-w-4xl mx-auto text-center" data-aos="fade-up">
                 <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-                    Siap Bergabung <span class="text-gold">Bersama Kami?</span>
+                    Yuk Gabung <span class="text-gold">Yuk</span>
                 </h2>
                 <p class="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
                     Kami mengundang Anda untuk menjadi bagian dari keluarga besar Youth GBI Philadelphia Life Center. 

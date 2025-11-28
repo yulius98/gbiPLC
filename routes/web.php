@@ -126,5 +126,9 @@ Route::middleware(['web'])->group(function () {
         Route::get('/materi_komsel', function () {
             return view('pengurus.materi_komsel');
         });
+
+        Route::get('/youth_gallery', function () {
+            return view('pengurus.youth_gallery');
+        });
     });
 });
