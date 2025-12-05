@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-black">
+<html lang="en" class="h-full">
+<!-- <html lang="id" class="h-full"> -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,18 +25,18 @@
             @vite(['resources/js/app.js','resources/css/app.css'])
     @endif
     <title>GBI PLC</title>
-    
+
     <!-- Force favicon refresh -->
     <meta http-equiv="cache-control" content="no-cache">
     <meta http-equiv="expires" content="0">
     <meta http-equiv="pragma" content="no-cache">
-    
+
     <!-- Favicon with cache buster -->
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v={{ time() }}">
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v={{ time() }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('logoplc.png') }}?v={{ time() }}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('logoplc.png') }}?v={{ time() }}">
-    
+
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <script src="https://unpkg.com/feather-icons"></script>
     <!-- Removed Bootstrap JS bundle to avoid conflict with Tailwind -->
@@ -43,7 +44,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
 
 </head>
-<body class="h-full">
+<body class="h-full" >
     <div class="min-h-full">
         <main>
             <div class="mx-auto max-w-7xl px-1 py-6 sm:px-2 lg:px-2">
@@ -53,4 +54,27 @@
     </div>
 </body>
 
+
+
 </html>
+<style>
+    body {
+        background-image: url('{{ asset('BGLayout.jpg') }}');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center 40px;
+        background-attachment: fixed;
+    }
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.3);
+        z-index: -1;
+    }
+
+</style>
+

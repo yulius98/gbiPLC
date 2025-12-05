@@ -1,6 +1,6 @@
-<div class="mt-16 border-t border-gray-700 pt-10 pb-8 w-full max-w-5xl mx-auto">
-    <h2 class="text-3xl md:text-4xl font-bold text-center text-purple-200 mb-8 tracking-wide">Materi Kotbah</h2>
-    
+<div class="mt-16 pt-10 pb-8 w-full max-w-5xl mx-auto shadow-lg shadow-black p-6" style="border-radius: 16px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(8px);">
+    <h2 class="text-3xl md:text-4xl font-bold text-center text-purple-800 mb-8 tracking-wide">Materi Kotbah</h2>
+
     @if (session()->has('error'))
         <div class="alert alert-danger mb-4 text-center">
             {{ session('error') }}
@@ -10,10 +10,10 @@
     @if (!empty($availableDates))
         <!-- Pilihan Tanggal Kotbah -->
         <div class="mb-8">
-            <label for="tanggal-kotbah" class="block text-xl font-semibold text-purple-200 mb-4">Tanggal Kotbah</label>
+            <label for="tanggal-kotbah" class="block text-xl font-semibold text-purple-800 mb-4">Tanggal Kotbah</label>
             <div class="relative w-full md:w-2/3 lg:w-1/2">
-                <select wire:model.live="selectedDate" id="tanggal-kotbah" 
-                        class="w-full p-3 rounded-lg bg-gray-800 border border-purple-300 text-white focus:outline-none focus:ring-2 focus:ring-purple-400 appearance-none pr-10">
+                <select wire:model.live="selectedDate" id="tanggal-kotbah"
+                        class="w-full p-3 rounded-lg bg-gray-800 border border-purple-800 text-white focus:outline-none focus:ring-2 focus:ring-purple-400 appearance-none pr-10">
                     <option value="">Pilih Tanggal Kotbah</option>
                     @foreach ($availableDates as $date)
                         <option value="{{ $date['date'] }}">{{ $date['label'] }}</option>
@@ -21,7 +21,7 @@
                 </select>
                 <!-- Custom dropdown arrow -->
                 <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                    <svg class="w-4 h-4 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 text-purple-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </div>
@@ -50,7 +50,7 @@
         @elseif ($selectedKotbah)
             <!-- Judul Kotbah -->
             <div wire:loading.remove wire:target="selectedDate" class="mb-6">
-                <label class="block text-xl font-semibold text-purple-200 mb-2">Judul Kotbah</label>
+                <label class="block text-xl font-semibold text-purple-800 mb-2">Judul Kotbah</label>
                 <div class="p-4 bg-gray-800 rounded-lg border border-purple-300">
                     <h3 class="text-lg text-white">{{ $selectedKotbah->judul ?: 'Materi Kotbah' }}</h3>
                     <p class="text-gray-300 text-sm mt-2">
@@ -63,7 +63,7 @@
             <div wire:loading.remove wire:target="selectedDate">
             @if ($selectedKotbah->filename)
                 <div class="mb-6">
-                    <label class="block text-xl font-semibold text-purple-200 mb-4">File Kotbah</label>
+                    <label class="block text-xl font-semibold text-purple-800 mb-4">File Kotbah</label>
                     <div class="bg-gray-800 rounded-lg border border-purple-300 p-6">
                         @php
                             $fileExtension = pathinfo($selectedKotbah->filename, PATHINFO_EXTENSION);
@@ -85,9 +85,9 @@
                                 </div>
                                 <!-- Embed PDF jika memungkinkan -->
                                 <div class="w-full h-96 border border-gray-600 rounded-lg overflow-hidden">
-                                    <embed src="{{ asset('storage/' . $selectedKotbah->filename) }}" 
-                                           type="application/pdf" 
-                                           width="100%" 
+                                    <embed src="{{ asset('storage/' . $selectedKotbah->filename) }}"
+                                           type="application/pdf"
+                                           width="100%"
                                            height="100%"
                                            class="rounded-lg" />
                                 </div>
@@ -126,7 +126,7 @@
 
                 <!-- Tombol Download -->
                 <div class="text-center">
-                    <a href="{{ route('materi-kotbah.download', $selectedKotbah->id) }}" 
+                    <a href="{{ route('materi-kotbah.download', $selectedKotbah->id) }}"
                        class="inline-flex items-center px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />

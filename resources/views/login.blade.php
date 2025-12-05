@@ -1,5 +1,5 @@
 <x-layout>
-    <div class="flex min-h-full flex-col justify-center px-4 py-12 lg:px-8 ">
+<div class="flex min-h-full flex-col justify-center px-4 py-12 lg:px-8 " style="margin-top:40px; border-radius: 16px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(6px);">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
         <img class="mx-auto h-40 w-auto rounded-full" src="..\logoplc.png" alt="Your Company">
         <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-[#b651b6]" style="font-family: 'Dancing Script', cursive;">
@@ -76,31 +76,31 @@
 
     </div>
 
-    </div>
+</div>
 
-    <script>
-        // Loading state for form submission
-        document.querySelector('form').addEventListener('submit', function() {
-            const button = document.querySelector('button[type="submit"]');
-            const buttonText = document.getElementById('button-text');
-            const spinner = document.getElementById('loading-spinner');
+<script>
+    // Loading state for form submission
+    document.querySelector('form').addEventListener('submit', function() {
+        const button = document.querySelector('button[type="submit"]');
+        const buttonText = document.getElementById('button-text');
+        const spinner = document.getElementById('loading-spinner');
 
-            button.disabled = true;
-            buttonText.textContent = 'Sedang masuk...';
-            spinner.classList.remove('hidden');
-        });
+        button.disabled = true;
+        buttonText.textContent = 'Sedang masuk...';
+        spinner.classList.remove('hidden');
+    });
 
-        // Auto hide alerts after 5 seconds
-        document.addEventListener('DOMContentLoaded', function() {
-            const alerts = document.querySelectorAll('.alert');
-            alerts.forEach(function(alert) {
+    // Auto hide alerts after 5 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(function(alert) {
+            setTimeout(function() {
+                alert.style.opacity = '0';
                 setTimeout(function() {
-                    alert.style.opacity = '0';
-                    setTimeout(function() {
-                        alert.remove();
-                    }, 300);
-                }, 5000);
-            });
+                    alert.remove();
+                }, 300);
+            }, 5000);
         });
-    </script>
+    });
+</script>
 </x-layout>

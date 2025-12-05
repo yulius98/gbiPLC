@@ -94,7 +94,7 @@
   }
 </style>
 
-<div class="flex flex-col justify-center items-center bg-black text-white pt-16">
+<div class="flex flex-col justify-center items-center text-white pt-16 shadow-lg shadow-gray rounded-5" style="border-radius: 16px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(8px);">
     {{-- Error Message --}}
     @if ($errors->any())
         <div class="pt-3 w-full max-w-xl">
@@ -123,25 +123,25 @@
         </div>
     @endif
 
-    <div class="bg-black py-24 sm:py-32">
+    <div class="py-24 sm:py-32">
         <div class="mx-auto grid max-w-7xl gap-20 px-6 lg:px-8 xl:grid-cols-2">
             <div class="max-w-xl">
-                <h2 class="text-3xl font-semibold tracking-tight text-pretty text-white sm:text-4xl">Ibadah Raya GBI Philadelphia Life Center</h2>
+                <h2 class="text-3xl font-semibold tracking-tight text-pretty text-black sm:text-4xl">Ibadah Raya GBI Philadelphia Life Center</h2>
             </div>
             <form id="ibadahraya" action="{{ route('ibadah-raya.getlink') }}" method="get" class="space-y-6" enctype="multipart/form-data" onsubmit="return preparePhotoForSubmit()">
             @csrf
                 <div>
-                    <label for="tgl_ibadah" class="block mb-1 text-white">Tanggal Ibadah</label>
+                    <label for="tgl_ibadah" class="block mb-1 text-black">Tanggal Ibadah</label>
                     <input type="date" id="tgl_ibadah" name="tgl_ibadah"
-                        class="form-control w-full px-4 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition {{ $errors->has('tgl_ibadah') ? 'border-red-500' : 'border-white' }}" 
-                        value="{{ old('tgl_ibadah', request('tgl_ibadah')) }}" 
+                        class="form-control w-full px-4 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition {{ $errors->has('tgl_ibadah') ? 'border-red-500' : 'border-white' }}"
+                        value="{{ old('tgl_ibadah', request('tgl_ibadah')) }}"
                         style="background-color: #f3eeee; color: white; color-scheme: dark;" />
                     @error('tgl_ibadah')
                         <span class="text-red-500 text-xs">{{ $message }}</span>
                     @enderror
                 </div>
                 <div>
-                    <label for="ibadah_ke" class="block mb-1 text-white">Ibadah ke..</label>
+                    <label for="ibadah_ke" class="block mb-1 text-black">Ibadah ke..</label>
                     <select id="ibadah_ke" name="ibadah_ke"
                         class="form-control w-full px-4 py-2 bg-black border rounded shadow focus:outline-none focus:ring-2 focus:ring-white transition {{ $errors->has('ibadah_ke') ? 'border-red-500' : 'border-white' }} text-white">
                         <option value="">-- Pilih Ibadah --</option>
@@ -169,7 +169,7 @@
                         <p class="text-white"><strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($ibadahRaya->tgl_ibadah)->format('d F Y') }}</p>
                         <p class="text-white"><strong>{{ $ibadahRaya->ibadah_ke }}</p>
                     </div>
-                    
+
                     @if($ibadahRaya->link_ibadah)
                     <div class="mb-4">
                         <p class="text-white mb-2"><strong>Link Ibadah:</strong></p>
@@ -190,11 +190,11 @@
                     <div class="mt-6 border border-white p-4 rounded-lg">
                         <h4 class="text-xl font-semibold text-white mb-3">📹 Video Ibadah</h4>
                         <div class="relative bg-black" style="padding-bottom: 56.25%; height: 0; overflow: hidden;">
-                            <iframe 
+                            <iframe
                                 class="absolute top-0 left-0 w-full h-full rounded-lg"
-                                src="https://www.youtube.com/embed/{{ $youtubeId }}" 
-                                frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                src="https://www.youtube.com/embed/{{ $youtubeId }}"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                 allowfullscreen>
                             </iframe>
                         </div>
@@ -228,11 +228,11 @@
     // Pastikan date input berfungsi dengan baik
     document.addEventListener('DOMContentLoaded', function() {
         const dateInput = document.getElementById('tgl_ibadah');
-        
+
         // Set max date ke hari ini
         const today = new Date().toISOString().split('T')[0];
         dateInput.setAttribute('max', today);
-        
+
         // Jika ada error atau data tidak ditemukan, fokus ke input
         @if(request('tgl_ibadah') && request('ibadah_ke') && !isset($ibadahRaya))
             dateInput.focus();

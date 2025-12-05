@@ -1,123 +1,149 @@
 <x-nav-bar/>
-<section id="hero" class="w-full bg-gradient-to-r from-purple-900 via-purple-700 to-blue-800 shadow-xl overflow-hidden">
-    <div id="heroCarousel" class="relative w-full">
-        <!-- Carousel Indicators -->
-        <div class="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 space-x-3">
-            @foreach ( $carousels as $key => $Ads)
-                <button type="button"
-                    class="h-3 w-3 rounded-full bg-white/50 hover:bg-white transition-all duration-200"
-                    data-carousel-indicator="{{ $key }}"
-                    aria-label="Slide {{ $key + 1 }}">
-                </button>
-            @endforeach
-        </div>
+{{--<section id="hero" class="w-full bg-gradient-to-r from-purple-900 via-purple-700 to-blue-800 shadow-xl overflow-hidden">
+    <div id="heroCarousel" class="relative w-full" style="background-image: url('{{ asset('BGCarousel.webp') }}'); background-size: cover; background-position: center;">
+    --}}
 
-        <div class="flex transition-transform duration-500 ease-in-out" id="carouselItems">
-            @foreach ( $carousels as $key => $Ads)
-                <div class="min-w-full relative" data-carousel-item="{{ $key }}">
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8 lg:p-12 min-h-[400px] lg:min-h-[500px] items-center">
-                        <!-- Left Side - Tema dan Description -->
-                        <div class="flex flex-col justify-center space-y-6 text-white order-2 lg:order-1">
-                            @if($Ads->tema)
-                            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
-                                {{ $Ads->tema }}
-                            </h2>
-                            @endif
-                            
-                            @if($Ads->description)
-                            <p class="text-base md:text-lg lg:text-xl text-gray-200 leading-relaxed">
-                                {!! nl2br(e($Ads->description)) !!}
-                            </p>
-                            @endif
-                            
-                            @if(!$Ads->tema && !$Ads->description)
-                            <div class="space-y-4">
+<x-layout>
+    <section id="hero" class="w-full shadow-lg shadow-gray-500 overflow-hidden" style="border-radius: 16px; background: rgba(255,255,255,0.2); backdrop-filter: blur(3px);" >
+        <div id="heroCarousel" class="relative w-full">
+
+            <!-- Carousel Indicators -->
+            <div class="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 space-x-3">
+                @foreach ( $carousels as $key => $Ads)
+                    <button type="button"
+                        class="h-3 w-3 rounded-full bg-black/10 hover:bg-gray-600 transition-all duration-200"
+                        data-carousel-indicator="{{ $key }}"
+                        aria-label="Slide {{ $key + 1 }}">
+                    </button>
+                @endforeach
+            </div>
+
+            <div class="flex transition-transform duration-500 ease-in-out" id="carouselItems">
+                @foreach ( $carousels as $key => $Ads)
+                    <div class="min-w-full relative" data-carousel-item="{{ $key }}">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8 lg:p-12 min-h-[400px] lg:min-h-[500px] items-center">
+                            <!-- Left Side - Tema dan Description -->
+                            <div class="flex flex-col justify-center space-y-6 text-purple-900 order-2 lg:order-1">
+                                @if($Ads->tema)
                                 <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
-                                    Welcome to GBI PLC
+                                    {{ $Ads->tema }}
                                 </h2>
-                                <p class="text-base md:text-lg lg:text-xl text-gray-200 leading-relaxed">
-                                    Gereja Bethel Indonesia Philadelphia Life Center
-                                </p>
-                            </div>
-                            @endif
-                        </div>
+                                @endif
 
-                        <!-- Right Side - Image -->
-                        <div class="flex justify-center lg:justify-end order-1 lg:order-2 mt-10">
-                            <div class="relative w-full max-w-md lg:max-w-lg">
-                                <img src="{{ asset('storage/'. $Ads->filename) }}"
-                                    class="w-full h-64 md:h-80 lg:h-96 object-contain rounded-2xl"
-                                    alt="Slide {{ $key + 1 }}">
+                                @if($Ads->description)
+                                <p class="text-base md:text-lg lg:text-xl font-semibold text-black leading-relaxed">
+                                    {!! nl2br(e($Ads->description)) !!}
+                                </p>
+                                @endif
+
+                                @if(!$Ads->tema && !$Ads->description)
+                                <div class="space-y-4">
+                                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
+                                        Welcome to GBI PLC
+                                    </h2>
+                                    <p class="text-base md:text-lg lg:text-xl text-black leading-relaxed">
+                                        Gereja Bethel Indonesia Philadelphia Life Center
+                                    </p>
+                                </div>
+                                @endif
+                            </div>
+
+                            <!-- Right Side - Image -->
+                            <div class="flex justify-center lg:justify-end order-1 lg:order-2 mt-10">
+                                <div class="relative w-full max-w-md lg:max-w-lg">
+                                    <img src="{{ asset('storage/'. $Ads->filename) }}"
+                                        class="w-full h-64 md:h-80 lg:h-96 object-contain rounded-2xl"
+                                        alt="Slide {{ $key + 1 }}">
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            @endforeach
+                @endforeach
+            </div>
+
+            <!-- Previous Control -->
+            <button class="absolute left-2 lg:left-4 top-1/2 -translate-y-1/2 p-3 lg:p-4 bg-gray-500 hover:bg-black/40 rounded-full transition-all duration-200 backdrop-blur-sm z-20"
+                    type="button"
+                    data-carousel-prev id="prevButton">
+                <svg class="w-5 h-5 lg:w-6 lg:h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+                <span class="sr-only">Previous</span>
+            </button>
+
+            <!-- Next Control -->
+            <button class="absolute right-2 lg:right-4 top-1/2 -translate-y-1/2 p-3 lg:p-4 bg-transparent hover:bg-white/40 rounded-full transition-all duration-200 backdrop-blur-sm z-20"
+                    type="button"
+                    data-carousel-next id="nextButton">
+                <svg class="w-5 h-5 lg:w-6 lg:h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+                <span class="sr-only">Next</span>
+            </button>
         </div>
+    </section>
 
-        <!-- Previous Control -->
-        <button class="absolute left-2 lg:left-4 top-1/2 -translate-y-1/2 p-3 lg:p-4 bg-white/20 hover:bg-white/40 rounded-full transition-all duration-200 backdrop-blur-sm z-20"
-                type="button"
-                data-carousel-prev id="prevButton">
-            <svg class="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-            </svg>
-            <span class="sr-only">Previous</span>
-        </button>
+    <script>
+        const carouselItems = document.getElementById('carouselItems');
+        const prevButton = document.getElementById('prevButton');
+        const nextButton = document.getElementById('nextButton');
+        const indicators = document.querySelectorAll('[data-carousel-indicator]');
+        const totalItems = carouselItems.children.length;
+        let currentIndex = 0;
 
-        <!-- Next Control -->
-        <button class="absolute right-2 lg:right-4 top-1/2 -translate-y-1/2 p-3 lg:p-4 bg-white/20 hover:bg-white/40 rounded-full transition-all duration-200 backdrop-blur-sm z-20"
-                type="button"
-                data-carousel-next id="nextButton">
-            <svg class="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-            <span class="sr-only">Next</span>
-        </button>
-    </div>
-</section>
-<script>
-    const carouselItems = document.getElementById('carouselItems');
-    const prevButton = document.getElementById('prevButton');
-    const nextButton = document.getElementById('nextButton');
-    const totalItems = carouselItems.children.length;
-    let currentIndex = 0;
+        function updateCarousel() {
+            const offset = -currentIndex * 100;
+            carouselItems.style.transform = `translateX(${offset}%)`;
 
-    function updateCarousel() {
-        const offset = -currentIndex * 100;
-        carouselItems.style.transform = `translateX(${offset}%)`;
-    }
+            // Update indicators
+            indicators.forEach((indicator, index) => {
+                if (index === currentIndex) {
+                    indicator.classList.remove('bg-black/10');
+                    indicator.classList.add('bg-gray-800');
+                } else {
+                    indicator.classList.remove('bg-gray-800');
+                    indicator.classList.add('bg-black/10');
+                }
+            });
+        }
 
-    prevButton.addEventListener('click', () => {
-        currentIndex = (currentIndex > 0) ? currentIndex - 1 : totalItems - 1;
+        prevButton.addEventListener('click', () => {
+            currentIndex = (currentIndex > 0) ? currentIndex - 1 : totalItems - 1;
+            updateCarousel();
+        });
+
+        nextButton.addEventListener('click', () => {
+            currentIndex = (currentIndex < totalItems - 1) ? currentIndex + 1 : 0;
+            updateCarousel();
+        });
+
+        // Add click event to indicators
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                currentIndex = index;
+                updateCarousel();
+            });
+        });
+
+        // Initialize first indicator as active
         updateCarousel();
-    });
+    </script>
 
-    nextButton.addEventListener('click', () => {
-        currentIndex = (currentIndex < totalItems - 1) ? currentIndex + 1 : 0;
-        updateCarousel();
-    });
-</script>
-<x-layout>
-    <div style="height: 100vh; width: 100%; background-size: cover; background-position: center; position: absolute; top: 0; left: 0; z-index: -1;"></div>
-    <div style="margin: auto; padding: 20px 50px; border-radius: 8px; width: auto;">
+    <!-- background layout diatur dari layout.blade.php -->
+    <div style="margin: auto; padding: 40px 70px; border-radius: 8px; width: auto;  ">
         <section class="hero" id="home">
             <div class="mask-container">
                 <main class="content">
-                    <!--
-                    <h1 style="font-size: xx-large; color: #D8B4FE; text-align: center; font-family: 'Times New Roman', Times, serif; font-weight: 400; text-shadow: 0 0 5px #D8B4FE, 0 0 10px #D8B4FE, 0 0 20px #A855F7;">
-                        WELCOME HOME
-                    </h1>
-                    -->
                     <marquee behavior="scroll" direction="left" scrollamount="5">
-                        <p style="color: white; mix-blend-mode: difference; font-family: 'Times New Roman', Times, serif; font-weight: 400; text-align: justify; text-justify: inter-word; font-size: medium;">
+                        <p style="color: black; mix-blend-mode: difference; font-family: 'Times New Roman', Times, serif; font-weight: 600; text-align: justify; text-justify: inter-word; font-size: medium;">
                             Dan orang-orang bijaksana akan bercahaya seperti cahaya cakrawala dan yang telah menuntun banyak orang kepada kebenaran seperti bintang-bintang tetap untuk selama-lamanya
-                            <strong class="text-white shadow-[0_0_20px_white]">-- Daniel 12 : 3 --</strong>
+                            <strong class="text-black shadow-[0_0_20px_white]">-- Daniel 12 : 3 --</strong>
                         </p>
                     </marquee>
                 </main>
             </div>
         </section>
+    </div>
 
     <!-- Popup Ads -->
     @if ($popupAds && $popupAds->count() > 0)
@@ -214,123 +240,185 @@
     <!-- End Popup Ads -->
 
     <!-- Suara Gembala -->
-    <div class="mt-16 border-t border-gray-700 pt-10 pb-8 w-full max-w-5xl mx-auto">
+    <div class="mt-4 pt-10 pb-8 w-full mx-auto shadow-lg shadow-grey" style="border-radius: 16px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(8px);">
         @if ($latestPastorNote)
-            <h2 class="text-3xl md:text-4xl font-bold text-center text-purple-200 mb-8 tracking-wide">Suara Gembala</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-black mb-8 tracking-wide">Suara Gembala</h2>
+            <div class="grid grid-cols-1 md:grid-cols-1 gap-8 items-center">
                 <div class="flex justify-center">
-                    <img src="{{ asset('storage/'. $latestPastorNote->filename) }}" alt="foto" class="max-h-72 rounded-3xl shadow-lg border-4 border-purple-200 bg-gray-50" />
+                    <img src="{{ asset('storage/'. $latestPastorNote->filename) }}" alt="foto" class="max-h-72 rounded-3xl shadow-lg border-4 border-purple-200" />
                 </div>
-                <div class="flex flex-col justify-center space-y-3">
-                    <time class="text-gray-300 text-sm">Tanggal : {{ \Carbon\Carbon::parse($latestPastorNote->tgl_note)->format('d-m-Y') }}</time>
-                    <p class="text-white text-lg leading-relaxed">{!! nl2br(e($latestPastorNote->note)) !!}</p>
+                <div class="flex flex-col justify-center space-y-3 p-8">
+                    <time class="text-gray-800 text-sm">Tanggal : {{ \Carbon\Carbon::parse($latestPastorNote->tgl_note)->format('d-m-Y') }}</time>
+                    <p class="text-black font-semibold text-lg leading-relaxed">{!! nl2br(e($latestPastorNote->note)) !!}</p>
                 </div>
             </div>
         @endif
     </div>
     <!-- END Suara Gembala -->
 
-    <!-- Jemaat Ultah -->
-    @if ($birthdayMembers->count() > 0)
-    <div class=" bg-transparent py-20 sm:py-28 w-full mt-10">
+    <!-- Event -->
+    <section id="event" class="py-24 shadow-lg shadow-grey" style="margin-top:40px; border-radius: 16px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(3px);">
         <div class="mx-auto grid max-w-7xl gap-16 px-6 lg:px-8 xl:grid-cols-3">
             <div class="max-w-xl">
-                <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-purple-200 mb-6">Jemaat GBI Philadelphia Berulang Tahun Bulan {{ \Carbon\Carbon::now()->translatedFormat('F') }}</h2>
+                <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-purple-800 mb-6">Event GBI Philadelphia Life Center</h2>
             </div>
             <ul role="list" class="grid gap-x-8 gap-y-12 sm:grid-cols-2 sm:gap-y-16 xl:col-span-2">
-                @foreach ( $birthdayMembers as $jemaat)
+                @forelse ( $events as $event )
                 <li>
-                    <div class="flex items-center gap-x-6 bg-black/60 rounded-xl p-4 shadow-lg">
-                        <img class="w-16 h-16 rounded-full border-2 border-purple-300 object-cover" src="{{ asset('storage/'. $jemaat->filename)}}" alt="" />
+                    <div class="items-center grid grid-cols-1 lg:grid-cols-2 gap-x-6">
+                        <img class=" size-72 rounded-3xl " src="{{ asset('storage/'. $event->filename)}}" alt="Event {{ $event->keterangan }}" />
                         <div>
-                            <h3 class="text-lg font-semibold tracking-tight text-white">{{ ucwords($jemaat->name) }}</h3>
-                            <h4 class="text-sm font-semibold text-purple-200">{{ \Carbon\Carbon::parse($jemaat->tgl_lahir)->translatedFormat('d F') }}</h4>
+                            <h3 class="text-base/7 font-semibold tracking-tight text-black">{{ ucwords($event->keterangan) }}</h3>
+                            <p class="text-sm text-gray-900">{{ $event->formatted_date }}</p>
                         </div>
                     </div>
                 </li>
-                @endforeach
+                @empty
+                <li class="col-span-2">
+                    <div class="text-center py-12">
+                        <h3 class="text-lg font-semibold text-white mb-2">Tidak ada event bulan ini</h3>
+                    </div>
+                </li>
+                @endforelse
+            <!-- More people... -->
             </ul>
             <div class="mt-6 text-white">
-                {{ $birthdayMembers->links() }}
+                {{ $events->links() }}
             </div>
         </div>
-    </div>
-    @endif
+    </section>
+
+
+    <!-- Jemaat Ultah -->
+    @auth
+        @if ($birthdayMembers->count() > 0)
+        <section id="birthday" class="py-24 shadow-lg shadow-grey" style="margin-top:40px; border-radius: 16px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(3px);">
+
+            <div class=" bg-transparent py-20 sm:py-28 w-full mt-10">
+                <div class="mx-auto grid max-w-7xl gap-16 px-6 lg:px-8 xl:grid-cols-3">
+                    <div class="max-w-xl">
+                        <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-purple-800 mb-6">Jemaat GBI Philadelphia Berulang Tahun Bulan {{ \Carbon\Carbon::now()->translatedFormat('F') }}</h2>
+                    </div>
+                    <ul role="list" class="grid gap-x-8 gap-y-12 sm:grid-cols-2 sm:gap-y-16 xl:col-span-2">
+                        @foreach ( $birthdayMembers as $jemaat)
+                        <li>
+                            <div class="flex items-center gap-x-6 bg-black/60 rounded-xl p-4 shadow-lg">
+                                <img class="w-16 h-16 rounded-full border-2 border-purple-300 object-cover" src="{{ asset('storage/'. $jemaat->filename)}}" alt="" />
+                                <div>
+                                    <h3 class="text-lg font-semibold tracking-tight text-white">{{ ucwords($jemaat->name) }}</h3>
+                                    <h4 class="text-sm font-semibold text-purple-200">{{ \Carbon\Carbon::parse($jemaat->tgl_lahir)->translatedFormat('d F') }}</h4>
+                                </div>
+                            </div>
+                        </li>
+                        @endforeach
+                    </ul>
+                    <div class="mt-6 text-white">
+                        {{ $birthdayMembers->links() }}
+                    </div>
+                </div>
+            </div>
+
+        </section>
+        @endif
+    @endauth
+
+
 </x-layout>
 
 {{-- Footer Section --}}
-<footer 
-    class="bg-gray-900 text-purple-100 py-10 border-t border-purple-900 mt-auto w-full"
+<footer
+    class="text-purple-800 py-10 mt-auto w-full"
     role="contentinfo"
     aria-label="Footer"
->
-    <div class="w-full px-6 md:px-12 lg:px-16">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-                {{-- Pastors Section --}}
-                <div>
-                    <h3 class="font-semibold text-lg mb-4 text-purple-200">
-                        Pemimpin Gereja
-                    </h3>
-                    <div class="mb-3">
-                        <h4 class="font-medium text-purple-300 mb-1">
-                            Gembala
-                        </h4>
-                        <p class="text-gray-300">
-                            Pdm. DR. Jimmy Sugiarto, S.PSI, M.TH
-                        </p>
-                    </div>
-                    <div class="mb-3">
-                        <h4 class="font-medium text-purple-300 mb-1">
-                            Wakil Gembala
-                        </h4>
-                        <p class="text-gray-300">
-                            Fredy Budiman SE, MTh
-                        </p>
-                    </div>
+    >
+    <div class="px-6 md:px-12 lg:px-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-4 max-w-6xl mx-auto">
+            {{-- Pastors Section --}}
+            <div class="text-center md:text-left">
+                <h3 class="font-semibold text-lg mb-4 text-black">
+                    Pemimpin Gereja
+                </h3>
+                <div class="mb-3">
+                    <h4 class="font-medium text-black">
+                        Gembala
+                    </h4>
+                    <p class="text-black">Pdm. DR. Jimmy Sugiarto, S.PSI, M.TH</p>
                 </div>
-
-                {{-- Church Info Section --}}
-                <div class="lg:col-span-2">
-                    <h3 class="font-semibold text-lg mb-4 text-purple-200">
-                        GBI Philadelphia Life Center
-                    </h3>
-                    <div class="space-y-3">
-                        <div>
-                            <h4 class="font-medium text-purple-300 mb-1">Alamat</h4>
-                            <p class="text-gray-300 leading-relaxed">
-                                Jl. Babarsari No.45, Janti, Caturtunggal, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281
-                            </p>
-                        </div>
-                        <div>
-                            <h4 class="font-medium text-purple-300 mb-1">Kontak</h4>
-                            <a 
-                                href="https://wa.me/6285336618852"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="inline-flex items-center text-purple-300 hover:text-white font-bold hover:underline transition-colors duration-200"
-                                aria-label="Hubungi kami via WhatsApp di 0853-3661-8852"
-                            >
-                                <span class="mr-2">📞</span>
-                                Telp: 0853-3661-8852
-                            </a>
-                        </div>
-                    </div>
+                <div class="mb-3">
+                    <h4 class="font-medium text-black mb-1">
+                        Wakil Gembala
+                    </h4>
+                    <p class="text-black">Fredy Budiman SE, MTh</p>
                 </div>
             </div>
 
-            {{-- Copyright Section --}}
-            <div class="border-t border-purple-800 mt-8 pt-6 max-w-7xl mx-auto">
-                <div class="text-center">
-                    <p class="text-sm text-purple-400">
-                        &copy; {{ date('Y') }} GBI Philadelphia Life Center. All rights reserved.
-                    </p>
-                    <p class="text-xs text-gray-500 mt-1">
-                        Built with love for the Kingdom of God
-                    </p>
+            {{-- Church Info Section --}}
+            <div class="text-center md:text-left">
+                <h3 class="font-semibold text-lg mb-4 text-black">
+                    GBI Philadelphia Life Center
+                </h3>
+                <div class="space-y-3">
+                    <div>
+                        <h4 class="font-medium text-black mb-1">Alamat</h4>
+                        <p class="text-black leading-relaxed">
+                            Jl. Babarsari No.45, Janti, Caturtunggal
+                        </p>
+                        <p class="text-black leading-relaxed">
+                            Kec. Depok, Kabupaten Sleman
+                        </p>
+                        <p class="text-black leading-relaxed">
+                            Daerah Istimewa Yogyakarta 55281
+                        </p>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-black mb-1">Kontak</h4>
+                        <a
+                            href="https://wa.me/6285336618852"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="inline-flex items-center text-purple-700 hover:text-purple-900 font-bold hover:underline transition-colors duration-200"
+                            aria-label="Hubungi kami via WhatsApp di 0853-3661-8852"
+                        >
+                            <span class="mr-2">📞</span>
+                            Telp: 0853-3661-8852
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    </footer>
-    {{-- End Footer Section --}}
 
+        {{-- Copyright Section --}}
+        <div class="mt-8 pt-6 max-w-7xl mx-auto">
+            <div class="text-center">
+                <p class="text-sm text-black">
+                    &copy; {{ date('Y') }} GBI Philadelphia Life Center. All rights reserved.
+                </p>
+                <p class="text-xs text-gray-500 mt-1">
+                    Built with love for the Kingdom of God
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+{{-- End Footer Section --}}
 
+<style>
+    footer {
+        position: relative;
+        background-image: url('{{ asset("BGFooter.png") }}');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+    footer::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.1);
+        z-index: 0;
+    }
+    footer > * {
+        position: relative;
+        z-index: 1;
+    }
+</style>
