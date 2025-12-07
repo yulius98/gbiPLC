@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\TblCarousel;
-use App\Models\TblPastorNote;
-use App\Models\TblPopupAds;
-use App\Models\User;
 use Carbon\Carbon;
+use App\Models\User;
+use App\Models\TblEvent;
+use App\Models\TblCarousel;
+use App\Models\TblPopupAds;
+use Illuminate\Http\Request;
+use App\Models\TblPastorNote;
 
 class WelcomeController extends Controller
 {
@@ -19,6 +20,20 @@ class WelcomeController extends Controller
 
         $latestPastorNote = TblPastorNote::orderBy('tgl_note', 'desc')
             ->first();
+
+        $latestEvent = TblEvent::orderBy('tgl_event', 'desc')->first();
+
+        if ($latestEvent) {
+            $latestMonth = Carbon::parse($latestEvent->tgl_event)->month;
+            $latestYear = Carbon::parse($latestEvent->tgl_event)->year;
+
+            $events = TblEvent::whereMonth('tgl_event', $latestMonth)
+                ->whereYear('tgl_event', $latestYear)
+                ->orderBy('tgl_event', 'asc')
+                ->paginate(10);
+        } else {
+            $events = collect(); // Tidak ada event sama sekali
+        }    
 
         $birthdayMembers = User::whereMonth('tgl_lahir', Carbon::now()->month)
             ->orderby('tgl_lahir','asc')
@@ -40,6 +55,6 @@ class WelcomeController extends Controller
         //        ->paginate(8);
         //});
 
-        return view('welcome', compact('popupAds','carousels','latestPastorNote','birthdayMembers'));
+        return view('welcome', compact('popupAds','carousels','latestPastorNote','birthdayMembers', 'events'));
     }
 }

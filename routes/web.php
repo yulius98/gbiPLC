@@ -64,7 +64,7 @@ Route::middleware(['web'])->group(function () {
     });
 
     // Logout route (can be accessed by authenticated users)
-    Route::post('/logout', [AuthLogin::class, 'logout'])->name('logout')->middleware('auth');
+    Route::post('/logout', [AuthLogin::class, 'logout'])->name('logout');
     
     // JWT Test route (for debugging, remove in production)
     Route::get('/jwt-test', [App\Http\Controllers\JWTTestController::class, 'testToken']);

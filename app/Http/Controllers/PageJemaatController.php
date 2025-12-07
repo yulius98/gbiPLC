@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\TblEvent;
 use App\Models\TblCarousel;
 use App\Models\TblPopupAds;
-use App\Models\TblPastorNote;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Models\TblPastorNote;
 use App\Services\FileUploadService;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class PageJemaatController extends Controller
 {
@@ -25,13 +27,31 @@ class PageJemaatController extends Controller
     public function index()
     {
         $popupAds = TblPopupAds::all();
+
         $carousels = TblCarousel::all();
-        $latestPastorNote = TblPastorNote::orderBy('tgl_note', 'desc')->first();
-        $birthdayMembers = User::birthdayThisMonth()
-            ->orderBy('tgl_lahir', 'asc')
+
+        $latestPastorNote = TblPastorNote::orderBy('tgl_note', 'desc')
+            ->first();
+
+        $latestEvent = TblEvent::orderBy('tgl_event', 'desc')->first();
+
+        if ($latestEvent) {
+            $latestMonth = Carbon::parse($latestEvent->tgl_event)->month;
+            $latestYear = Carbon::parse($latestEvent->tgl_event)->year;
+
+            $events = TblEvent::whereMonth('tgl_event', $latestMonth)
+                ->whereYear('tgl_event', $latestYear)
+                ->orderBy('tgl_event', 'asc')
+                ->paginate(10);
+        } else {
+            $events = collect(); // Tidak ada event sama sekali
+        }    
+
+        $birthdayMembers = User::whereMonth('tgl_lahir', Carbon::now()->month)
+            ->orderby('tgl_lahir','asc')
             ->paginate(8);
 
-        return view('page-jemaat', compact('popupAds', 'carousels', 'latestPastorNote', 'birthdayMembers'));
+        return view('page-jemaat', compact('popupAds', 'carousels', 'latestPastorNote', 'birthdayMembers','events'));
     }
 
     /**

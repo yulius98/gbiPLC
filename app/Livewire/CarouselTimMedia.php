@@ -100,7 +100,7 @@ class CarouselTimMedia extends Component
         $validated = $this->validate($rules, $messages);
 
         $carousel = TblCarousel::findOrFail($this->carousel_id);
-        
+
         $carousel->tema = $this->tema;
         $carousel->description = $this->description;
 
@@ -111,7 +111,7 @@ class CarouselTimMedia extends Component
             }
             $carousel->filename = $this->filename->store('foto-carousel', 'public');
         }
-        
+
         $carousel->save();
 
         session()->flash('message', 'Data Carousel berhasil diupdate.');
