@@ -66,16 +66,23 @@ class AuthLogin extends Controller
     public function logout(Request $request)
     {
         // Invalidate JWT token dari cookie
-        if ($token = $request->cookie('jwt_token')) {
+        $token = $request->cookie('jwt_token');
+        if ($token) {
             try {
-                JWTAuth::setToken($token)->invalidate();
+                \Tymon\JWTAuth\Facades\JWTAuth::setToken($token)->invalidate();
+                Log::info('JWT Token berhasil di-invalidate', ['jti' => JWTAuth::getPayload($token)['jti']]);
             } catch (\Exception $e) {
-                // Token sudah tidak valid atau expired, tidak masalah
+                Log::warning('Gagal invalidate JWT token: ' . $e->getMessage());
             }
         }
 
-        // Hapus JWT cookie (no session to invalidate)
-        $cookie = cookie()->forget('jwt_token');
+        // Hapus JWT cookie dengan path dan domain eksplisit
+        $cookie = cookie('jwt_token', '', -1, '/', null, false, true, false, 'lax');
+        Log::info('Cookie jwt_token telah dihapus');
+
+        // Hapus session Laravel tanpa memanggil Auth::logout() yang membutuhkan token di header
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return redirect()->route('home')
             ->with('message', 'Successfully logged out')

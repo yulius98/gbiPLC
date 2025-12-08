@@ -6,10 +6,12 @@ use App\Http\Controllers\Api\BirthdayController;
 use App\Http\Controllers\Api\CarouselController;
 use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Api\IbadahRayaController;
+use App\Http\Controllers\Api\LifeGroupController;
 use App\Http\Controllers\Api\MateriKotbahController;
 use App\Http\Controllers\Api\MyProfileController;
 use App\Http\Controllers\Api\PasswordResetController;
 use App\Http\Controllers\Api\PastorNoteController;
+use App\Http\Controllers\Api\ReadingController;
 use App\Http\Controllers\Api\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +29,7 @@ Route::resource('/birthday',BirthdayController::class);
 Route::resource('/event',EventController::class);
 Route::resource('/register',RegisterController::class);
 Route::resource('/carousel',CarouselController::class);
+Route::resource('/lifegroup',LifeGroupController::class);
 Route::get('/materi-kotbah',[MateriKotbahController::class,'index'])->name('materi-kotbah');
 Route::get('/materi-kotbah/getlink/',[MateriKotbahController::class,'GetLinkKotbah'])->name('materi-kotbah.GetLinkKotbah');
 Route::get('ibadahraya',[IbadahRayaController::class,'getLink'])->name('ibadahraya.getLink');
@@ -45,6 +48,8 @@ Route::middleware(['auth:api','role:jemaat,pengurus'])->get('/myprofile/{id}', [
 Route::middleware(['auth:api','role:jemaat,pengurus'])->get('/myprofile/{id}/edit', [MyProfileController::class,'edit']);
 Route::middleware(['auth:api','role:jemaat,pengurus'])->put('/myprofile/{id}', [MyProfileController::class, 'update']);
 Route::middleware(['auth:api','role:pengurus'])->get('dashboard/{id}',[AdminDashboardController::class,'index']);
+Route::middleware(['auth:api','role:jemaat,pengurus'])->get('/reading/today',[ReadingController::class,'today']);
+Route::middleware(['auth:api','role:jemaat,pengurus'])->post('/reading/start-date',[ReadingController::class,'setStartDate']);
 
 
 

@@ -21,6 +21,15 @@ class TblEvent extends Model
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'photo_url'
+    ];
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -36,9 +45,9 @@ class TblEvent extends Model
     }
 
     /**
-     * Get full image URL
+     * Get photo URL for API response
      */
-    public function getImageUrlAttribute(): ?string
+    public function getPhotoUrlAttribute(): ?string
     {
         return $this->filename ? asset('storage/' . $this->filename) : null;
     }

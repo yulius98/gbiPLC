@@ -41,13 +41,7 @@ class MyProfileController extends Controller
     {
         $myprofile = User::find($id);
 
-        if ($myprofile) {
-            return response()->json([
-                'status' => true,
-                'message' => 'Data ditemukan',
-                'data' => $myprofile
-            ]);
-        } else {
+        if (!$myprofile) {
             return response()->json([
                 'status' => false,
                 'message' => 'Data tidak ditemukan',
@@ -55,6 +49,15 @@ class MyProfileController extends Controller
             ], 404);
         }
 
+        // Karena $myprofile adalah single model, tidak perlu map()
+        $data = $myprofile->toArray();
+        $data['photo_url'] = $myprofile->photo_url;
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Data ditemukan',
+            'data' => $data
+        ]);
     }
 
     /**

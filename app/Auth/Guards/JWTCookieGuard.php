@@ -124,4 +124,20 @@ class JWTCookieGuard implements Guard
 
         return null;
     }
+
+    /**
+     * Log a user into the application without sessions or cookies.
+     * This is for one-time authentication.
+     */
+    public function once(array $credentials = [])
+    {
+        $this->lastAttempted = $user = $this->provider->retrieveByCredentials($credentials);
+
+        if ($this->hasValidCredentials($user, $credentials)) {
+            $this->setUser($user);
+            return true;
+        }
+
+        return false;
+    }
 }

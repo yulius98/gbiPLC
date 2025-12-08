@@ -19,7 +19,7 @@ class AuthLoginController extends Controller
             'password' => ['required'],
         ]);
 
-        if(! $token = jwtAuth()->attempt($credential)) {
+        if(! $token = JWTAuth::attempt($credential)) {
             return response()->json(['error' => 'Email atau Password salah'], 401);
         }
 
@@ -29,7 +29,7 @@ class AuthLoginController extends Controller
 
     public function refresh() {
         try {
-            $newToken = jwtAuth()->refresh();
+            $newToken = JWTAuth::refresh();
         } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
             return response()->json(['error' => 'Token tidak valid'], 401);
         }
@@ -37,7 +37,7 @@ class AuthLoginController extends Controller
     }
 
     public function logout() {
-        jwtAuth()->logout();
+        JWTAuth::logout();
         return response()->json(['message'=>'Berhasil logout']);
     }
 
@@ -81,7 +81,7 @@ class AuthLoginController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => jwtAuth()->factory()->getTTL() * 1,
+            'expires_in' => JWTAuth::factory()->getTTL() * 1,
             'refresh_ttl' => config('jwt.refresh_ttl') * 1
         ]);
     }
