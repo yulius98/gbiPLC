@@ -279,7 +279,7 @@
             <ul role="list" class="grid gap-x-8 gap-y-12 sm:grid-cols-2 sm:gap-y-16 xl:col-span-2">
                 @forelse ( $events as $event )
                 <li>
-                    <div class="items-center grid grid-cols-1 lg:grid-cols-2 gap-x-6">
+                    <div class="items-center grid grid-cols-1 lg:grid-cols-1 gap-x-6">
                         <img class=" size-72 rounded-3xl " src="{{ asset('storage/'. $event->filename)}}" alt="Event {{ $event->keterangan }}" />
                         <div>
                             <h3 class="text-base/7 font-semibold tracking-tight text-black">{{ ucwords($event->keterangan) }}</h3>

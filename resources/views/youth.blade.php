@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Youth GBI Philadelphia Life Center</title>
     <link rel="icon" type="image/png" href="https://customer-assets.emergentagent.com/job_youthgbi-philly/artifacts/bxjvqwqd_logoplc.png">
-    
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
     <!-- AOS Animation Library -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    
+
     <!-- Custom CSS -->
     <!-- <link rel="stylesheet" href="assets/css/style.css"> -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
@@ -34,7 +34,7 @@
                         <p class="text-xs text-gray-400">GBI Philadelphia Life Center</p>
                     </div>
                 </div>
-                
+
                 <!-- Desktop Menu -->
                 <ul class="hidden md:flex space-x-8 items-center">
                     <li><a href="#home" class="nav-link">Home</a></li>
@@ -44,7 +44,7 @@
                     <li><a href="#schedule" class="nav-link">Jadwal</a></li>
                     <li><a href="/" class="cta-button">&#11013; Back to Main Home</a></li>
                 </ul>
-                
+
                 <!-- Mobile Menu Button -->
                 <button class="md:hidden text-white" id="mobile-menu-button">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -52,7 +52,7 @@
                     </svg>
                 </button>
             </div>
-            
+
             <!-- Mobile Menu -->
             <div class="hidden md:hidden mt-4" id="mobile-menu">
                 <ul class="flex flex-col space-y-4">
@@ -77,7 +77,7 @@
 
         <!-- Dark Overlay -->
         <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-60"></div>
-        
+
         <!-- Content -->
         <div class="relative z-10 text-center px-6" data-aos="fade-up">
             <h1 class="hero-title mb-6">
@@ -91,7 +91,7 @@
                 <a href="#about" class="cta-button-large">Kenali Kami</a>
                 <a href="#programs" class="cta-button-outline">Lihat Program</a>
             </div>
-            
+
             <!-- Scroll Indicator -->
             <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
                 <svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -105,7 +105,7 @@
     <section id="about" class="py-24 bg-gradient-to-b from-black via-gray-900 to-black relative overflow-hidden">
         <!-- Background Decoration -->
         <div class="absolute top-0 right-0 w-96 h-96 bg-gold opacity-5 rounded-full blur-3xl"></div>
-        
+
         <div class="container mx-auto px-6 relative z-10">
             <div class="max-w-4xl mx-auto text-center" data-aos="fade-up">
                 <h2 class="section-title mb-6">
@@ -113,11 +113,11 @@
                 </h2>
                 <div class="w-20 h-1 bg-gold mx-auto mb-8"></div>
                 <p class="text-lg md:text-xl text-gray-300 leading-relaxed mb-8">
-                    Youth GBI Philadelphia Life Center adalah komunitas anak muda yang bersemangat untuk bertumbuh dalam iman, 
+                    Youth GBI Philadelphia Life Center adalah komunitas anak muda yang bersemangat untuk bertumbuh dalam iman,
                     membangun karakter Kristus, dan memberikan dampak positif bagi generasi ini.
                 </p>
             </div>
-            
+
             <!-- Core Values -->
             <div class="grid md:grid-cols-3 gap-8 mt-16">
                 <div class="value-card" data-aos="fade-up" data-aos-delay="100">
@@ -129,7 +129,7 @@
                     <h3 class="text-xl font-bold mb-3 text-gold">Firman Tuhan</h3>
                     <p class="text-gray-400">Bertumbuh dalam pengenalan akan Firman Tuhan dan hidup sesuai kebenaran-Nya</p>
                 </div>
-                
+
                 <div class="value-card" data-aos="fade-up" data-aos-delay="200">
                     <div class="value-icon">
                         <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -139,7 +139,7 @@
                     <h3 class="text-xl font-bold mb-3 text-gold">Komunitas</h3>
                     <p class="text-gray-400">Membangun persahabatan yang solid dan saling mendukung dalam perjalanan iman</p>
                 </div>
-                
+
                 <div class="value-card" data-aos="fade-up" data-aos-delay="300">
                     <div class="value-icon">
                         <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -165,7 +165,7 @@
                     Berbagai aktivitas yang dirancang untuk membangun iman dan karakter generasi muda
                 </p>
             </div>
-            
+
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach ($programs as $program)
                     <div class="program-card" data-aos="fade-up" data-aos-delay="100">
@@ -175,7 +175,7 @@
                         <span class="program-tag">{{ $program->frequency }}</span>
                     </div>
                 @endforeach
-                
+
             </div>
         </div>
     </section>
@@ -192,7 +192,7 @@
                     Momen berharga dan kenangan indah dalam setiap kegiatan Youth Ministry
                 </p>
             </div>
-            
+
             <!-- Gallery Grid -->
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 @foreach ( $galleries as $galleri )
@@ -202,7 +202,7 @@
                                 $ext = strtolower(pathinfo($galleri->file_path, PATHINFO_EXTENSION));
                             @endphp
                                 @if(in_array($ext, ['jpg','jpeg','png','gif','webp']))
-                                    <img src="{{ asset($galleri->file_path) }}" alt="{{ $galleri->title }}" class="w-full h-full object-cover absolute inset-0" />
+                                    <img src="{{ asset('storage/'. $galleri->file_path)}}" alt="{{ $galleri->title }}" class="w-full h-full object-cover absolute inset-0" />
                                 @elseif(in_array($ext, ['mp4','webm','ogg']))
                                     <video controls class="w-full h-full object-cover absolute inset-0 bg-black">
                                         <source src="{{ asset('storage/'. $galleri->file_path) }}" type="video/{{ $ext }}">
@@ -213,7 +213,7 @@
                                 <p class="text-sm font-semibold">{{ $galleri->title }}</p>
                             </div>
                         </div>
-                    </div>    
+                    </div>
                 @endforeach
             </div>
         </div>
@@ -223,7 +223,7 @@
     <section id="schedule" class="py-24 bg-black relative overflow-hidden">
         <!-- Background Decoration -->
         <div class="absolute bottom-0 left-0 w-96 h-96 bg-gold opacity-5 rounded-full blur-3xl"></div>
-        
+
         <div class="container mx-auto px-6 relative z-10">
             <div class="text-center mb-16" data-aos="fade-up">
                 <h2 class="section-title mb-6">
@@ -234,7 +234,7 @@
                     Bergabunglah dengan kami dalam setiap kegiatan yang penuh berkat
                 </p>
             </div>
-            
+
             <div class="max-w-4xl mx-auto">
                 <!-- Weekly Schedule -->
                 <div class="schedule-card" data-aos="fade-up" data-aos-delay="100">
@@ -246,7 +246,7 @@
                         <div class="flex-1">
                             <h3 class="text-2xl font-bold mb-3">Ibadah Youth Service</h3>
                             <p class="text-gray-400 mb-4">
-                                Ibadah khusus untuk generasi muda dengan worship yang energik, pengajaran Firman yang relevan, 
+                                Ibadah khusus untuk generasi muda dengan worship yang energik, pengajaran Firman yang relevan,
                                 dan komunitas yang hangat. Ayo datang dan rasakan hadirat Tuhan bersama-sama!
                             </p>
                             <div class="flex flex-wrap gap-2">
@@ -261,7 +261,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Weekday Schedule -->
                 <!--
                 <div class="schedule-card" data-aos="fade-up" data-aos-delay="200">
@@ -273,7 +273,7 @@
                         <div class="flex-1">
                             <h3 class="text-2xl font-bold mb-3">Small Group Meeting</h3>
                             <p class="text-gray-400 mb-4">
-                                Pertemuan kelompok kecil untuk sharing, belajar Firman Tuhan lebih dalam, dan membangun 
+                                Pertemuan kelompok kecil untuk sharing, belajar Firman Tuhan lebih dalam, dan membangun
                                 persahabatan yang bermakna. Lokasi bergantian di rumah anggota.
                             </p>
                             <div class="flex flex-wrap gap-2">
@@ -300,7 +300,7 @@
                         <div class="flex-1">
                             <h3 class="text-2xl font-bold mb-3">Youth Activities</h3>
                             <p class="text-gray-400 mb-4">
-                                Berbagai kegiatan special seperti outbound, social action, creative workshop, dan fun games. 
+                                Berbagai kegiatan special seperti outbound, social action, creative workshop, dan fun games.
                                 Follow Instagram kami untuk info kegiatan terbaru!
                             </p>
                             <div class="flex flex-wrap gap-2">
@@ -324,22 +324,22 @@
         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full">
             <div class="w-96 h-96 bg-gold opacity-10 rounded-full blur-3xl mx-auto"></div>
         </div>
-        
+
         <div class="container mx-auto px-6 relative z-10">
             <div class="max-w-4xl mx-auto text-center" data-aos="fade-up">
                 <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
                     Yuk Gabung <span class="text-gold">Yuk</span>
                 </h2>
                 <p class="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
-                    Kami mengundang Anda untuk menjadi bagian dari keluarga besar Youth GBI Philadelphia Life Center. 
+                    Kami mengundang Anda untuk menjadi bagian dari keluarga besar Youth GBI Philadelphia Life Center.
                     Mari bertumbuh dan melayani Tuhan bersama-sama!
                 </p>
-                
+
                 <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
                     <a href="/register" class="cta-button-large">Join Youth Ministry</a>
                     <a href="https://wa.me/6285336618852" class="cta-button-outline">Hubungi Kami</a>
                 </div>
-                
+
                 <!-- Social Media -->
                 <div class="flex justify-center gap-6 mt-12">
                     <a href="https://www.instagram.com/lightyouthandteens?igsh=ejUweG0xZ3I0eGl1" class="social-icon" aria-label="Instagram">
@@ -354,7 +354,7 @@
                             <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
                         </svg>
                     </a>
-                    
+
                     <a href="#" class="social-icon" aria-label="Facebook">
                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
@@ -388,7 +388,7 @@
                         Generasi muda yang bersemangat melayani Tuhan dan memberikan dampak bagi dunia.
                     </p>
                 </div>
-                
+
                 <!-- Quick Links -->
                 <div>
                     <h4 class="font-bold mb-4 text-gold">Quick Links</h4>
@@ -400,7 +400,7 @@
                         <li><a href="#schedule" class="text-gray-400 hover:text-gold transition-colors">Jadwal</a></li>
                     </ul>
                 </div>
-                
+
                 <!-- Contact -->
                 <div>
                     <h4 class="font-bold mb-4 text-gold">Kontak</h4>
@@ -428,7 +428,7 @@
                         </li>
                     </ul>
                 </div>
-                
+
                 <!-- Schedule -->
                 <div>
                     <h4 class="font-bold mb-4 text-gold">Jadwal Ibadah</h4>
@@ -447,7 +447,7 @@
                     </ul>
                 </div>
             </div>
-            
+
             <!-- Copyright -->
             <div class="border-t border-gray-800 pt-8 text-center text-sm text-gray-400">
                 <p>&copy; 2025 Youth GBI Philadelphia Life Center. All rights reserved.</p>
@@ -458,7 +458,7 @@
 
     <!-- AOS Animation Library -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    
+
     <!-- Custom JavaScript -->
     <!-- <script src="assets/js/script.js"></script> -->
     <script src="{{ asset('assets/js/script.js') }}"></script>
