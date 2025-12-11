@@ -43,7 +43,7 @@ class ReadingController extends Controller
         $daysSinceStart = (int) $startDate->diffInDays(Carbon::now());
 
         // Cycle through 365 days
-        $currentDay = ($daysSinceStart % 365) + 1;
+        $currentDay = ($daysSinceStart % 365) + 2;
 
         $schedule = reading_schedules::where('day', $currentDay)->firstOrFail();
         Log::info('Nilai $schedule:', ['schedule' => $schedule]);
