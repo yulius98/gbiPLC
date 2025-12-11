@@ -52,7 +52,7 @@ class ReadingScheduleSeeder extends Seeder
         $bookIndex = 0;
         $chapter = 1;
 
-        while ($day <= 365 && $bookIndex < count($this->books)) {  // Force 365
+        while ($day <= 365 && $bookIndex < count($this->books)) {
             $morning = [];
             $evening = [];
 
@@ -74,29 +74,17 @@ class ReadingScheduleSeeder extends Seeder
             if ($chapter > $this->books[$bookIndex]['chapters']) {
                 $bookIndex++;
                 $chapter = 1;
-                if ($bookIndex >= count($this->books)) {
-                    // Sisa hari: ulang dari awal atau kosong
-                    $bookIndex = 0;
-                    $chapter = 1;
-                }
+                if ($bookIndex >= count($this->books)) break;
             }
 
-            // Selalu create, meski kurang pasal (isi minimal 1)
-            if (count($morning) > 0 && count($evening) > 0) {
+            if (count($morning) === 2 && count($evening) === 2) {
                 reading_schedules::create([
                     'day' => $day,
                     'morning_passage' => implode('-', $morning),
                     'evening_passage' => implode('-', $evening),
                 ]);
-            } else {
-                // Fallback untuk sisa hari
-                reading_schedules::create([
-                    'day' => $day,
-                    'morning_passage' => 'PSA.1-PSA.1',  // Review Mazmur
-                    'evening_passage' => 'PSA.2-PSA.2',
-                ]);
+                $day++;
             }
-            $day++;
         }
     }
 }

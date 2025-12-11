@@ -2,108 +2,119 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Models\reading_schedules;
-use App\Models\ReadingSchedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Models\ReadingSchedule;
+use App\Models\reading_schedules;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Http;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 
 class ReadingController extends Controller
 {
+    // Mapping USFM → kode singkat alkita.mobi (wajib tepat!)
+    private $bookMap = [
+        'GEN' => 'Kej', 'EXO' => 'Kel', 'LEV' => 'Ima', 'NUM' => 'Bil', 'DEU' => 'Ul',
+        'JOS' => 'Yos', 'JDG' => 'Hak', 'RUT' => 'Rut',
+        '1SA' => '1Sam', '2SA' => '2Sam', '1KI' => '1Raj', '2KI' => '2Raj',
+        '1CH' => '1Taw', '2CH' => '2Taw', 'EZR' => 'Ezr', 'NEH' => 'Neh', 'EST' => 'Est',
+        'JOB' => 'Ayb', 'PSA' => 'Mzm', 'PRO' => 'Ams', 'ECC' => 'Pkh', 'SNG' => 'Kid',
+        'ISA' => 'Yes', 'JER' => 'Yer', 'LAM' => 'Rat', 'EZK' => 'Yeh', 'DAN' => 'Dan',
+        'HOS' => 'Hos', 'JOL' => 'Yoe', 'AMO' => 'Amo', 'OBA' => 'Oba', 'JON' => 'Yun',
+        'MIC' => 'Mi',  'NAM' => 'Nah', 'HAB' => 'Hab', 'ZEP' => 'Zef', 'HAG' => 'Hag',
+        'ZEC' => 'Za',  'MAL' => 'Mal',
+        'MAT' => 'Mat', 'MRK' => 'Mrk', 'LUK' => 'Luk', 'JHN' => 'Yoh', 'ACT' => 'Kis',
+        'ROM' => 'Rom', '1CO' => '1Kor', '2CO' => '2Kor', 'GAL' => 'Gal', 'EPH' => 'Ef',
+        'PHP' => 'Flp', 'COL' => 'Kol', '1TH' => '1Tes', '2TH' => '2Tes',
+        '1TI' => '1Tim', '2TI' => '2Tim', 'TIT' => 'Tit', 'PHM' => 'Flm',
+        'HEB' => 'Ibr', 'JAS' => 'Yak', '1PE' => '1Pet', '2PE' => '2Pet',
+        '1JN' => '1Yoh', '2JN' => '2Yoh', '3JN' => '3Yoh', 'JUD' => 'Yud', 'REV' => 'Why'
+    ];
+
     public function today(Request $request)
     {
         $user = $request->user();
-        $startDate = $user->reading_start_date ? Carbon::parse($user->reading_start_date) : Carbon::today();
 
-        $daysSinceStart = $startDate->diffInDays(Carbon::now()->startOfDay());
+        // Gunakan reading_start_date user, atau default awal tahun
+        $startDate = $user->reading_start_date
+            ? Carbon::parse($user->reading_start_date)
+            : Carbon::now()->startOfYear();
 
+        $daysSinceStart = (int) $startDate->diffInDays(Carbon::now());
 
-        $schedule = reading_schedules::where('day', $daysSinceStart + 1)->firstOrFail();
+        // Cycle through 365 days
+        $currentDay = ($daysSinceStart % 365) + 1;
+
+        $schedule = reading_schedules::where('day', $currentDay)->firstOrFail();
         Log::info('Nilai $schedule:', ['schedule' => $schedule]);
 
-        $morning = $this->fetchPassages($schedule->morning_passage);
-        $evening = $this->fetchPassages($schedule->evening_passage);
-
+        $morning = $this->fetchFromAlkitabMobi($schedule->morning_passage);
+        $evening = $this->fetchFromAlkitabMobi($schedule->evening_passage);
 
         return response()->json([
-            'date' => Carbon::now()->format('d M Y'),
-            'morning' => $morning,
-            'evening' => $evening,
-            'progress' => [
-                'current_day' => $daysSinceStart + 1,
-                'total_days' => 365
+            'date'       => Carbon::now()->translatedFormat('d F Y'),
+            'morning'    => $morning,
+            'evening'    => $evening,
+            'progress'   => [
+                'current_day' => $currentDay,
+                'total_days'  => 365
             ]
         ]);
     }
 
-    public function fetchPassages($passage)
+    private function fetchFromAlkitabMobi($passageString)
     {
-        // Ganti bibleId ke ID TB Indonesia (konfirmasi via /v1/bibles?language=ind)
-        $bibleId = '2dd568eeff29fb3c-02';  // Plain Indonesian Translation (ganti jika dapat ID TB asli)
-        $results = [];
+        // Contoh: "GEN.17-GEN.18" → ['Kej', 17] dan ['Kej', 18]
+        $parts = explode('-', $passageString);
+        $allVerses = [];
 
-        // Cek apakah $passage adalah range
-        if (preg_match('/^([A-Z]+)\.(\d+)-([A-Z]+)\.(\d+)$/', $passage, $matches)) {
-            $bookStart = $matches[1];
-            $chapterStart = (int)$matches[2];
-            $bookEnd = $matches[3];
-            $chapterEnd = (int)$matches[4];
+        foreach ($parts as $part) {
+            [$bookCode, $chapter] = explode('.', $part);
+            $shortCode = $this->bookMap[$bookCode] ?? 'Kej';
 
-            // Pastikan bookStart == bookEnd (Scripture API tidak support lintas kitab dalam satu request)
-            if ($bookStart === $bookEnd) {
-                for ($i = $chapterStart; $i <= $chapterEnd; $i++) {
-                    $singlePassage = "{$bookStart}.{$i}";
-                    $results[] = $this->fetchSinglePassage($bibleId, $singlePassage);
-                }
+            $url = "https://alkitab.mobi/tb/{$shortCode}/{$chapter}/";
+
+            $cacheKey = "alkitab_mobi_{$shortCode}_{$chapter}";
+            $html = Cache::remember($cacheKey, now()->addDays(7), function () use ($url) {
+                $context = stream_context_create(['http' => ['timeout' => 10]]);
+                $content = @file_get_contents($url, false, $context);
+                return $content ?: '<body></body>';
+            });
+
+            // Parsing ayat dari HTML alkitab.mobi
+            // Format: <span class="reftext"><a name=v1 ...>1</a></span> <span data-dur="...">Teks ayat</span>
+            preg_match_all(
+                '/<span class="reftext"><a name=v(\\d+)[^>]*>(\\d+)<\\/a><\\/span>\\s*<span[^>]*>([^<]+)<\\/span>/s',
+                $html,
+                $matches,
+                PREG_SET_ORDER
+            );
+
+            foreach ($matches as $m) {
+                $allVerses[] = [
+                    'verse'    => (int)$m[1],
+                    'text'     => trim($m[3]),
+                    'audioUrl' => "https://audio.alkitab.mobi/tb/{$shortCode}/{$chapter}/{$m[1]}.mp3"
+                ];
             }
-        } else {
-            $results[] = $this->fetchSinglePassage($bibleId, $passage);
         }
 
-        return $results;
-    }
+        // Referensi cantik
+        $prettyRef = strtr($passageString, ['GEN' => 'Kejadian', 'EXO' => 'Keluaran', 'LEV' => 'Imamat', 'MAT' => 'Matius', 'MRK' => 'Markus', 'LUK' => 'Lukas', 'JHN' => 'Yohanes', 'ACT' => 'Kisah Para Rasul', 'REV' => 'Wahyu']);
 
-    private function fetchSinglePassage($bibleId, $passage)
-    {
-        $cacheKey = 'bible_passage_' . md5($bibleId . '_' . $passage);
-        return cache()->remember($cacheKey, now()->addHours(24), function () use ($bibleId, $passage) {
-            $client = new \GuzzleHttp\Client();
-            $response = $client->get("https://rest.api.bible/v1/bibles/{$bibleId}/passages/{$passage}", [
-                'headers' => [
-                    'api-key' => env('BIBLE_API_KEY'),
-                    'Accept' => 'application/json'
-                ],
-                'query' => [
-                    'content-type' => 'text',
-                    'include-notes' => 'false',
-                    'include-titles' => 'true',
-                    'include-chapter-numbers' => 'true',
-                    'include-verse-numbers' => 'true',
-                    'include-verse-spans' => 'false'
-                ]
-            ]);
-            return json_decode($response->getBody(), true);
-        });
-    }
+        // Extract first book code for audio
+        $firstPart = $parts[0] ?? 'GEN.1';
+        $firstBookCode = explode('.', $firstPart)[0];
+        $firstChapter = explode('.', $firstPart)[1] ?? '1';
+        $firstBookShort = $this->bookMap[$firstBookCode] ?? 'Kej';
 
-    public function fetchAudio($chapterId)  // e.g., 'GEN.1'
-    {
-        $bibleId = '2dd568eeff29fb3c-02';  // Sama seperti atas (ada versi dengan audio?)
-        $cacheKey = 'bible_audio_' . md5($bibleId . '_' . $chapterId);
-        return cache()->remember($cacheKey, now()->addHours(24), function () use ($bibleId, $chapterId) {
-            $client = new \GuzzleHttp\Client();
-            $response = $client->get("https://api.scripture.api.bible/v1/bibles/{$bibleId}/audio/chapters/{$chapterId}", [
-                'headers' => [
-                    'api-key' => env('BIBLE_API_KEY'),
-                    'Accept' => 'application/json'
-                ]
-            ]);
-
-            $data = json_decode($response->getBody(), true);
-            return $data['data']['downloadUrls'][0]['url'] ?? null;  // Ambil URL audio MP3
-        });
+        return [
+            'data' => [
+                'reference'   => $prettyRef . ' (TB)',
+                'content'     => $allVerses,
+                'audio'       => count($allVerses) > 0 ? "https://audio.alkitab.mobi/tb/{$firstBookShort}/{$firstChapter}.mp3" : null
+            ]
+        ];
     }
 
     public function setStartDate(Request $request)
@@ -122,9 +133,5 @@ class ReadingController extends Controller
                 'tanggal_mulai' => $user->reading_start_date,
                 'message' => 'Lanjut membaca Alkitab' ]);
         }
-
-
     }
-
-
 }
