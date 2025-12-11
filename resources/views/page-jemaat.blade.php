@@ -22,40 +22,54 @@
                 @foreach ( $carousels as $key => $Ads)
                     <div class="min-w-full relative" data-carousel-item="{{ $key }}">
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8 lg:p-12 min-h-[400px] lg:min-h-[500px] items-center">
-                            <!-- Left Side - Tema dan Description -->
-                            <div class="flex flex-col justify-center space-y-6 text-purple-900 order-2 lg:order-1">
-                                @if($Ads->tema)
-                                <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
-                                    {{ $Ads->tema }}
-                                </h2>
-                                @endif
+                            @php
+                                $isVideo = Str::endsWith($Ads->filename, ['.mp4', '.webm', '.ogg']);
+                            @endphp
 
-                                @if($Ads->description)
-                                <p class="text-base md:text-lg lg:text-xl font-semibold text-black leading-relaxed">
-                                    {!! nl2br(e($Ads->description)) !!}
-                                </p>
-                                @endif
+                            @if ($isVideo)
+                                <div class="col-span-1 lg:col-span-2 flex justify-center items-center">
+                                    <video class="w-full h-64 md:h-80 lg:h-96 object-contain rounded-2xl" controls autoplay loop muted>
+                                        <source src="{{ asset('storage/'. $Ads->filename) }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                            @else
 
-                                @if(!$Ads->tema && !$Ads->description)
-                                <div class="space-y-4">
+                                <!-- Left Side - Tema dan Description -->
+                                <div class="flex flex-col justify-center space-y-6 text-purple-900 order-2 lg:order-1">
+                                    @if($Ads->tema)
                                     <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
-                                        Welcome to GBI PLC
+                                        {{ $Ads->tema }}
                                     </h2>
-                                    <p class="text-base md:text-lg lg:text-xl text-black leading-relaxed">
-                                        Gereja Bethel Indonesia Philadelphia Life Center
-                                    </p>
-                                </div>
-                                @endif
-                            </div>
+                                    @endif
 
-                            <!-- Right Side - Image -->
-                            <div class="flex justify-center lg:justify-end order-1 lg:order-2 mt-10">
-                                <div class="relative w-full max-w-md lg:max-w-lg">
-                                    <img src="{{ asset('storage/'. $Ads->filename) }}"
-                                        class="w-full h-64 md:h-80 lg:h-96 object-contain rounded-2xl"
-                                        alt="Slide {{ $key + 1 }}">
+                                    @if($Ads->description)
+                                    <p class="text-base md:text-lg lg:text-xl font-semibold text-black leading-relaxed">
+                                        {!! nl2br(e($Ads->description)) !!}
+                                    </p>
+                                    @endif
+
+                                    @if(!$Ads->tema && !$Ads->description)
+                                    <div class="space-y-4">
+                                        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
+                                            Welcome to GBI PLC
+                                        </h2>
+                                        <p class="text-base md:text-lg lg:text-xl text-black leading-relaxed">
+                                            Gereja Bethel Indonesia Philadelphia Life Center
+                                        </p>
+                                    </div>
+                                    @endif
                                 </div>
-                            </div>
+
+                                <!-- Right Side - Image -->
+                                <div class="flex justify-center lg:justify-end order-1 lg:order-2 mt-10">
+                                    <div class="relative w-full max-w-md lg:max-w-lg">
+                                        <img src="{{ asset('storage/'. $Ads->filename) }}"
+                                            class="w-full h-64 md:h-80 lg:h-96 object-contain rounded-2xl"
+                                            alt="Slide {{ $key + 1 }}">
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 @endforeach

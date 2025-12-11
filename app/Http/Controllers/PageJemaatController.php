@@ -14,6 +14,7 @@ use Carbon\Carbon;
 
 class PageJemaatController extends Controller
 {
+
     protected $fileUploadService;
 
     public function __construct(FileUploadService $fileUploadService)
@@ -45,7 +46,7 @@ class PageJemaatController extends Controller
                 ->paginate(10);
         } else {
             $events = collect(); // Tidak ada event sama sekali
-        }    
+        }
 
         $birthdayMembers = User::whereMonth('tgl_lahir', Carbon::now()->month)
             ->orderby('tgl_lahir','asc')
