@@ -1,11 +1,11 @@
 <x-nav-bar />
 <x-layout>
 
-    <div class="flex min-h-full flex-col justify-center px-4 py-12 lg:px-8 ">
+    <div class="flex min-h-full flex-col justify-center px-4 py-12 lg:px-8" style="margin-top:40px; border-radius: 16px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img class="mx-auto h-40 w-auto rounded-b-full" src="{{ asset('logoplc.png') }}" alt="GBI PLC Logo">
-        <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-white">Reset Password</h2>
-        <p class="mt-2 text-center text-sm text-gray-300">
+        {{-- <img class="mx-auto h-40 w-auto rounded-b-full" src="{{ asset('logoplc.png') }}" alt="GBI PLC Logo"> --}}
+        <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-black">Reset Password</h2>
+        <p class="mt-2 text-center text-sm text-gray-800">
             Enter your new password below.
         </p>
     </div>
@@ -61,7 +61,7 @@
             @endif
 
             <div>
-                <label for="email" class="block text-sm/6 font-semibold text-white">Email address</label>
+                <label for="email" class="block text-sm/6 font-semibold text-black">Email address</label>
                 <div class="mt-2">
                 <input type="email" name="email" id="email" autocomplete="email" required
                        value="{{ old('email', request()->email) }}"
@@ -70,16 +70,16 @@
             </div>
 
             <div>
-                <label for="password" class="block text-sm/6 font-semibold text-white">New Password</label>
+                <label for="password" class="block text-sm/6 font-semibold text-black">New Password</label>
                 <div class="mt-2">
                 <input type="password" name="password" id="password" required autocomplete="new-password"
                        class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-[#723322] sm:text-sm/6">
                 </div>
-                <p class="mt-1 text-xs text-gray-400">Password must be at least 8 characters long.</p>
+                <p class="mt-1 text-xs text-gray-800">Password must be at least 8 characters long.</p>
             </div>
 
             <div>
-                <label for="password_confirmation" class="block text-sm/6 font-semibold text-white">Confirm Password</label>
+                <label for="password_confirmation" class="block text-sm/6 font-semibold text-black">Confirm Password</label>
                 <div class="mt-2">
                 <input type="password" name="password_confirmation" id="password_confirmation" required autocomplete="new-password"
                        class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-[#723322] sm:text-sm/6">
@@ -91,7 +91,7 @@
             </div>
             </form>
 
-            <p class="mt-10 text-center text-sm/6 text-gray-300">
+            <p class="mt-10 text-center text-sm/6 text-gray-800">
                 Remember your password?
                 <a href="{{ route('login') }}" class="font-semibold text-blue-400 hover:text-blue-300">Sign in here</a>
             </p>

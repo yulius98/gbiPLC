@@ -31,6 +31,7 @@ class User extends Authenticatable implements JWTSubject
         'tgl_lahir',
         'path',
         'role',
+        'reading_start_date',
     ];
 
     /**

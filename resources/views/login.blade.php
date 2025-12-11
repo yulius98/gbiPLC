@@ -30,7 +30,7 @@
                 </div>
             @endif
         <div>
-            <label for="email" class="block text-sm/6 font-semibold text-white">Email</label>
+            <label for="email" class="block text-sm/6 font-semibold text-black">Email</label>
             <div class="mt-2">
             <input type="email" name="email" id="email" autocomplete="email" required value="{{ old('email') }}" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-[#723322] sm:text-sm/6" placeholder="Masukkan email Anda">
             </div>
@@ -38,9 +38,9 @@
 
         <div>
             <div class="flex items-center justify-between">
-                <label for="password" class="block text-sm/6 font-semibold text-white">Password</label>
+                <label for="password" class="block text-sm/6 font-semibold text-black">Password</label>
                <div class="text-sm">
-                    <a href="/forgot-password" class="font-semibold text-white hover:text-blue-400">Lupa/Buat password?</a>
+                    <a href="/forgot-password" class="font-semibold text-black hover:text-blue-400">Lupa/Buat password?</a>
                 </div>
             </div>
             <div class="mt-2">

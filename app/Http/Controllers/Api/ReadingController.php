@@ -7,6 +7,7 @@ use App\Models\reading_schedules;
 use App\Models\ReadingSchedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 
 class ReadingController extends Controller
@@ -15,13 +16,16 @@ class ReadingController extends Controller
     {
         $user = $request->user();
         $startDate = $user->reading_start_date ? Carbon::parse($user->reading_start_date) : Carbon::today();
-        $daysSinceStart = Carbon::now()->startOfDay()->diffInDays($startDate);
+
+        $daysSinceStart = $startDate->diffInDays(Carbon::now()->startOfDay());
+
 
         $schedule = reading_schedules::where('day', $daysSinceStart + 1)->firstOrFail();
+        Log::info('Nilai $schedule:', ['schedule' => $schedule]);
 
         $morning = $this->fetchPassages($schedule->morning_passage);
         $evening = $this->fetchPassages($schedule->evening_passage);
-        
+
 
         return response()->json([
             'date' => Carbon::now()->format('d M Y'),
@@ -104,8 +108,23 @@ class ReadingController extends Controller
 
     public function setStartDate(Request $request)
     {
-        $request->validate(['start_date' => 'required|date']);
-        $request->user()->update(['reading_start_date' => $request->start_date]);
-        return response()->json(['message' => 'Tanggal mulai diperbarui']);
+        $user = $request->user();
+        if ( is_null($user->reading_start_date)){
+            $request->validate(['start_date' => 'required|date']);
+            $request->user()->update(['reading_start_date' => $request->start_date]);
+            return response()->json([
+                'status' => true,
+                'tanggal_mulai' => $request->start_date,
+                'message' => 'Mulai membaca Alkitab' ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'tanggal_mulai' => $user->reading_start_date,
+                'message' => 'Lanjut membaca Alkitab' ]);
+        }
+
+
     }
+
+
 }

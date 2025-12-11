@@ -1,11 +1,10 @@
 <x-nav-bar />
 <x-layout>
 
-    <div class="flex min-h-full flex-col justify-center px-4 py-12 lg:px-8 ">
+    <div class="flex min-h-full flex-col justify-center px-4 py-12 lg:px-8" style="margin-top:40px; border-radius: 16px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(6px);">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img class="mx-auto h-40 w-auto rounded-b-full" src="{{ asset('logoplc.png') }}" alt="GBI PLC Logo">
-        <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-white">Reset/Buat Password</h2>
-        <p class="mt-2 text-center text-sm text-gray-300">
+        <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-black">Reset/Buat Password</h2>
+        <p class="mt-2 text-center text-sm text-gray-800">
             Masukkan alamat email Anda, dan kami akan mengirimkan tautan untuk mereset kata sandi Anda.
         </p>
     </div>
@@ -57,7 +56,7 @@
                 </div>
             @endif
             <div>
-                <label for="email" class="block text-sm/6 font-semibold text-white">Email address</label>
+                <label for="email" class="block text-sm/6 font-semibold text-black">Email address</label>
                 <div class="mt-2">
                 <input type="email" name="email" id="email" autocomplete="email" required
                        value="{{ old('email') }}"
@@ -69,7 +68,7 @@
             </div>
             </form>
 
-            <p class="mt-10 text-center text-sm/6 text-gray-300">
+            <p class="mt-10 text-center text-sm/6 text-gray-800">
                 Remember your password?
                 <a href="{{ route('login') }}" class="font-semibold text-blue-400 hover:text-blue-300">Sign in here</a>
             </p>
