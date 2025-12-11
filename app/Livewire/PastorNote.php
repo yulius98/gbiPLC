@@ -9,14 +9,14 @@ use Livewire\WithFileUploads;
 
 class PastorNote extends Component
 {
-    use WithPagination, WithFileUploads; 
-    
+    use WithPagination, WithFileUploads;
+
     public $tgl_note, $note, $filename, $path;
     protected $paginationTheme = 'bootstrap';
     public $updatedata = false;
     public $note_id;
-    public $cari; 
-    public $sortcolom ='tgl_note'; 
+    public $cari;
+    public $sortcolom ='tgl_note';
     public $sortdirection = 'asc';
 
     public function show_detail($id)
@@ -71,7 +71,7 @@ class PastorNote extends Component
     }
 
     public function edit($id)
-    {    
+    {
         $pastornote = TblPastorNote::where('tbl_pastor_notes.id', $id)
             ->first();
 
@@ -97,10 +97,10 @@ class PastorNote extends Component
             'tgl_note' => 'Tanggal tidak boleh kosong',
             'filename.image' => 'File harus berupa gambar',
             'filename.max' => 'Ukuran gambar tidak boleh lebih dari 1MB',
-            
+
         ];
         $validated = $this->validate($rules, $messages);
-        
+
         // Cek apakah ada gambar yang diupload
         if ($this->filename != null) {
             $data['filename'] = $this->filename->store('foto-pesangembala', 'public');
@@ -123,12 +123,12 @@ class PastorNote extends Component
         $this->note_id = '';
         $this->cari = '';
 
-        
+
     }
 
     public function hapus()
     {
-        
+
         $id = $this->note_id;
         $pastornote = TblPastorNote::find($id);
         if ($pastornote) {
@@ -149,25 +149,25 @@ class PastorNote extends Component
 
     public function konfimasihapus($id)
     {
-        
+
         $this->note_id = $id;
     }
 
     public function sort($colomname){
-        
+
         $this->sortcolom = $colomname;
         //dump($this->sortcolom);
         $this->sortdirection = $this->sortdirection == 'asc' ? 'desc' : 'asc';
         //dd($this->sortdirection);
-        
+
     }
-        
+
 
     public function render()
     {
         $pastornotes = TblPastorNote::where('tgl_note', 'like', '%' . $this->cari . '%')
             ->orWhere('note', 'like', '%' . $this->cari . '%')
-            ->orderBy($this->sortcolom, $this->sortdirection)
+            ->orderBy('tgl_note','desc')
             ->paginate(10);
 
         $dtpasstornote = TblPastorNote::orderBy('tgl_note', 'desc')

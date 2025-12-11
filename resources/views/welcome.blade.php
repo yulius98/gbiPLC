@@ -310,7 +310,7 @@
             <div class=" bg-transparent py-20 sm:py-28 w-full mt-10">
                 <div class="mx-auto grid max-w-7xl gap-16 px-6 lg:px-8 xl:grid-cols-3">
                     <div class="max-w-xl">
-                        <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-purple-200 mb-6">Jemaat GBI Philadelphia Berulang Tahun Bulan {{ \Carbon\Carbon::now()->translatedFormat('F') }}</h2>
+                        <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-black mb-6">Jemaat GBI Philadelphia Berulang Tahun Bulan {{ \Carbon\Carbon::now()->translatedFormat('F') }}</h2>
                     </div>
                     <ul role="list" class="grid gap-x-8 gap-y-12 sm:grid-cols-2 sm:gap-y-16 xl:col-span-2">
                         @foreach ( $birthdayMembers as $jemaat)
