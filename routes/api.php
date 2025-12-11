@@ -39,7 +39,6 @@ Route::post('/logout',[AuthLoginController::class, 'logout']);
 Route::post('/forgot-password',[PasswordResetController::class,'sendResetLinkEmail'])->name('password.email');
 Route::post('/reset-password',[PasswordResetController::class,'resetPassword'])->name('password.update');
 
-
 Route::middleware(['auth:api','role:pengurus'])->get('/pengurus/dashboard', function() {
     return response()->json(['message'=>'Dashboard Pengurus']);
 });

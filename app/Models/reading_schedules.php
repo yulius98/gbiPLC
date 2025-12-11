@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class reading_schedules extends Model
@@ -15,6 +14,6 @@ class reading_schedules extends Model
     protected $fillable = [
         'day',
         'morning_passage',
-        'evening_passage', 
+        'evening_passage',
     ];
 }
