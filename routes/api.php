@@ -16,6 +16,10 @@ use App\Http\Controllers\Api\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use GuzzleHttp\Client;
+
+use GuzzleHttp\Exception\RequestException;
+
 
 Route::get('/user', function (Request $request) {
     return response()->json([
@@ -49,7 +53,6 @@ Route::middleware(['auth:api','role:jemaat,pengurus'])->put('/myprofile/{id}', [
 Route::middleware(['auth:api','role:pengurus'])->get('dashboard/{id}',[AdminDashboardController::class,'index']);
 Route::middleware(['auth:api','role:jemaat,pengurus'])->get('/reading/today',[ReadingController::class,'today']);
 Route::middleware(['auth:api','role:jemaat,pengurus'])->post('/reading/start-date',[ReadingController::class,'setStartDate']);
-
 
 
 

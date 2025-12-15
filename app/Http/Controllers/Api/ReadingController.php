@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\Api;
 
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use App\Models\ReadingSchedule;
 use App\Models\reading_schedules;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
+use GuzzleHttp\Exception\RequestException;
 
 class ReadingController extends Controller
 {
-    // Mapping USFM → kode singkat alkita.mobi (wajib tepat!)
+    // Mapping USFM → kode singkat alkita.mobi
     private $bookMap = [
         'GEN' => 'Kej', 'EXO' => 'Kel', 'LEV' => 'Ima', 'NUM' => 'Bil', 'DEU' => 'Ul',
         'JOS' => 'Yos', 'JDG' => 'Hak', 'RUT' => 'Rut',
@@ -31,10 +32,94 @@ class ReadingController extends Controller
         '1JN' => '1Yoh', '2JN' => '2Yoh', '3JN' => '3Yoh', 'JUD' => 'Yud', 'REV' => 'Why'
     ];
 
+    // Nama kitab lengkap untuk tampilan
+    private $bookFullName = [
+        'GEN' => 'Kejadian', 'EXO' => 'Keluaran', 'LEV' => 'Imamat', 'NUM' => 'Bilangan', 'DEU' => 'Ulangan',
+        'JOS' => 'Yosua', 'JDG' => 'Hakim-hakim', 'RUT' => 'Rut',
+        '1SA' => '1 Samuel', '2SA' => '2 Samuel', '1KI' => '1 Raja-raja', '2KI' => '2 Raja-raja',
+        '1CH' => '1 Tawarikh', '2CH' => '2 Tawarikh', 'EZR' => 'Ezra', 'NEH' => 'Nehemia', 'EST' => 'Ester',
+        'JOB' => 'Ayub', 'PSA' => 'Mazmur', 'PRO' => 'Amsal', 'ECC' => 'Pengkhotbah', 'SNG' => 'Kidung Agung',
+        'ISA' => 'Yesaya', 'JER' => 'Yeremia', 'LAM' => 'Ratapan', 'EZK' => 'Yehezkiel', 'DAN' => 'Daniel',
+        'HOS' => 'Hosea', 'JOL' => 'Yoel', 'AMO' => 'Amos', 'OBA' => 'Obaja', 'JON' => 'Yunus',
+        'MIC' => 'Mikha', 'NAM' => 'Nahum', 'HAB' => 'Habakuk', 'ZEP' => 'Zefanya', 'HAG' => 'Hagai',
+        'ZEC' => 'Zakharia', 'MAL' => 'Maleakhi',
+        'MAT' => 'Matius', 'MRK' => 'Markus', 'LUK' => 'Lukas', 'JHN' => 'Yohanes', 'ACT' => 'Kisah Para Rasul',
+        'ROM' => 'Roma', '1CO' => '1 Korintus', '2CO' => '2 Korintus', 'GAL' => 'Galatia', 'EPH' => 'Efesus',
+        'PHP' => 'Filipi', 'COL' => 'Kolose', '1TH' => '1 Tesalonika', '2TH' => '2 Tesalonika',
+        '1TI' => '1 Timotius', '2TI' => '2 Timotius', 'TIT' => 'Titus', 'PHM' => 'Filemon',
+        'HEB' => 'Ibrani', 'JAS' => 'Yakobus', '1PE' => '1 Petrus', '2PE' => '2 Petrus',
+        '1JN' => '1 Yohanes', '2JN' => '2 Yohanes', '3JN' => '3 Yohanes', 'JUD' => 'Yudas', 'REV' => 'Wahyu'
+    ];
+
+    // Mapping untuk SABDA.org audio - nomor urut kitab
+    private $bookNumber = [
+        'GEN' => '01', 'EXO' => '02', 'LEV' => '03', 'NUM' => '04', 'DEU' => '05',
+        'JOS' => '06', 'JDG' => '07', 'RUT' => '08',
+        '1SA' => '09', '2SA' => '10', '1KI' => '11', '2KI' => '12',
+        '1CH' => '13', '2CH' => '14', 'EZR' => '15', 'NEH' => '16', 'EST' => '17',
+        'JOB' => '18', 'PSA' => '19', 'PRO' => '20', 'ECC' => '21', 'SNG' => '22',
+        'ISA' => '23', 'JER' => '24', 'LAM' => '25', 'EZK' => '26', 'DAN' => '27',
+        'HOS' => '28', 'JOL' => '29', 'AMO' => '30', 'OBA' => '31', 'JON' => '32',
+        'MIC' => '33', 'NAM' => '34', 'HAB' => '35', 'ZEP' => '36', 'HAG' => '37',
+        'ZEC' => '38', 'MAL' => '39',
+        'MAT' => '01', 'MRK' => '02', 'LUK' => '03', 'JHN' => '04', 'ACT' => '05',
+        'ROM' => '06', '1CO' => '07', '2CO' => '08', 'GAL' => '09', 'EPH' => '10',
+        'PHP' => '11', 'COL' => '12', '1TH' => '13', '2TH' => '14',
+        '1TI' => '15', '2TI' => '16', 'TIT' => '17', 'PHM' => '18',
+        'HEB' => '19', 'JAS' => '20', '1PE' => '21', '2PE' => '22',
+        '1JN' => '23', '2JN' => '24', '3JN' => '25', 'JUD' => '26', 'REV' => '27'
+    ];
+
+    // Mapping untuk nama folder SABDA.org
+    private $bookFolder = [
+        'GEN' => 'kejadian', 'EXO' => 'keluaran', 'LEV' => 'imamat', 'NUM' => 'bilangan', 'DEU' => 'ulangan',
+        'JOS' => 'yosua', 'JDG' => 'hakim2', 'RUT' => 'rut',
+        '1SA' => '1samuel', '2SA' => '2samuel', '1KI' => '1raja2', '2KI' => '2raja2',
+        '1CH' => '1tawarikh', '2CH' => '2tawarikh', 'EZR' => 'ezra', 'NEH' => 'nehemia', 'EST' => 'ester',
+        'JOB' => 'ayub', 'PSA' => 'mazmur', 'PRO' => 'amsal', 'ECC' => 'pengkhotbah', 'SNG' => 'kidung',
+        'ISA' => 'yesaya', 'JER' => 'yeremia', 'LAM' => 'ratapan', 'EZK' => 'yehezkiel', 'DAN' => 'daniel',
+        'HOS' => 'hosea', 'JOL' => 'yoel', 'AMO' => 'amos', 'OBA' => 'obaja', 'JON' => 'yunus',
+        'MIC' => 'mikha', 'NAM' => 'nahum', 'HAB' => 'habakuk', 'ZEP' => 'zefanya', 'HAG' => 'hagai',
+        'ZEC' => 'zakharia', 'MAL' => 'maleakhi',
+        'MAT' => 'matius', 'MRK' => 'markus', 'LUK' => 'lukas', 'JHN' => 'yohanes', 'ACT' => 'kis_rasul',
+        'ROM' => 'roma', '1CO' => '1korintus', '2CO' => '2korintus', 'GAL' => 'galatia', 'EPH' => 'efesus',
+        'PHP' => 'filipi', 'COL' => 'kolose', '1TH' => '1tesalonika', '2TH' => '2tesalonika',
+        '1TI' => '1timotius', '2TI' => '2timotius', 'TIT' => 'titus', 'PHM' => 'filemon',
+        'HEB' => 'ibrani', 'JAS' => 'yakobus', '1PE' => '1petrus', '2PE' => '2petrus',
+        '1JN' => '1yohanes', '2JN' => '2yohanes', '3JN' => '3yohanes', 'JUD' => 'yudas', 'REV' => 'wahyu'
+    ];
+
+    // Kitab-kitab Perjanjian Lama
+    private $oldTestamentBooks = [
+        'GEN', 'EXO', 'LEV', 'NUM', 'DEU', 'JOS', 'JDG', 'RUT',
+        '1SA', '2SA', '1KI', '2KI', '1CH', '2CH', 'EZR', 'NEH', 'EST',
+        'JOB', 'PSA', 'PRO', 'ECC', 'SNG',
+        'ISA', 'JER', 'LAM', 'EZK', 'DAN',
+        'HOS', 'JOL', 'AMO', 'OBA', 'JON', 'MIC', 'NAM', 'HAB', 'ZEP', 'HAG', 'ZEC', 'MAL'
+    ];
+
+    // Kode 3 huruf untuk nama file audio SABDA.org
+    private $audioFileCode = [
+        'GEN' => 'kej', 'EXO' => 'kel', 'LEV' => 'ima', 'NUM' => 'bil', 'DEU' => 'ul_',
+        'JOS' => 'yos', 'JDG' => 'hak', 'RUT' => 'rut',
+        '1SA' => '1sa', '2SA' => '2sa', '1KI' => '1ra', '2KI' => '2ra',
+        '1CH' => '1ta', '2CH' => '2ta', 'EZR' => 'ezr', 'NEH' => 'neh', 'EST' => 'est',
+        'JOB' => 'ayb', 'PSA' => 'mzm', 'PRO' => 'ams', 'ECC' => 'pkh', 'SNG' => 'kid',
+        'ISA' => 'yes', 'JER' => 'yer', 'LAM' => 'rat', 'EZK' => 'yeh', 'DAN' => 'dan',
+        'HOS' => 'hos', 'JOL' => 'yoe', 'AMO' => 'amo', 'OBA' => 'oba', 'JON' => 'yun',
+        'MIC' => 'mi_', 'NAM' => 'nah', 'HAB' => 'hab', 'ZEP' => 'zef', 'HAG' => 'hag',
+        'ZEC' => 'za_', 'MAL' => 'mal',
+        'MAT' => 'mat', 'MRK' => 'mrk', 'LUK' => 'luk', 'JHN' => 'yoh', 'ACT' => 'kis',
+        'ROM' => 'rom', '1CO' => '1ko', '2CO' => '2ko', 'GAL' => 'gal', 'EPH' => 'efe',
+        'PHP' => 'flp', 'COL' => 'kol', '1TH' => '1te', '2TH' => '2te',
+        '1TI' => '1ti', '2TI' => '2ti', 'TIT' => 'tit', 'PHM' => 'flm',
+        'HEB' => 'ibr', 'JAS' => 'yak', '1PE' => '1pe', '2PE' => '2pe',
+        '1JN' => '1yo', '2JN' => '2yo', '3JN' => '3yo', 'JUD' => 'yud', 'REV' => 'why'
+    ];
+
     public function today(Request $request)
     {
         $user = $request->user();
-
         // Gunakan reading_start_date user, atau default awal tahun
         $startDate = $user->reading_start_date
             ? Carbon::parse($user->reading_start_date)
@@ -43,78 +128,114 @@ class ReadingController extends Controller
         $daysSinceStart = (int) $startDate->diffInDays(Carbon::now());
 
         // Cycle through 365 days
-        $currentDay = ($daysSinceStart % 365) + 2;
+        $currentDay = ($daysSinceStart % 365) + 1;
 
         $schedule = reading_schedules::where('day', $currentDay)->firstOrFail();
         Log::info('Nilai $schedule:', ['schedule' => $schedule]);
 
-        $morning = $this->fetchFromAlkitabMobi($schedule->morning_passage);
-        $evening = $this->fetchFromAlkitabMobi($schedule->evening_passage);
+        $morning = $this->fetchPassage($schedule->morning_passage);
+        $evening = $this->fetchPassage($schedule->evening_passage);
 
         return response()->json([
-            'date'       => Carbon::now()->translatedFormat('d F Y'),
-            'morning'    => $morning,
-            'evening'    => $evening,
-            'progress'   => [
+            'date'     => Carbon::now()->translatedFormat('d F Y'),
+            'morning'  => $morning,
+            'evening'  => $evening,
+            'progress' => [
                 'current_day' => $currentDay,
                 'total_days'  => 365
             ]
         ]);
     }
 
-    private function fetchFromAlkitabMobi($passageString)
+    private function fetchPassage(string $passageString)
     {
-        // Contoh: "GEN.17-GEN.18" → ['Kej', 17] dan ['Kej', 18]
-        $parts = explode('-', $passageString);
+        $parts = explode('-', $passageString); // contoh: GEN.17-GEN.18
         $allVerses = [];
+        $audioUrls = [];
 
         foreach ($parts as $part) {
             [$bookCode, $chapter] = explode('.', $part);
             $shortCode = $this->bookMap[$bookCode] ?? 'Kej';
 
+            // Tambahkan URL audio SABDA.org dengan pembagian PL/PB
+            $audioUrls[] = $this->getAudioUrl($bookCode, $chapter);
+
             $url = "https://alkitab.mobi/tb/{$shortCode}/{$chapter}/";
 
-            $cacheKey = "alkitab_mobi_{$shortCode}_{$chapter}";
+            $cacheKey = "alkitab_html_{$bookCode}_{$chapter}";
             $html = Cache::remember($cacheKey, now()->addDays(7), function () use ($url) {
-                $context = stream_context_create(['http' => ['timeout' => 10]]);
+                $context = stream_context_create([
+                    'http' => ['timeout' => 15],
+                    'ssl'  => ['verify_peer' => false, 'verify_peer_name' => false]
+                ]);
                 $content = @file_get_contents($url, false, $context);
                 return $content ?: '<body></body>';
             });
 
-            // Parsing ayat dari HTML alkitab.mobi
-            // Format: <span class="reftext"><a name=v1 ...>1</a></span> <span data-dur="...">Teks ayat</span>
+            // Regex untuk struktur alkitab.mobi yang sebenarnya
             preg_match_all(
-                '/<span class="reftext"><a name=v(\\d+)[^>]*>(\\d+)<\\/a><\\/span>\\s*<span[^>]*>([^<]+)<\\/span>/s',
+                '/<span class="reftext"><a name=v\d+[^>]*>(\d+)<\/a><\/span>\s*<span[^>]*>([^<]+)<\/span>/s',
                 $html,
                 $matches,
                 PREG_SET_ORDER
             );
 
             foreach ($matches as $m) {
+                $verseNum = (int)$m[1];
                 $allVerses[] = [
-                    'verse'    => (int)$m[1],
-                    'text'     => trim($m[3]),
-                    'audioUrl' => "https://audio.alkitab.mobi/tb/{$shortCode}/{$chapter}/{$m[1]}.mp3"
+                    'verse'    => $verseNum,
+                    'text'     => trim(strip_tags($m[2]))
                 ];
             }
         }
 
-        // Referensi cantik
-        $prettyRef = strtr($passageString, ['GEN' => 'Kejadian', 'EXO' => 'Keluaran', 'LEV' => 'Imamat', 'MAT' => 'Matius', 'MRK' => 'Markus', 'LUK' => 'Lukas', 'JHN' => 'Yohanes', 'ACT' => 'Kisah Para Rasul', 'REV' => 'Wahyu']);
+        // Buat referensi cantik
+        $firstPart = explode('.', $parts[0]);
+        $lastPart  = explode('.', $parts[count($parts)-1]);
 
-        // Extract first book code for audio
-        $firstPart = $parts[0] ?? 'GEN.1';
-        $firstBookCode = explode('.', $firstPart)[0];
-        $firstChapter = explode('.', $firstPart)[1] ?? '1';
-        $firstBookShort = $this->bookMap[$firstBookCode] ?? 'Kej';
+        $firstBook = $this->bookFullName[$firstPart[0]] ?? $firstPart[0];
+        $firstChapter = $firstPart[1];
+
+        $lastBook = $this->bookFullName[$lastPart[0]] ?? $lastPart[0];
+        $lastChapter = $lastPart[1];
+
+        // Format: Kejadian:5-Kejadian:6 atau Kejadian:5-6 jika kitab sama
+        if ($firstPart[0] === $lastPart[0]) {
+            $ref = "{$firstBook}:{$firstChapter}-{$lastChapter}";
+        } else {
+            $ref = "{$firstBook}:{$firstChapter}-{$lastBook}:{$lastChapter}";
+        }
 
         return [
             'data' => [
-                'reference'   => $prettyRef . ' (TB)',
-                'content'     => $allVerses,
-                'audio'       => count($allVerses) > 0 ? "https://audio.alkitab.mobi/tb/{$firstBookShort}/{$firstChapter}.mp3" : null
+                'reference' => $ref . ' (TB)',
+                'audioUrl'  => $audioUrls,
+                'content'   => $allVerses
             ]
         ];
+    }
+
+    /**
+     * Generate URL audio dari SABDA.org berdasarkan kitab dan pasal
+     * Format: https://media.sabda.org/alkitab_audio/tb_alkitabsuara/{pl|pb}/mp3/cd/{nomor}_{folder}/{nomor}_{kode}{pasal}.mp3
+     */
+    private function getAudioUrl(string $bookCode, string $chapter): string
+    {
+        // Tentukan PL atau PB
+        $testament = in_array($bookCode, $this->oldTestamentBooks) ? 'pl' : 'pb';
+
+        // Dapatkan nomor urut kitab dan nama folder
+        $bookNum = $this->bookNumber[$bookCode] ?? '01';
+        $bookFolder = $this->bookFolder[$bookCode] ?? 'kejadian';
+
+        // Kode 3 huruf untuk nama file audio
+        $fileCode = $this->audioFileCode[$bookCode] ?? 'kej';
+
+        // Format pasal menjadi 2 digit
+        $chapterPadded = str_pad($chapter, 2, '0', STR_PAD_LEFT);
+
+        // Contoh: https://media.sabda.org/alkitab_audio/tb_alkitabsuara/pl/mp3/cd/01_kejadian/01_kej01.mp3
+        return "https://media.sabda.org/alkitab_audio/tb_alkitabsuara/{$testament}/mp3/cd/{$bookNum}_{$bookFolder}/{$bookNum}_{$fileCode}{$chapterPadded}.mp3";
     }
 
     public function setStartDate(Request $request)
