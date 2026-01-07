@@ -127,8 +127,11 @@ class ReadingController extends Controller
 
         $daysSinceStart = (int) $startDate->diffInDays(Carbon::now());
 
-        // Cycle through 365 days
-        $currentDay = ($daysSinceStart % 365) + 1;
+        // Cycle through 298 days not 365
+        $totalDays = 298;
+
+        if ($daysSinceStart <= $totalDays) {
+            $currentDay = ($daysSinceStart % $totalDays) + 1;
 
         $schedule = reading_schedules::where('day', $currentDay)->firstOrFail();
         Log::info('Nilai $schedule:', ['schedule' => $schedule]);
@@ -145,6 +148,18 @@ class ReadingController extends Controller
                 'total_days'  => 298
             ]
         ]);
+        } else {
+           return response()->json([
+                'date'     => Carbon::now()->translatedFormat('d F Y'),
+                'morning'  => null,
+                'evening'  => null,
+                'progress' => [
+                    'current_day' => 0,
+                    'total_days'  => 0
+                ]
+            ]);
+        }
+
     }
 
     private function fetchPassage(string $passageString)

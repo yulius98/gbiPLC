@@ -6,19 +6,53 @@ import '../helpers/file_type_helper.dart';
 
 /// A lightweight carousel widget that fetches items using `fetchCarousel()`.
 /// Uses PageView with graceful loading/error states.
+/// Optimized for faster initial load with lazy loading.
 
-class CarouselWidget extends StatelessWidget {
+class CarouselWidget extends StatefulWidget {
   const CarouselWidget({super.key});
+
+  @override
+  State<CarouselWidget> createState() => _CarouselWidgetState();
+}
+
+class _CarouselWidgetState extends State<CarouselWidget> {
+  Future<List<CarouselItem>>? _carouselFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    // Delay carousel loading to not block initial render
+    Future.microtask(() {
+      if (mounted) {
+        setState(() {
+          _carouselFuture = fetchCarousel();
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     // Untuk portrait, lebar lebih kecil, tinggi lebih besar (rasio 3:4)
     final carouselWidth = screenWidth;
-    final carouselHeight = screenWidth * 1.6; //carouselWidth * (4 / 3); // rasio portrait 3:4
+    final carouselHeight =
+        screenWidth * 1.6; //carouselWidth * (4 / 3); // rasio portrait 3:4
+
+    // Show placeholder immediately if data not loaded yet
+    if (_carouselFuture == null) {
+      return SizedBox(
+        width: carouselWidth,
+        height: carouselHeight,
+        child: Container(
+          color: Colors.black,
+          child: const Center(child: CircularProgressIndicator()),
+        ),
+      );
+    }
 
     return FutureBuilder<List<CarouselItem>>(
-      future: fetchCarousel(),
+      future: _carouselFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SizedBox(
@@ -79,23 +113,24 @@ class CarouselWidget extends StatelessWidget {
                                 ),
                               );
                             },
-                            errorBuilder: (context, error, stackTrace) => Container(
-                              color: Colors.grey[300],
-                              child: Center(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: const [
-                                    Icon(
-                                      Icons.broken_image,
-                                      size: 40,
-                                      color: Colors.grey,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Container(
+                                  color: Colors.grey[300],
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: const [
+                                        Icon(
+                                          Icons.broken_image,
+                                          size: 40,
+                                          color: Colors.grey,
+                                        ),
+                                        SizedBox(height: 6),
+                                        Text('Gagal memuat gambar'),
+                                      ],
                                     ),
-                                    SizedBox(height: 6),
-                                    Text('Gagal memuat gambar'),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ),
                           ),
                   ),
                 ),
@@ -118,39 +153,58 @@ class _VideoPlayerWidget extends StatefulWidget {
 }
 
 class _VideoPlayerWidgetState extends State<_VideoPlayerWidget> {
-  late VideoPlayerController _controller;
+  VideoPlayerController? _controller;
   bool _initialized = false;
+  bool _shouldInitialize = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.url))
-      ..initialize().then((_) {
+    // Delay video initialization to not block UI
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) {
         setState(() {
-          _initialized = true;
+          _shouldInitialize = true;
         });
-        _controller.setLooping(true);
-        _controller.play();
-      });
+        _initializeVideo();
+      }
+    });
+  }
+
+  void _initializeVideo() {
+    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.url))
+      ..initialize()
+          .then((_) {
+            if (mounted) {
+              setState(() {
+                _initialized = true;
+              });
+              _controller?.setLooping(true);
+              _controller?.play();
+            }
+          })
+          .catchError((error) {
+            debugPrint('Error initializing video: $error');
+          });
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_initialized) {
+    if (!_shouldInitialize || !_initialized || _controller == null) {
       return Container(
         color: Colors.black,
         child: const Center(child: CircularProgressIndicator()),
       );
     }
     return AspectRatio(
-      aspectRatio: _controller.value.aspectRatio,
-      child: VideoPlayer(_controller),
+      aspectRatio: _controller!.value.aspectRatio,
+      child: VideoPlayer(_controller!),
     );
   }
 }

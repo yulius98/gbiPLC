@@ -31,7 +31,6 @@ dependencies:
   flutter:
     sdk: flutter
   video_player: ^2.8.2
-  google_fonts: ^6.1.0
   http: ^1.2.1
   http_parser: ^4.0.0
   carousel_slider: ^5.1.1
@@ -48,6 +47,10 @@ dependencies:
   flutter_secure_storage: ^9.2.2
   audioplayers: ^6.1.0
   just_audio: ^0.9.36
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  flutter_native_splash: ^2.4.3
+  google_fonts: ^6.1.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -114,3 +117,13 @@ flutter_icons:
   android: true
   ios: true
   image_path: "assets/icon/icon.png"
+
+flutter_native_splash:
+  color: "#070A47"
+  image: assets/icon/icon.png
+  android: true
+  ios: true
+  web: false
+  android_12:
+    color: "#070A47"
+    image: assets/icon/icon.png

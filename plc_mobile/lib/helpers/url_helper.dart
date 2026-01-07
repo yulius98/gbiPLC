@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 /// For emulator: 'http://10.0.2.2:8000'
 /// For phone/LAN: 'http://192.168.1.5:8000' 
 /// For production: 'https://philadelphialifecenter.com'
-String baseUrl = 'http://10.0.2.2:8000';
+String baseUrl = 'https://philadelphialifecenter.com';
 
 /// Initialize base URL. Call this in main() to set the base URL.
 void initBaseUrl([String? url]) {

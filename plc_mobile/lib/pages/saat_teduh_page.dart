@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../services/pastor_note_service.dart';
+import '../helpers/text_style_helper.dart';
 import '../models/pastor_note.dart';
 import '../helpers/url_helper.dart';
 import 'package:intl/intl.dart';
@@ -37,14 +37,9 @@ class _SaatTeduhPageState extends State<SaatTeduhPage> {
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 1, 7, 118),
         foregroundColor: Colors.white,
-        title: Text(
+        title: const Text(
           "Saat Teduh",
-          style: GoogleFonts.inter(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.2,
-            color: Colors.white,
-          ),
+          style: AppTextStyles.appBarTitle,
         ),
         centerTitle: true,
       ),
@@ -72,7 +67,7 @@ class _SaatTeduhPageState extends State<SaatTeduhPage> {
                     const SizedBox(height: 16),
                     Text(
                       'Gagal memuat data',
-                      style: GoogleFonts.inter(
+                      style: AppTextStyles.custom(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
@@ -82,7 +77,7 @@ class _SaatTeduhPageState extends State<SaatTeduhPage> {
                     Text(
                       '${snapshot.error}',
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.inter(
+                      style: AppTextStyles.custom(
                         fontSize: 14,
                         color: Colors.white70,
                       ),
@@ -109,7 +104,7 @@ class _SaatTeduhPageState extends State<SaatTeduhPage> {
             return Center(
               child: Text(
                 'Tidak ada data',
-                style: GoogleFonts.inter(
+                style: AppTextStyles.custom(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
@@ -202,7 +197,7 @@ class _SaatTeduhPageState extends State<SaatTeduhPage> {
                           const SizedBox(width: 6),
                           Text(
                             formatDate(pastorNote.tglNote),
-                            style: GoogleFonts.inter(
+                            style: AppTextStyles.custom(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: Colors.white,
@@ -226,7 +221,7 @@ class _SaatTeduhPageState extends State<SaatTeduhPage> {
                       ),
                       child: Text(
                         pastorNote.note,
-                        style: GoogleFonts.inter(
+                        style: AppTextStyles.custom(
                           fontSize: 16,
                           height: 1.6,
                           color: Colors.white,
@@ -247,14 +242,14 @@ class _SaatTeduhPageState extends State<SaatTeduhPage> {
                         children: [
                           Text(
                             'ID: ${pastorNote.id}',
-                            style: GoogleFonts.inter(
+                            style: AppTextStyles.custom(
                               fontSize: 12,
                               color: Colors.grey[500],
                             ),
                           ),
                           Text(
                             'Diperbarui: ${formatDate(pastorNote.updatedAt.split('T')[0])}',
-                            style: GoogleFonts.inter(
+                            style: AppTextStyles.custom(
                               fontSize: 12,
                               color: Colors.grey[500],
                             ),

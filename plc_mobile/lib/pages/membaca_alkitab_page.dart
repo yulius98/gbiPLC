@@ -455,116 +455,40 @@ class _MembacaAlkitabPageState extends State<MembacaAlkitabPage> {
         if (_readingData != null &&
             _readingData!.progress.currentDay >
                 _readingData!.progress.totalDays) {
-          // Check mounted before showing dialog
+          // Tampilkan pesan bahwa periode sudah selesai
           if (!mounted) return;
-          
-          // Tampilkan dialog konfirmasi
-          final shouldReset = await showDialog<bool>(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Row(
-                  children: [
-                    Icon(Icons.info_outline, color: Color(0xFF6a3093)),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        'Periode Selesai',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                content: Text(
-                  'Anda telah menyelesaikan periode membaca alkitab. Apakah Anda ingin memulai periode baru dari hari ini?',
-                  style: TextStyle(fontSize: 14),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: Text('Batal', style: TextStyle(color: Colors.grey)),
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF6a3093),
-                      foregroundColor: Colors.white,
-                    ),
-                    onPressed: () => Navigator.of(context).pop(true),
-                    child: Text('Mulai Periode Baru'),
-                  ),
-                ],
-              );
-            },
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Periode membaca alkitab telah selesai. Silakan klik tombol "Mengulang Membaca dari Kitab Kejadian" untuk memulai periode baru.',
+              ),
+              backgroundColor: Colors.orange,
+              duration: Duration(seconds: 5),
+            ),
           );
-
-          // Jika user setuju, reset start_date
-          if (shouldReset == true) {
-            await _resetStartDate();
-          }
         }
       }
     } catch (e) {
       // Cek apakah error karena data tidak ditemukan (periode sudah selesai)
-      if (e.toString().contains('tidak ditemukan') || 
+      if (e.toString().contains('tidak ditemukan') ||
           e.toString().contains('404')) {
         if (mounted) {
           setState(() {
             _isLoadingReading = false;
           });
-          
-          if (!mounted) return;
-          
-          // Tampilkan dialog untuk reset periode
-          final shouldReset = await showDialog<bool>(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Row(
-                  children: [
-                    Icon(Icons.info_outline, color: Color(0xFF6a3093)),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        'Periode Selesai',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                content: Text(
-                  'Anda telah menyelesaikan periode membaca alkitab (298 hari). Apakah Anda ingin memulai periode baru dari hari ini?',
-                  style: TextStyle(fontSize: 14),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: Text('Batal', style: TextStyle(color: Colors.grey)),
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF6a3093),
-                      foregroundColor: Colors.white,
-                    ),
-                    onPressed: () => Navigator.of(context).pop(true),
-                    child: Text('Mulai Periode Baru'),
-                  ),
-                ],
-              );
-            },
-          );
 
-          // Jika user setuju, reset start_date
-          if (shouldReset == true) {
-            await _resetStartDate();
-          }
+          if (!mounted) return;
+
+          // Tampilkan pesan error sederhana
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Periode membaca alkitab telah selesai. Silakan klik tombol "Mengulang Membaca dari Kitab Kejadian" untuk memulai periode baru.',
+              ),
+              backgroundColor: Colors.orange,
+              duration: Duration(seconds: 5),
+            ),
+          );
         }
       } else {
         // Error lainnya, tampilkan error message
@@ -597,37 +521,28 @@ class _MembacaAlkitabPageState extends State<MembacaAlkitabPage> {
       final formattedDate =
           '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
 
-      debugPrint('Attempting to reset start_date to: $formattedDate');
-
-      // Panggil service untuk update start_date
-      final response = await fetchMulaiMembacaAlkitab(
+      // Panggil service untuk update start_date menggunakan PUT method
+      final response = await resetMembacaAlkitab(
         token: _token!,
         tanggal: formattedDate,
       );
 
       if (mounted) {
-        debugPrint('Received response: tanggal_mulai=${response?.tanggalMulai}');
-        
         // Verifikasi apakah tanggal benar-benar berubah
         if (response != null && response.tanggalMulai != null) {
           // Cek apakah API benar-benar mengupdate tanggal
           if (response.tanggalMulai != formattedDate) {
-            debugPrint('WARNING: API tidak mengupdate tanggal!');
-            debugPrint('Expected: $formattedDate, Got: ${response.tanggalMulai}');
             throw Exception(
               'API tidak dapat memperbarui tanggal mulai membaca. '
               'Tanggal tetap: ${response.tanggalMulai}. '
-              'Silakan hubungi administrator sistem.'
+              'Silakan hubungi administrator sistem.',
             );
           }
-          
+
           setState(() {
             _data = response;
             _tanggal = formattedDate;
           });
-
-          debugPrint('Start date updated in local state to: $formattedDate');
-          debugPrint('Response shows tanggal_mulai: ${response.tanggalMulai}');
 
           // Reload reading data setelah reset
           try {
@@ -641,7 +556,9 @@ class _MembacaAlkitabPageState extends State<MembacaAlkitabPage> {
             if (!mounted) return;
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Periode membaca alkitab berhasil diperbarui ke ${response.tanggalMulai}'),
+                content: Text(
+                  'Periode membaca alkitab berhasil diperbarui ke ${response.tanggalMulai}',
+                ),
                 backgroundColor: Colors.green,
                 duration: Duration(seconds: 3),
               ),
@@ -672,7 +589,6 @@ class _MembacaAlkitabPageState extends State<MembacaAlkitabPage> {
         }
       }
     } catch (e) {
-      debugPrint('Error in _resetStartDate: $e');
       if (mounted) {
         setState(() {
           _isLoadingReading = false;
@@ -871,10 +787,77 @@ class _MembacaAlkitabPageState extends State<MembacaAlkitabPage> {
           color: Colors.white.withValues(alpha: 0.9),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Text(
-          'Tidak ada bacaan untuk ${_selectedReading == "pagi" ? "pagi" : "sore"} hari ini.',
-          style: TextStyle(fontSize: 14, color: Color(0xFF485563)),
-          textAlign: TextAlign.center,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Tidak ada bacaan untuk ${_selectedReading == "pagi" ? "pagi" : "sore"} hari ini.',
+              style: TextStyle(fontSize: 14, color: Color(0xFF485563)),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: () async {
+                final shouldReset = await showDialog<bool>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Row(
+                        children: [
+                          Icon(Icons.refresh, color: Color(0xFF6a3093)),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              'Mengulang dari Awal',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      content: Text(
+                        'Apakah Anda ingin mengulang membaca Alkitab dari Kitab Kejadian?',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: Text(
+                            'Batal',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFF6a3093),
+                            foregroundColor: Colors.white,
+                          ),
+                          onPressed: () => Navigator.of(context).pop(true),
+                          child: Text('Mulai dari Awal'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+
+                if (shouldReset == true) {
+                  await _resetStartDate();
+                }
+              },
+              icon: Icon(Icons.refresh, size: 18),
+              label: Text('Mengulang Membaca Kitab Kejadian'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF6a3093),
+                foregroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+          ],
         ),
       );
     }
