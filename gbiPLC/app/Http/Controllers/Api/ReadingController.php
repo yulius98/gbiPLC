@@ -81,7 +81,7 @@ class ReadingController extends Controller
         'HOS' => 'hosea', 'JOL' => 'yoel', 'AMO' => 'amos', 'OBA' => 'obaja', 'JON' => 'yunus',
         'MIC' => 'mikha', 'NAM' => 'nahum', 'HAB' => 'habakuk', 'ZEP' => 'zefanya', 'HAG' => 'hagai',
         'ZEC' => 'zakharia', 'MAL' => 'maleakhi',
-        'MAT' => 'matius', 'MRK' => 'markus', 'LUK' => 'lukas', 'JHN' => 'yohanes', 'ACT' => 'kis_rasul',
+        'MAT' => 'matius', 'MRK' => 'markus', 'LUK' => 'lukas', 'JHN' => 'yohanes', 'ACT' => 'kisah',
         'ROM' => 'roma', '1CO' => '1korintus', '2CO' => '2korintus', 'GAL' => 'galatia', 'EPH' => 'efesus',
         'PHP' => 'filipi', 'COL' => 'kolose', '1TH' => '1tesalonika', '2TH' => '2tesalonika',
         '1TI' => '1timotius', '2TI' => '2timotius', 'TIT' => 'titus', 'PHM' => 'filemon',

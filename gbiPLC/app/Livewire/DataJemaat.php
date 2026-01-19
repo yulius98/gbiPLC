@@ -55,6 +55,8 @@ class DataJemaat extends Component
             $rules['password'] = 'required|min:8';
             $rules['email'] .= '|unique:users,email';
         } else {
+            // Saat update, password optional, tapi jika diisi harus minimal 8 karakter
+            $rules['password'] = 'nullable|min:8';
             $rules['email'] .= '|unique:users,email,' . $this->jemaat_id;
         }
 
@@ -128,8 +130,16 @@ class DataJemaat extends Component
             $jemaat->filename = $this->handleFileUpload($this->foto_upload, $this->name);
         }
 
-        // Update other fields
-        $jemaat->update($this->prepareData());
+        // Prepare data to update
+        $data = $this->prepareData();
+
+        // Update password jika field password diisi
+        if (!empty($this->password)) {
+            $data['password'] = Hash::make($this->password);
+        }
+
+        // Update all fields
+        $jemaat->update($data);
 
         session()->flash('message', 'Data Jemaat berhasil diupdate.');
         $this->clear();
@@ -193,7 +203,7 @@ class DataJemaat extends Component
         $this->gol_darah = $jemaat->gol_darah;
         $this->filename = $jemaat->filename;
         $this->role = $jemaat->role;
-        $this->tgl_lahir = $jemaat->tgl_lahir;
+        $this->tgl_lahir = $jemaat->tgl_lahir ? $jemaat->tgl_lahir->format('Y-m-d') : null;
         $this->facebook = $jemaat->facebook;
         $this->instagram = $jemaat->instagram;
         $this->foto_upload = null;

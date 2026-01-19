@@ -52,7 +52,11 @@
                     <div class="mb-3 row">
                         <label for="password" class="col-sm-3 col-form-label">Password</label>
                         <div class="col-sm-9">
-                            <input type="password" class="form-control" id="password" wire:model="password">
+                            <input type="password" class="form-control" id="password" wire:model="password"
+                                   placeholder="{{ $updatedata ? 'Kosongkan jika tidak ingin mengubah password' : '' }}">
+                            @if($updatedata)
+                                <small class="form-text text-muted">Kosongkan jika tidak ingin mengubah password</small>
+                            @endif
                         </div>
                     </div>
 
@@ -115,19 +119,19 @@
                                 @error('foto_upload')
                                     <span class="invalid-feedback d-block">{{ $message }}</span>
                                 @enderror
-                                
+
                                 {{-- Preview Gambar Upload --}}
                                 @if ($foto_upload && $foto_upload instanceof \Illuminate\Http\UploadedFile)
                                     @php
                                         try {
                                             // Method 1: Try temporary URL (server-side)
                                             $tempUrl = $foto_upload->temporaryUrl();
-                                            
+
                                             // Method 2: Generate data URI for fallback (client-side independent)
                                             $imageData = base64_encode(file_get_contents($foto_upload->getRealPath()));
                                             $mimeType = $foto_upload->getMimeType();
                                             $dataUri = "data:{$mimeType};base64,{$imageData}";
-                                            
+
                                             // Log ke Laravel log
                                             \Log::info('Data Jemaat - Temporary URL Generated', [
                                                 'url' => $tempUrl,
@@ -146,21 +150,21 @@
                                             $dataUri = null;
                                         }
                                     @endphp
-                                    
+
                                     @if($dataUri)
                                         <div class="mt-3 border p-2 rounded">
                                             {{-- Use Data URI for immediate preview (always works) --}}
-                                            <img src="{{ $dataUri }}" 
+                                            <img src="{{ $dataUri }}"
                                                  id="preview-img-jemaat-{{ md5($foto_upload->getClientOriginalName()) }}"
-                                                 alt="Preview Foto" 
-                                                 class="img-thumbnail object-contain rounded d-block mb-2" 
+                                                 alt="Preview Foto"
+                                                 class="img-thumbnail object-contain rounded d-block mb-2"
                                                  style="max-height: 150px;"
                                                  onload="document.getElementById('img-success-jemaat-{{ md5($foto_upload->getClientOriginalName()) }}').style.display='block';">
                                             <!--
                                             <div id="img-success-jemaat-{{ md5($foto_upload->getClientOriginalName()) }}" class="alert alert-success mb-2" style="display:none;">
                                                 <small>✓ Preview berhasil dimuat</small>
                                             </div>
-                                            
+
                                             <small class="d-block text-muted">
                                                 <strong>File:</strong> {{ $foto_upload->getClientOriginalName() }}<br>
                                                 <strong>Size:</strong> {{ number_format($foto_upload->getSize() / 1024, 2) }} KB<br>
@@ -179,7 +183,7 @@
                                             @endif
                                             --}}
                                         </div>
-                                        
+
                                         <script>
                                             (function() {
                                                 console.log('=== Data Jemaat - Image Preview ===');
@@ -187,10 +191,10 @@
                                                 console.log('File size:', '{{ number_format($foto_upload->getSize() / 1024, 2) }}', 'KB');
                                                 console.log('Mime type:', '{{ $foto_upload->getMimeType() }}');
                                                 console.log('Preview method:', 'Data URI (Base64)');
-                                                
+
                                                 @if($tempUrl)
                                                 console.log('Temporary URL (for reference):', '{{ $tempUrl }}');
-                                                
+
                                                 // Test temporary URL in background
                                                 fetch('{{ $tempUrl }}', {
                                                     method: 'GET',

@@ -188,7 +188,16 @@
 
                     @if($youtubeId)
                     <div class="mt-6 border border-white p-4 rounded-lg">
-                        <h4 class="text-xl font-semibold text-white mb-3">📹 Video Ibadah</h4>
+                        <div class="flex justify-between items-center mb-3">
+                            <h4 class="text-xl font-semibold text-white">📹 Video Ibadah</h4>
+                            <a href="https://www.youtube.com/watch?v={{ $youtubeId }}" target="_blank"
+                               class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                                </svg>
+                                Buka di YouTube
+                            </a>
+                        </div>
                         <div class="relative bg-black" style="padding-bottom: 56.25%; height: 0; overflow: hidden;">
                             <iframe
                                 class="absolute top-0 left-0 w-full h-full rounded-lg"
@@ -197,6 +206,9 @@
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                 allowfullscreen>
                             </iframe>
+                        </div>
+                        <div class="mt-3 bg-blue-900 bg-opacity-50 border border-blue-600 p-3 rounded-lg">
+                            <p class="text-blue-200 text-sm">💡 <strong>Tips:</strong> Jika video tidak dapat diputar di sini, klik tombol "Buka di YouTube" untuk menonton langsung di aplikasi YouTube.</p>
                         </div>
                     </div>
                     @else
